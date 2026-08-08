@@ -17,11 +17,13 @@ import {
   buildQueueState,
   clearPending,
   enqueue,
+  maybeStart,
   QueueError,
   removeEntry,
   reorder,
   skip
 } from './queue'
+import { addStandby, clearStandby, listStandby, removeStandby } from './standby'
 import { broadcastQueue } from './realtime'
 import {
   addPath,
@@ -415,6 +417,51 @@ export function createApiRouter(getRunningPort: () => number): Router {
   router.post('/queue/clear', requireAdmin, (req, res) => {
     clearPending()
     res.json(buildQueueState(clientIp(req)))
+  })
+
+  // ---- Standby (filler) playlist — admin ------------------------------------
+
+  const standbyState = () => {
+    const c = loadConfig()
+    return { enabled: c.standbyEnabled, shuffle: c.standbyShuffle, entries: listStandby() }
+  }
+
+  router.get('/standby', requireAdmin, (_req, res) => res.json(standbyState()))
+
+  router.post('/standby', requireAdmin, (req, res) => {
+    const trackId = Number((req.body ?? {}).trackId)
+    if (!Number.isInteger(trackId)) {
+      res.status(400).json({ error: 'trackId required' })
+      return
+    }
+    try {
+      addStandby(trackId)
+    } catch (err) {
+      res.status(400).json({ error: err instanceof Error ? err.message : String(err) })
+      return
+    }
+    maybeStart() // start filler now if enabled and nothing is playing
+    res.json(standbyState())
+  })
+
+  router.delete('/standby/:id', requireAdmin, (req, res) => {
+    removeStandby(Number(req.params.id))
+    res.json(standbyState())
+  })
+
+  router.post('/standby/clear', requireAdmin, (_req, res) => {
+    clearStandby()
+    res.json(standbyState())
+  })
+
+  router.post('/standby/settings', requireAdmin, (req, res) => {
+    const body = (req.body ?? {}) as { enabled?: boolean; shuffle?: boolean }
+    const patch: Partial<ReturnType<typeof loadConfig>> = {}
+    if (typeof body.enabled === 'boolean') patch.standbyEnabled = body.enabled
+    if (typeof body.shuffle === 'boolean') patch.standbyShuffle = body.shuffle
+    updateConfig(patch)
+    if (patch.standbyEnabled) maybeStart() // enabling while idle kicks off filler
+    res.json(standbyState())
   })
 
   return router

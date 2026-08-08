@@ -12,6 +12,7 @@ import type {
   ScanStatus,
   SetupRequest,
   SetupResponse,
+  StandbyState,
   TracksResponse
 } from '@shared/types'
 
@@ -123,6 +124,20 @@ export const removeLibraryPath = (path: string): Promise<LibraryPathsResponse> =
 export const startScan = (): Promise<ScanStatus> =>
   jsonFetch('/api/library/scan', { method: 'POST' })
 export const getScanStatus = (): Promise<ScanStatus> => jsonFetch('/api/library/scan/status')
+
+// ---- Admin: standby playlist -------------------------------------------------
+export const getStandby = (): Promise<StandbyState> => jsonFetch('/api/standby')
+export const addStandby = (trackId: number): Promise<StandbyState> =>
+  jsonFetch('/api/standby', { method: 'POST', body: JSON.stringify({ trackId }) })
+export const removeStandby = (id: number): Promise<StandbyState> =>
+  jsonFetch(`/api/standby/${id}`, { method: 'DELETE' })
+export const clearStandby = (): Promise<StandbyState> =>
+  jsonFetch('/api/standby/clear', { method: 'POST' })
+export const setStandbySettings = (patch: {
+  enabled?: boolean
+  shuffle?: boolean
+}): Promise<StandbyState> =>
+  jsonFetch('/api/standby/settings', { method: 'POST', body: JSON.stringify(patch) })
 
 // ---- Admin: settings ---------------------------------------------------------
 export const getSettings = (): Promise<AdminSettings> => jsonFetch('/api/admin/settings')
