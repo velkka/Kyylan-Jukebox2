@@ -13,6 +13,10 @@ export interface AppConfig {
   perUserQueueLimit: number
   /** Output device id (MediaDeviceInfo.deviceId) the player renderer should use. */
   outputDeviceId: string | null
+  /** Play the standby (filler) playlist when the guest queue is empty. */
+  standbyEnabled: boolean
+  /** Pick standby tracks at random instead of in order. */
+  standbyShuffle: boolean
 }
 
 export const DEFAULT_CONFIG: AppConfig = {
@@ -21,7 +25,9 @@ export const DEFAULT_CONFIG: AppConfig = {
   adminPassword: '',
   libraryPaths: [],
   perUserQueueLimit: 3,
-  outputDeviceId: null
+  outputDeviceId: null,
+  standbyEnabled: false,
+  standbyShuffle: false
 }
 
 /** Non-sensitive settings safe to expose to any guest. Never includes the password. */
@@ -182,6 +188,19 @@ export interface NowPlaying {
   position: number
   duration: number
   playing: boolean
+  /** True when the current track comes from the standby playlist, not a guest. */
+  isStandby: boolean
+}
+
+export interface StandbyEntry {
+  id: number
+  track: Track
+}
+
+export interface StandbyState {
+  enabled: boolean
+  shuffle: boolean
+  entries: StandbyEntry[]
 }
 
 export interface QueueState {
