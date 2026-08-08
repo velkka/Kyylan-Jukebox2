@@ -1,0 +1,49 @@
+appId: org.kyylan.jukebox
+productName: Kyylan Jukebox
+directories:
+  output: release
+  buildResources: build
+# Ad-hoc signs unsigned macOS builds so they run locally (no-op once a real
+# Developer ID signature is applied). Windows/Linux packs are ignored by the hook.
+afterPack: scripts/afterpack-adhoc.cjs
+files:
+  - out/**/*
+  - package.json
+# The web build is served over HTTP from out/renderer; keep it unpacked-friendly.
+asarUnpack:
+  - out/renderer/**/*
+# Tray icons need to be readable from disk at runtime.
+extraResources:
+  - from: build/tray.png
+    to: tray.png
+  - from: build/tray@2x.png
+    to: tray@2x.png
+  - from: build/icon.png
+    to: icon.png
+mac:
+  target:
+    - dmg
+  category: public.app-category.music
+  artifactName: ${productName}-${version}-${arch}.${ext}
+  # Signing-ready: these take effect once a "Developer ID Application" cert is in
+  # the keychain. With no identity, electron-builder skips signing (unsigned build).
+  hardenedRuntime: true
+  gatekeeperAssess: false
+  entitlements: build/entitlements.mac.plist
+  entitlementsInherit: build/entitlements.mac.plist
+# Notarization runs automatically when the app is signed with a Developer ID and
+# APPLE_ID + APPLE_APP_SPECIFIC_PASSWORD + APPLE_TEAM_ID are set in the environment.
+win:
+  target:
+    - nsis        # installer
+    - portable    # single self-contained .exe (handy for a party host — no install)
+  icon: build/icon.png   # electron-builder derives the .ico from this
+  artifactName: ${productName}-${version}-${arch}.${ext}
+  # Signing-ready: set WIN_CSC_LINK (path to .pfx) + WIN_CSC_KEY_PASSWORD to sign.
+nsis:
+  oneClick: false
+  perMachine: false
+  allowToChangeInstallationDirectory: true
+  artifactName: ${productName}-${version}-setup.${ext}
+portable:
+  artifactName: ${productName}-${version}-portable.${ext}
