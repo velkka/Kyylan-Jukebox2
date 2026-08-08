@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react'
-import type { AudioDevice, ScanStatus } from '@shared/types'
+import type { AudioDevice, ScanStatus, StandbyEntry, Track } from '@shared/types'
 import * as api from '../api'
+import { subtitle } from '../util'
+import TrackArt from './TrackArt'
 
 export default function AdminPanel({ onError }: { onError: (msg: string) => void }): JSX.Element {
   return (
@@ -9,6 +11,7 @@ export default function AdminPanel({ onError }: { onError: (msg: string) => void
         <span>⚙︎</span> Admin controls
       </h3>
       <OutputDevice onError={onError} />
+      <Standby onError={onError} />
       <MusicFolders onError={onError} />
       <Settings onError={onError} />
     </section>
@@ -67,6 +70,147 @@ function OutputDevice({ onError }: { onError: (msg: string) => void }): JSX.Elem
           ↻
         </button>
       </div>
+    </Group>
+  )
+}
+
+function Toggle({
+  label,
+  checked,
+  onChange
+}: {
+  label: string
+  checked: boolean
+  onChange: (v: boolean) => void
+}): JSX.Element {
+  return (
+    <label className="flex cursor-pointer items-center gap-2 text-sm text-white/70">
+      <button
+        type="button"
+        role="switch"
+        aria-checked={checked}
+        onClick={() => onChange(!checked)}
+        className={`relative h-5 w-9 shrink-0 rounded-full transition ${
+          checked ? 'bg-jukebox-accent' : 'bg-white/15'
+        }`}
+      >
+        <span
+          className={`absolute top-0.5 h-4 w-4 rounded-full bg-white transition-all ${
+            checked ? 'left-[18px]' : 'left-0.5'
+          }`}
+        />
+      </button>
+      {label}
+    </label>
+  )
+}
+
+function Standby({ onError }: { onError: (msg: string) => void }): JSX.Element {
+  const [enabled, setEnabled] = useState(false)
+  const [shuffle, setShuffle] = useState(false)
+  const [entries, setEntries] = useState<StandbyEntry[]>([])
+  const [search, setSearch] = useState('')
+  const [results, setResults] = useState<Track[]>([])
+
+  const apply = (s: { enabled: boolean; shuffle: boolean; entries: StandbyEntry[] }): void => {
+    setEnabled(s.enabled)
+    setShuffle(s.shuffle)
+    setEntries(s.entries)
+  }
+  const fail = (e: unknown): void => onError(e instanceof Error ? e.message : String(e))
+
+  useEffect(() => {
+    api.getStandby().then(apply).catch(fail)
+  }, [])
+
+  useEffect(() => {
+    if (!search.trim()) {
+      setResults([])
+      return
+    }
+    const t = setTimeout(() => {
+      api.getTracks({ search, limit: 8 }).then((r) => setResults(r.tracks)).catch(() => setResults([]))
+    }, 250)
+    return () => clearTimeout(t)
+  }, [search])
+
+  return (
+    <Group title="Standby playlist">
+      <p className="-mt-1 mb-2 text-xs text-white/40">
+        Played automatically when the guest queue is empty.
+      </p>
+      <div className="flex flex-wrap items-center gap-5">
+        <Toggle
+          label="Enabled"
+          checked={enabled}
+          onChange={(v) => api.setStandbySettings({ enabled: v }).then(apply).catch(fail)}
+        />
+        <Toggle
+          label="Shuffle"
+          checked={shuffle}
+          onChange={(v) => api.setStandbySettings({ shuffle: v }).then(apply).catch(fail)}
+        />
+      </div>
+
+      {entries.length === 0 ? (
+        <p className="mt-3 text-sm text-white/40">No standby songs yet — add some below.</p>
+      ) : (
+        <>
+          <ul className="mt-3 space-y-1">
+            {entries.map((e) => (
+              <li key={e.id} className="flex items-center gap-2 text-sm">
+                <TrackArt hash={e.track.artHash} size={32} />
+                <div className="min-w-0 flex-1">
+                  <p className="truncate">{e.track.title}</p>
+                  <p className="truncate text-xs text-white/45">
+                    {subtitle(e.track.artist, e.track.album)}
+                  </p>
+                </div>
+                <button
+                  onClick={() => api.removeStandby(e.id).then(apply).catch(fail)}
+                  className="shrink-0 rounded-md px-2 py-0.5 text-xs text-white/50 hover:bg-red-500/20 hover:text-red-300"
+                >
+                  Remove
+                </button>
+              </li>
+            ))}
+          </ul>
+          <button
+            onClick={() => api.clearStandby().then(apply).catch(fail)}
+            className="mt-2 text-xs text-white/40 hover:text-red-300"
+          >
+            Clear all
+          </button>
+        </>
+      )}
+
+      <input
+        value={search}
+        onChange={(e) => setSearch(e.target.value)}
+        placeholder="Search to add songs…"
+        className="mt-3 w-full rounded-lg bg-black/40 px-3 py-2 text-sm outline-none ring-1 ring-white/10 focus:ring-jukebox-accent"
+      />
+      {results.length > 0 && (
+        <ul className="mt-1 space-y-1">
+          {results.map((t) => (
+            <li
+              key={t.id}
+              className="flex items-center gap-2 rounded-lg px-2 py-1 text-sm hover:bg-white/5"
+            >
+              <div className="min-w-0 flex-1">
+                <p className="truncate">{t.title}</p>
+                <p className="truncate text-xs text-white/45">{subtitle(t.artist, t.album)}</p>
+              </div>
+              <button
+                onClick={() => api.addStandby(t.id).then(apply).catch(fail)}
+                className="shrink-0 rounded-md bg-white/10 px-2 py-1 text-xs hover:bg-white/20"
+              >
+                + Standby
+              </button>
+            </li>
+          ))}
+        </ul>
+      )}
     </Group>
   )
 }

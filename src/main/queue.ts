@@ -3,7 +3,34 @@ import { loadConfig } from './config'
 import { getTrackById } from './library'
 import { getState, loadTrack, pause } from './player'
 import { broadcastQueue } from './realtime'
+import { standbyTrackIds } from './standby'
 import { NowPlaying, QueueEntry, QueueState } from '@shared/types'
+
+// Sentinel "added by" for standby (filler) tracks, so they never count against a
+// guest's limit and are visually distinguished from guest songs.
+const STANDBY_IP = '__standby__'
+
+// Cursor for sequential standby playback; last id to avoid immediate repeats when shuffling.
+let standbyCursor = -1
+let lastStandbyTrack: number | null = null
+
+/** Chooses the next standby track (sequential or shuffled), or null if none. */
+function pickStandbyTrack(): number | null {
+  const ids = standbyTrackIds()
+  if (ids.length === 0) return null
+  if (loadConfig().standbyShuffle) {
+    let pick = ids[Math.floor(Math.random() * ids.length)]
+    // Avoid repeating the previous track when there's more than one.
+    for (let tries = 0; ids.length > 1 && pick === lastStandbyTrack && tries < 8; tries++) {
+      pick = ids[Math.floor(Math.random() * ids.length)]
+    }
+    lastStandbyTrack = pick
+    return pick
+  }
+  standbyCursor = (standbyCursor + 1) % ids.length
+  lastStandbyTrack = ids[standbyCursor]
+  return lastStandbyTrack
+}
 
 /** Error carrying an HTTP status for the API layer. */
 export class QueueError extends Error {
@@ -36,7 +63,10 @@ function toEntry(row: QueueRow, forIp: string): QueueEntry | null {
 
 /** Reset transient state on boot: nothing is "playing" until the player starts. */
 export function initQueue(): void {
-  getDb().prepare("UPDATE queue SET status = 'pending' WHERE status = 'playing'").run()
+  const db = getDb()
+  // Drop any leftover standby track, then demote a guest "playing" row to pending.
+  db.prepare('DELETE FROM queue WHERE added_by_ip = ?').run(STANDBY_IP)
+  db.prepare("UPDATE queue SET status = 'pending' WHERE status = 'playing'").run()
 }
 
 export function buildQueueState(forIp: string): QueueState {
@@ -45,15 +75,18 @@ export function buildQueueState(forIp: string): QueueState {
     .prepare("SELECT * FROM queue WHERE status = 'playing' LIMIT 1")
     .get() as QueueRow | undefined
   const pendingRows = db
-    .prepare("SELECT * FROM queue WHERE status = 'pending' ORDER BY position ASC")
-    .all() as QueueRow[]
+    .prepare(
+      "SELECT * FROM queue WHERE status = 'pending' AND added_by_ip != ? ORDER BY position ASC"
+    )
+    .all(STANDBY_IP) as QueueRow[]
 
   const state = getState()
   const nowPlaying: NowPlaying = {
     entry: playingRow ? toEntry(playingRow, forIp) : null,
     position: state.position,
     duration: state.duration,
-    playing: state.playing
+    playing: state.playing,
+    isStandby: playingRow?.added_by_ip === STANDBY_IP
   }
 
   const queue = pendingRows
@@ -63,16 +96,34 @@ export function buildQueueState(forIp: string): QueueState {
   return { nowPlaying, queue, perUserLimit: loadConfig().perUserQueueLimit }
 }
 
-/** Advances to the next pending track (also used for skip / on song-ended). */
+/**
+ * Advances playback. Guest songs come first; when none are pending, the standby
+ * playlist fills in (if enabled). Also used for skip / on song-ended.
+ */
 export function advance(): void {
   const db = getDb()
   db.prepare("DELETE FROM queue WHERE status = 'playing'").run()
+
   const next = db
-    .prepare("SELECT * FROM queue WHERE status = 'pending' ORDER BY position ASC LIMIT 1")
-    .get() as QueueRow | undefined
+    .prepare(
+      "SELECT * FROM queue WHERE status = 'pending' AND added_by_ip != ? ORDER BY position ASC LIMIT 1"
+    )
+    .get(STANDBY_IP) as QueueRow | undefined
+
   if (next) {
     db.prepare("UPDATE queue SET status = 'playing' WHERE id = ?").run(next.id)
     loadTrack(next.track_id, true)
+  } else if (loadConfig().standbyEnabled) {
+    const trackId = pickStandbyTrack()
+    if (trackId != null) {
+      db.prepare(
+        `INSERT INTO queue (track_id, added_by_ip, added_by_name, added_at, position, status)
+         VALUES (?, ?, NULL, ?, 0, 'playing')`
+      ).run(trackId, STANDBY_IP, new Date().toISOString())
+      loadTrack(trackId, true)
+    } else {
+      pause()
+    }
   } else {
     pause()
   }
@@ -109,8 +160,15 @@ export function enqueue(trackId: number, ip: string, name?: string): void {
      VALUES (?, ?, ?, ?, ?, 'pending')`
   ).run(trackId, ip, name?.trim() || null, new Date().toISOString(), nextPos)
 
-  maybeStart() // start immediately if idle
-  broadcastQueue()
+  const playing = db
+    .prepare("SELECT added_by_ip AS ip FROM queue WHERE status = 'playing' LIMIT 1")
+    .get() as { ip: string } | undefined
+  if (!playing || playing.ip === STANDBY_IP) {
+    // Idle → start; filler playing → take over from the standby track now.
+    advance()
+  } else {
+    broadcastQueue()
+  }
 }
 
 export function removeEntry(entryId: number, ip: string, isAdmin: boolean): void {

@@ -151,6 +151,9 @@ admin password, library paths, per-user queue limit, and selected output device.
 - **M8 — admin UI** ✅ Login modal + Manage panel: audio-output picker, music-folder
   management + rescan, per-guest limit & port settings, drag-drop queue reorder
   (dnd-kit), skip, clear, remove-any.
+- **Standby playlist** ✅ Admin-curated filler playlist (enable + shuffle) that plays
+  automatically when the guest queue is empty; a guest adding a song takes over
+  immediately, and standby resumes when the queue drains. Shown with a STANDBY badge.
 - **M9 — polish + ship** ✅ App/menubar icons generated from the logo, system tray
   (open console, copy guest links, quit) that keeps the jukebox playing when the
   window is closed, packaging to `.dmg` / `.exe`.

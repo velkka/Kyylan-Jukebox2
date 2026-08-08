@@ -17,8 +17,13 @@ export default function NowPlaying(): JSX.Element {
       <div className="flex items-center gap-4">
         <TrackArt hash={entry?.track.artHash ?? null} size={72} />
         <div className="min-w-0 flex-1">
-          <p className="text-xs uppercase tracking-wide text-jukebox-accent2">
+          <p className="flex items-center gap-2 text-xs uppercase tracking-wide text-jukebox-accent2">
             {progress.playing ? 'Now playing' : entry ? 'Paused' : 'Nothing playing'}
+            {queue?.nowPlaying.isStandby && (
+              <span className="rounded bg-white/10 px-1.5 py-0.5 text-[10px] font-medium text-white/60">
+                STANDBY
+              </span>
+            )}
           </p>
           <h2 className="truncate text-lg font-semibold">
             {entry ? entry.track.title : 'Queue is empty'}

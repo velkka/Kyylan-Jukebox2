@@ -75,7 +75,15 @@ const MIGRATIONS: string[] = [
      position      INTEGER NOT NULL,
      status        TEXT NOT NULL DEFAULT 'pending'
    );
-   CREATE INDEX idx_queue_status_pos ON queue(status, position);`
+   CREATE INDEX idx_queue_status_pos ON queue(status, position);`,
+
+  // 6: standby (filler) playlist — played when the guest queue is empty.
+  `CREATE TABLE standby (
+     id       INTEGER PRIMARY KEY AUTOINCREMENT,
+     track_id INTEGER NOT NULL REFERENCES tracks(id) ON DELETE CASCADE,
+     position INTEGER NOT NULL,
+     added_at TEXT NOT NULL
+   );`
 ]
 
 function migrate(d: Database.Database): void {
