@@ -1,0 +1,209 @@
+// Types shared between the Electron main process and the renderers.
+
+export interface AppConfig {
+  /** Whether first-run setup has been completed (admin password chosen). */
+  configured: boolean
+  /** TCP port the embedded HTTP/WebSocket server listens on (0.0.0.0). */
+  port: number
+  /** Plaintext admin password (LAN party convenience — see project notes). */
+  adminPassword: string
+  /** Folders scanned to build the music library. */
+  libraryPaths: string[]
+  /** Max number of queued (not-yet-played) songs one guest IP may hold. */
+  perUserQueueLimit: number
+  /** Output device id (MediaDeviceInfo.deviceId) the player renderer should use. */
+  outputDeviceId: string | null
+}
+
+export const DEFAULT_CONFIG: AppConfig = {
+  configured: false,
+  port: 8080,
+  adminPassword: '',
+  libraryPaths: [],
+  perUserQueueLimit: 3,
+  outputDeviceId: null
+}
+
+/** Non-sensitive settings safe to expose to any guest. Never includes the password. */
+export interface PublicConfig {
+  configured: boolean
+  port: number
+  perUserQueueLimit: number
+  name: string
+  version: string
+}
+
+export interface SetupRequest {
+  adminPassword: string
+  port?: number
+}
+
+export interface LoginRequest {
+  password: string
+}
+
+export interface AuthStatus {
+  isAdmin: boolean
+}
+
+export interface AdminSettings {
+  port: number
+  perUserQueueLimit: number
+}
+
+export interface AdminSettingsUpdate {
+  port?: number
+  perUserQueueLimit?: number
+  adminPassword?: string
+}
+
+export interface SetupResponse {
+  ok: boolean
+  /** True when the chosen port differs from the running one (restart needed). */
+  restartRequired: boolean
+  port: number
+}
+
+/** A library track as exposed to clients (no filesystem path). */
+export interface Track {
+  id: number
+  title: string
+  artist: string | null
+  album: string | null
+  albumArtist: string | null
+  genre: string | null
+  /** Duration in seconds. */
+  duration: number | null
+  trackNo: number | null
+  discNo: number | null
+  year: number | null
+  /** Cover-art hash; when set, art is at /api/art/<artHash>. */
+  artHash: string | null
+}
+
+export interface TracksQuery {
+  search?: string
+  /** Filter to a single artist (matches artist or album artist). */
+  artist?: string
+  /** Filter to a single album (use with albumArtist to disambiguate). */
+  album?: string
+  albumArtist?: string
+  limit?: number
+  offset?: number
+}
+
+export interface TracksResponse {
+  tracks: Track[]
+  total: number
+  limit: number
+  offset: number
+}
+
+export interface ArtistSummary {
+  artist: string
+  trackCount: number
+  albumCount: number
+}
+
+export interface AlbumSummary {
+  album: string
+  artist: string
+  artHash: string | null
+  trackCount: number
+  year: number | null
+}
+
+export interface ArtistsResponse {
+  artists: ArtistSummary[]
+  total: number
+}
+
+export interface AlbumsResponse {
+  albums: AlbumSummary[]
+  total: number
+}
+
+export interface ScanStatus {
+  scanning: boolean
+  /** Files processed so far in the current/last scan. */
+  processed: number
+  added: number
+  updated: number
+  removed: number
+  total: number
+  startedAt: string | null
+  finishedAt: string | null
+  error: string | null
+}
+
+export interface LibraryPathsResponse {
+  paths: string[]
+}
+
+// ---- Player ------------------------------------------------------------------
+
+export interface AudioDevice {
+  deviceId: string
+  label: string
+}
+
+export interface PlaybackState {
+  trackId: number | null
+  playing: boolean
+  /** Current position in seconds. */
+  position: number
+  /** Track duration in seconds (0 until known). */
+  duration: number
+  volume: number
+}
+
+/** Command sent from main → hidden player renderer. */
+export type PlayerCommand =
+  | { type: 'load'; trackId: number; autoplay: boolean }
+  | { type: 'play' }
+  | { type: 'pause' }
+  | { type: 'seek'; position: number }
+  | { type: 'volume'; value: number }
+  | { type: 'setSinkId'; deviceId: string }
+  | { type: 'enumerate' }
+
+// ---- Queue -------------------------------------------------------------------
+
+export interface QueueEntry {
+  id: number
+  track: Track
+  addedByName: string | null
+  /** True when this entry was added by the requesting client (IP match). */
+  mine: boolean
+}
+
+export interface NowPlaying {
+  entry: QueueEntry | null
+  position: number
+  duration: number
+  playing: boolean
+}
+
+export interface QueueState {
+  nowPlaying: NowPlaying
+  queue: QueueEntry[]
+  perUserLimit: number
+}
+
+export interface EnqueueRequest {
+  trackId: number
+  name?: string
+}
+
+/** Real-time messages pushed server → client over the WebSocket. */
+export type RealtimeMessage =
+  | { type: 'queue'; payload: QueueState }
+  | { type: 'progress'; payload: { position: number; duration: number; playing: boolean; trackId: number | null } }
+
+export interface HealthResponse {
+  name: string
+  version: string
+  /** LAN URLs guests can open to reach the jukebox. */
+  addresses: string[]
+  port: number
+}

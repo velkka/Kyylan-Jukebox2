@@ -1,0 +1,19 @@
+# dependencies & build output
+node_modules/
+out/
+dist/
+release/
+
+# TypeScript incremental build info
+*.tsbuildinfo
+
+# generated icons (regenerated from build/logo-source.png by scripts/gen-icons.cjs)
+build/icon.png
+build/tray.png
+build/tray@2x.png
+
+# logs, OS & env
+*.log
+.DS_Store
+.env
+.env.*
