@@ -1,5 +1,5 @@
 import { useJukebox, useLivePosition } from '../JukeboxContext'
-import { skipCurrent } from '../api'
+import { playerPause, playerPlay, skipCurrent } from '../api'
 import { formatTime, subtitle } from '../util'
 import TrackArt from './TrackArt'
 
@@ -33,13 +33,23 @@ export default function NowPlaying(): JSX.Element {
           </p>
         </div>
         {isAdmin && entry && (
-          <button
-            onClick={() => skipCurrent().then(refresh)}
-            className="shrink-0 rounded-lg bg-white/10 px-3 py-2 text-sm font-medium hover:bg-white/20"
-            title="Skip"
-          >
-            ⏭ Skip
-          </button>
+          <div className="flex shrink-0 items-center gap-2">
+            <button
+              onClick={() => (progress.playing ? playerPause() : playerPlay())}
+              className="rounded-lg bg-white/10 px-3 py-2 text-sm font-medium hover:bg-white/20"
+              title={progress.playing ? 'Pause' : 'Play'}
+              aria-label={progress.playing ? 'Pause' : 'Play'}
+            >
+              {progress.playing ? '⏸' : '▶'}
+            </button>
+            <button
+              onClick={() => skipCurrent().then(refresh)}
+              className="rounded-lg bg-white/10 px-3 py-2 text-sm font-medium hover:bg-white/20"
+              title="Skip"
+            >
+              ⏭ Skip
+            </button>
+          </div>
         )}
       </div>
 
