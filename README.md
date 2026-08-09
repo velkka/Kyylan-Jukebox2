@@ -53,6 +53,16 @@ Wine/NSIS toolchain automatically, no manual Wine install needed. Two Windows
 artifacts are produced: an NSIS **installer** and a **portable** single-exe (handy
 for a party host — run it without installing). Use `package:win:arm64` for ARM PCs.
 
+### Automated releases
+
+Pushing a version tag builds both platforms on GitHub-hosted runners and publishes
+a GitHub Release with the `.dmg` + Windows `.exe`s attached (`.github/workflows/release.yml`):
+
+```bash
+npm version 0.3.0            # bump + commit + tag v0.3.0
+git push && git push --tags # → CI builds macOS + Windows and drafts the release
+```
+
 > Native-module note: packaging rebuilds `better-sqlite3` for the target platform.
 > After a Windows build, run `npm run rebuild` before `npm run dev` again on macOS.
 
