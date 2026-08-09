@@ -5,6 +5,7 @@ import QueueList from './QueueList'
 import Library from './Library'
 import AdminLogin from './AdminLogin'
 import AdminPanel from './AdminPanel'
+import logo from '../logo.png'
 
 export default function Home(): JSX.Element {
   const { connected, isAdmin, name, setName, logout } = useJukebox()
@@ -22,7 +23,7 @@ export default function Home(): JSX.Element {
     <div className="mx-auto min-h-full max-w-2xl px-4 pb-24 pt-5">
       <header className="mb-5 flex items-center gap-3">
         <div className="flex items-center gap-2">
-          <span className="text-2xl">🎛️</span>
+          <img src={logo} alt="" className="h-6 w-auto" />
           <span className="text-lg font-bold tracking-tight">Kyylan Jukebox</span>
         </div>
         <span

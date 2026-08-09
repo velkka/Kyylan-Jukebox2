@@ -1,6 +1,7 @@
 import { FormEvent, useState } from 'react'
 import { runSetup } from './api'
 import type { PublicConfig } from '@shared/types'
+import logo from './logo.png'
 
 export default function FirstRunSetup({
   config,
@@ -50,7 +51,7 @@ export default function FirstRunSetup({
         className="w-full max-w-md rounded-2xl bg-jukebox-panel p-8 shadow-2xl"
       >
         <div className="text-center">
-          <div className="text-5xl">🎛️</div>
+          <img src={logo} alt="Kyylan Jukebox" className="mx-auto h-12 w-auto" />
           <h1 className="mt-3 text-2xl font-bold">Welcome to Kyylan Jukebox</h1>
           <p className="mt-1 text-sm text-white/60">
             First-time setup — create the admin password.
