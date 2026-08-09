@@ -24,7 +24,7 @@ mac:
   target:
     - dmg
   category: public.app-category.music
-  artifactName: ${productName}-${version}-${arch}.${ext}
+  artifactName: Kyylan-Jukebox-${version}-${arch}.${ext}
   # Signing-ready: these take effect once a "Developer ID Application" cert is in
   # the keychain. With no identity, electron-builder skips signing (unsigned build).
   hardenedRuntime: true
@@ -38,12 +38,12 @@ win:
     - nsis        # installer
     - portable    # single self-contained .exe (handy for a party host — no install)
   icon: build/icon.png   # electron-builder derives the .ico from this
-  artifactName: ${productName}-${version}-${arch}.${ext}
+  artifactName: Kyylan-Jukebox-${version}-${arch}.${ext}
   # Signing-ready: set WIN_CSC_LINK (path to .pfx) + WIN_CSC_KEY_PASSWORD to sign.
 nsis:
   oneClick: false
   perMachine: false
   allowToChangeInstallationDirectory: true
-  artifactName: ${productName}-${version}-setup.${ext}
+  artifactName: Kyylan-Jukebox-${version}-setup.${ext}
 portable:
-  artifactName: ${productName}-${version}-portable.${ext}
+  artifactName: Kyylan-Jukebox-${version}-portable.${ext}

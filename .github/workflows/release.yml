@@ -1,0 +1,70 @@
+name: Release
+
+# Build the macOS + Windows packages and publish a GitHub Release whenever a
+# version tag (v*) is pushed.
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write # required to create the release
+
+jobs:
+  build-mac:
+    runs-on: macos-latest # Apple Silicon runner → arm64 .dmg
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci
+      - name: Build macOS package
+        run: npm run package:mac
+        env:
+          # Unsigned build: skip Developer ID discovery (the afterPack hook
+          # applies an ad-hoc signature so the app still runs locally).
+          CSC_IDENTITY_AUTO_DISCOVERY: 'false'
+      - uses: actions/upload-artifact@v4
+        with:
+          name: mac
+          path: release/*.dmg
+          if-no-files-found: error
+
+  build-win:
+    runs-on: windows-latest # native NSIS/portable build, x64
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci
+      - name: Build Windows packages
+        run: npm run package:win
+      - uses: actions/upload-artifact@v4
+        with:
+          name: win
+          path: |
+            release/*setup.exe
+            release/*portable.exe
+          if-no-files-found: error
+
+  release:
+    needs: [build-mac, build-win]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          path: dist
+      - name: Publish GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: dist/**/*
+          fail_on_unmatched_files: true
+          generate_release_notes: true
+          body: |
+            > **Unsigned builds.**
+            > - **macOS**: ad-hoc signed and runs locally, but Gatekeeper may warn on first open — right-click → **Open**, or `xattr -cr` then `codesign --force --deep --sign -` the app.
+            > - **Windows**: SmartScreen will warn until the `.exe` is code-signed.
