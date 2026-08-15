@@ -134,38 +134,3 @@ admin password, library paths, per-user queue limit, and selected output device.
 
 > The admin password is stored in plaintext by design (LAN party convenience). Don't
 > reuse a sensitive password.
-
-## Status
-
-- **M1 — scaffold** ✅ Electron shell, embedded server, hidden player window, host UI, packaging.
-- **M2 — settings + store** ✅ SQLite (better-sqlite3) with a migration runner, first-run
-  setup (admin password + port), safe `/api/config` + `/api/setup` endpoints.
-- **M3 — music library** ✅ Add/scan folders, metadata + cover-art extraction
-  (music-metadata), deduped art, FTS5 search, incremental rescan (mtime) with
-  deletion pruning. Endpoints: `/api/tracks`, `/api/art/:hash`, `/api/library/*`.
-- **M4 — player engine** ✅ Hidden player window drives an `<audio>` sink via IPC;
-  `/api/stream/:id` with HTTP range (seeking); output-device enumeration (labels)
-  and `setSinkId` selection persisted to config; transport (load/play/pause/seek/
-  volume) and an `ended` hook for auto-advance.
-- **M5 — queue + playback** ✅ Add/remove/reorder/skip/clear, per-user (per-IP)
-  limit, auto-start + auto-advance on song end, and a WebSocket that broadcasts
-  personalized queue state + throttled progress to every browser.
-- **M6 — admin auth** ✅ Login against the plaintext password → HttpOnly session
-  cookie (12h); `requireAdmin` guard on all admin routes; admins can remove any
-  queue entry, guests only their own.
-- **M7 — guest UI** ✅ React app (served to all LAN clients): live now-playing with
-  interpolated progress, up-next queue with attribution + remove-own, guest name,
-  WebSocket auto-reconnect. Library browses by **Songs / Artists / Albums** with
-  drill-down (artist → tracks, album → cover + track list + "Add album"), search
-  per mode, and cover-art grid — built to stay usable across thousands of tracks.
-- **M8 — admin UI** ✅ Login modal + Manage panel: audio-output picker, music-folder
-  management + rescan, per-guest limit & port settings, drag-drop queue reorder
-  (dnd-kit), skip, clear, remove-any.
-- **Standby playlist** ✅ Admin-curated filler playlist (enable + shuffle) that plays
-  automatically when the guest queue is empty; a guest adding a song takes over
-  immediately, and standby resumes when the queue drains. Shown with a STANDBY badge.
-- **M9 — polish + ship** ✅ App/menubar icons generated from the logo, system tray
-  (open console, copy guest links, quit) that keeps the jukebox playing when the
-  window is closed, packaging to `.dmg` / `.exe`.
-
-All nine milestones complete.
