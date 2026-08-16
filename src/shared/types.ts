@@ -149,8 +149,16 @@ export interface ScanStatus {
   error: string | null
 }
 
+export interface LibraryPath {
+  path: string
+  /** Number of indexed tracks located under this folder. */
+  trackCount: number
+}
+
 export interface LibraryPathsResponse {
-  paths: string[]
+  paths: LibraryPath[]
+  /** Total tracks in the library (across all folders). */
+  total: number
 }
 
 // ---- Player ------------------------------------------------------------------

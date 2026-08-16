@@ -30,7 +30,7 @@ import {
   addPath,
   getArt,
   getTrackPath,
-  listPaths,
+  listPathsWithCounts,
   queryAlbums,
   queryArtists,
   queryTracks,
@@ -261,22 +261,21 @@ export function createApiRouter(getRunningPort: () => number): Router {
   // ---- Library management (admin) -------------------------------------------
 
   router.get('/library/paths', requireAdmin, (_req, res) => {
-    const body: LibraryPathsResponse = { paths: listPaths() }
-    res.json(body)
+    res.json(listPathsWithCounts() satisfies LibraryPathsResponse)
   })
 
   router.post('/library/paths', requireAdmin, (req, res) => {
     try {
-      const paths = addPath(String((req.body ?? {}).path ?? ''))
-      res.json({ paths } satisfies LibraryPathsResponse)
+      addPath(String((req.body ?? {}).path ?? ''))
+      res.json(listPathsWithCounts() satisfies LibraryPathsResponse)
     } catch (err) {
       res.status(400).json({ error: err instanceof Error ? err.message : String(err) })
     }
   })
 
   router.delete('/library/paths', requireAdmin, (req, res) => {
-    const paths = removePath(String((req.body ?? {}).path ?? ''))
-    res.json({ paths } satisfies LibraryPathsResponse)
+    removePath(String((req.body ?? {}).path ?? ''))
+    res.json(listPathsWithCounts() satisfies LibraryPathsResponse)
   })
 
   router.post('/library/scan', requireAdmin, (_req, res) => {

@@ -1,5 +1,5 @@
-import { useEffect, useState } from 'react'
-import type { AudioDevice, ScanStatus, StandbyEntry, Track } from '@shared/types'
+import { useCallback, useEffect, useState } from 'react'
+import type { AudioDevice, LibraryPath, ScanStatus, StandbyEntry, Track } from '@shared/types'
 import * as api from '../api'
 import { subtitle } from '../util'
 import TrackArt from './TrackArt'
@@ -216,30 +216,37 @@ function Standby({ onError }: { onError: (msg: string) => void }): JSX.Element {
 }
 
 function MusicFolders({ onError }: { onError: (msg: string) => void }): JSX.Element {
-  const [paths, setPaths] = useState<string[]>([])
+  const [paths, setPaths] = useState<LibraryPath[]>([])
+  const [total, setTotal] = useState(0)
   const [input, setInput] = useState('')
   const [scan, setScan] = useState<ScanStatus | null>(null)
 
-  useEffect(() => {
-    api.getPaths().then((r) => setPaths(r.paths)).catch((e) => onError(String(e.message ?? e)))
+  const apply = (r: { paths: LibraryPath[]; total: number }): void => {
+    setPaths(r.paths)
+    setTotal(r.total)
+  }
+  const fail = (e: unknown): void => onError(e instanceof Error ? e.message : String(e))
+
+  const load = useCallback(() => {
+    api.getPaths().then(apply).catch(fail)
   }, [])
+  useEffect(load, [load])
 
   async function add(): Promise<void> {
     if (!input.trim()) return
     try {
-      const r = await api.addLibraryPath(input.trim())
-      setPaths(r.paths)
+      apply(await api.addLibraryPath(input.trim()))
       setInput('')
     } catch (e) {
-      onError(e instanceof Error ? e.message : String(e))
+      fail(e)
     }
   }
 
   async function remove(p: string): Promise<void> {
     try {
-      setPaths((await api.removeLibraryPath(p)).paths)
+      apply(await api.removeLibraryPath(p))
     } catch (e) {
-      onError(e instanceof Error ? e.message : String(e))
+      fail(e)
     }
   }
 
@@ -249,31 +256,44 @@ function MusicFolders({ onError }: { onError: (msg: string) => void }): JSX.Elem
       const poll = setInterval(async () => {
         const s = await api.getScanStatus()
         setScan(s)
-        if (!s.scanning) clearInterval(poll)
+        if (!s.scanning) {
+          clearInterval(poll)
+          load() // refresh per-folder counts once the scan settles
+        }
       }, 500)
     } catch (e) {
-      onError(e instanceof Error ? e.message : String(e))
+      fail(e)
     }
   }
+
+  const n = (v: number): string => v.toLocaleString()
 
   return (
     <Group title="Music folders">
       {paths.length === 0 ? (
         <p className="mb-2 text-sm text-white/40">No folders yet.</p>
       ) : (
-        <ul className="mb-2 space-y-1">
-          {paths.map((p) => (
-            <li key={p} className="flex items-center gap-2 text-sm">
-              <span className="min-w-0 flex-1 truncate font-mono text-white/70">{p}</span>
-              <button
-                onClick={() => remove(p)}
-                className="shrink-0 rounded-md px-2 py-0.5 text-xs text-white/50 hover:bg-red-500/20 hover:text-red-300"
-              >
-                Remove
-              </button>
-            </li>
-          ))}
-        </ul>
+        <>
+          <ul className="mb-1 space-y-1">
+            {paths.map((p) => (
+              <li key={p.path} className="flex items-center gap-2 text-sm">
+                <span className="min-w-0 flex-1 truncate font-mono text-white/70">{p.path}</span>
+                <span className="shrink-0 tabular-nums text-xs text-white/45">
+                  {n(p.trackCount)} song{p.trackCount === 1 ? '' : 's'}
+                </span>
+                <button
+                  onClick={() => remove(p.path)}
+                  className="shrink-0 rounded-md px-2 py-0.5 text-xs text-white/50 hover:bg-red-500/20 hover:text-red-300"
+                >
+                  Remove
+                </button>
+              </li>
+            ))}
+          </ul>
+          <p className="mb-2 border-t border-white/10 pt-1 text-right text-xs text-white/50">
+            Total: <span className="tabular-nums font-medium text-white/70">{n(total)}</span> songs
+          </p>
+        </>
       )}
       <div className="flex gap-2">
         <input

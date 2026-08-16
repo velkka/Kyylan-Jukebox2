@@ -5,7 +5,7 @@ import { createHash } from 'node:crypto'
 import { parseFile } from 'music-metadata'
 import { getDb } from './db'
 import { loadConfig, updateConfig } from './config'
-import { Track, TracksQuery, TracksResponse, ScanStatus } from '@shared/types'
+import { LibraryPath, Track, TracksQuery, TracksResponse, ScanStatus } from '@shared/types'
 
 const AUDIO_EXTS = new Set([
   '.mp3',
@@ -54,6 +54,23 @@ function rowToTrack(r: TrackRow): Track {
 
 export function listPaths(): string[] {
   return loadConfig().libraryPaths
+}
+
+/** Library folders with the number of indexed tracks under each, plus the total. */
+export function listPathsWithCounts(): { paths: LibraryPath[]; total: number } {
+  const db = getDb()
+  // Compare on a normalized "<folder>/" prefix so a stored trailing slash (or the
+  // lack of one) doesn't change the result. `length()` is evaluated by SQLite so
+  // character counting matches `substr`.
+  const countStmt = db.prepare(
+    'SELECT COUNT(*) AS c FROM tracks WHERE substr(path, 1, length(@prefix)) = @prefix'
+  )
+  const paths = loadConfig().libraryPaths.map((path) => {
+    const prefix = `${path.replace(/\/+$/, '')}/`
+    return { path, trackCount: (countStmt.get({ prefix }) as { c: number }).c }
+  })
+  const total = (db.prepare('SELECT COUNT(*) AS c FROM tracks').get() as { c: number }).c
+  return { paths, total }
 }
 
 export function addPath(path: string): string[] {
