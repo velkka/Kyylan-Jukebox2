@@ -16,6 +16,7 @@ import {
 import {
   buildQueueState,
   clearPending,
+  downvote,
   enqueue,
   maybeStart,
   QueueError,
@@ -93,13 +94,18 @@ export function createApiRouter(getRunningPort: () => number): Router {
 
   router.get('/admin/settings', requireAdmin, (_req, res) => {
     const c = loadConfig()
-    res.json({ port: c.port, perUserQueueLimit: c.perUserQueueLimit })
+    res.json({
+      port: c.port,
+      perUserQueueLimit: c.perUserQueueLimit,
+      downvoteSkipThreshold: c.downvoteSkipThreshold
+    })
   })
 
   router.post('/admin/settings', requireAdmin, (req, res) => {
     const body = (req.body ?? {}) as {
       port?: number
       perUserQueueLimit?: number
+      downvoteSkipThreshold?: number
       adminPassword?: string
     }
     const patch: Partial<ReturnType<typeof loadConfig>> = {}
@@ -111,6 +117,15 @@ export function createApiRouter(getRunningPort: () => number): Router {
         return
       }
       patch.perUserQueueLimit = n
+    }
+    if (body.downvoteSkipThreshold !== undefined) {
+      const n = Number(body.downvoteSkipThreshold)
+      // 0 = disabled; negative uses |n| as the threshold but hides the count.
+      if (!Number.isInteger(n) || n < -100 || n > 100) {
+        res.status(400).json({ error: 'Downvote threshold must be between -100 and 100' })
+        return
+      }
+      patch.downvoteSkipThreshold = n
     }
     if (body.port !== undefined) {
       const n = Number(body.port)
@@ -129,8 +144,10 @@ export function createApiRouter(getRunningPort: () => number): Router {
     }
 
     updateConfig(patch)
-    // Changing the queue limit affects everyone's view — rebroadcast.
-    if (patch.perUserQueueLimit !== undefined) broadcastQueue()
+    // These affect everyone's view (limit label / downvote button) — rebroadcast.
+    if (patch.perUserQueueLimit !== undefined || patch.downvoteSkipThreshold !== undefined) {
+      broadcastQueue()
+    }
     res.json({ restartRequired: patch.port !== undefined && patch.port !== getRunningPort() })
   })
 
@@ -395,6 +412,12 @@ export function createApiRouter(getRunningPort: () => number): Router {
       const status = err instanceof QueueError ? err.status : 500
       res.status(status).json({ error: err instanceof Error ? err.message : String(err) })
     }
+  })
+
+  router.post('/queue/downvote', (req, res) => {
+    const ip = clientIp(req)
+    downvote(ip)
+    res.json(buildQueueState(ip))
   })
 
   // ---- Queue admin ----------------------------------------------------------

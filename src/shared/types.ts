@@ -17,6 +17,8 @@ export interface AppConfig {
   standbyEnabled: boolean
   /** Pick standby tracks at random instead of in order. */
   standbyShuffle: boolean
+  /** Downvotes needed to auto-skip the current song. 0 disables downvoting. */
+  downvoteSkipThreshold: number
 }
 
 export const DEFAULT_CONFIG: AppConfig = {
@@ -27,7 +29,8 @@ export const DEFAULT_CONFIG: AppConfig = {
   perUserQueueLimit: 3,
   outputDeviceId: null,
   standbyEnabled: false,
-  standbyShuffle: false
+  standbyShuffle: false,
+  downvoteSkipThreshold: 0
 }
 
 /** Non-sensitive settings safe to expose to any guest. Never includes the password. */
@@ -55,11 +58,13 @@ export interface AuthStatus {
 export interface AdminSettings {
   port: number
   perUserQueueLimit: number
+  downvoteSkipThreshold: number
 }
 
 export interface AdminSettingsUpdate {
   port?: number
   perUserQueueLimit?: number
+  downvoteSkipThreshold?: number
   adminPassword?: string
 }
 
@@ -190,6 +195,15 @@ export interface NowPlaying {
   playing: boolean
   /** True when the current track comes from the standby playlist, not a guest. */
   isStandby: boolean
+  /** Downvotes for the current song (0 when the count is hidden). */
+  downvotes: number
+  /**
+   * Downvote setting: 0 = disabled, positive = votes-to-skip with the count
+   * shown, negative = same magnitude threshold but the count is hidden in the UI.
+   */
+  downvoteThreshold: number
+  /** Whether the requesting client has already downvoted this song. */
+  downvotedByMe: boolean
 }
 
 export interface StandbyEntry {

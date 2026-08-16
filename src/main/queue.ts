@@ -14,6 +14,18 @@ const STANDBY_IP = '__standby__'
 let standbyCursor = -1
 let lastStandbyTrack: number | null = null
 
+// Downvotes for the current song: the playing entry id being voted on, and the
+// set of guest IPs that have downvoted it. Reset whenever the song changes.
+let downvoteEntryId: number | null = null
+let downvoters = new Set<string>()
+
+function playingRowId(): number | null {
+  const row = getDb().prepare("SELECT id FROM queue WHERE status = 'playing' LIMIT 1").get() as
+    | { id: number }
+    | undefined
+  return row?.id ?? null
+}
+
 /** Chooses the next standby track (sequential or shuffled), or null if none. */
 function pickStandbyTrack(): number | null {
   const ids = standbyTrackIds()
@@ -81,12 +93,20 @@ export function buildQueueState(forIp: string): QueueState {
     .all(STANDBY_IP) as QueueRow[]
 
   const state = getState()
+  // Downvotes only apply to the song currently being voted on. A negative
+  // threshold keeps the same skip logic but hides the count/threshold from the UI.
+  const rawThreshold = loadConfig().downvoteSkipThreshold
+  const showCount = rawThreshold > 0
+  const votesActive = playingRow != null && downvoteEntryId === playingRow.id
   const nowPlaying: NowPlaying = {
     entry: playingRow ? toEntry(playingRow, forIp) : null,
     position: state.position,
     duration: state.duration,
     playing: state.playing,
-    isStandby: playingRow?.added_by_ip === STANDBY_IP
+    isStandby: playingRow?.added_by_ip === STANDBY_IP,
+    downvotes: votesActive && showCount ? downvoters.size : 0,
+    downvoteThreshold: rawThreshold,
+    downvotedByMe: votesActive ? downvoters.has(forIp) : false
   }
 
   const queue = pendingRows
@@ -102,6 +122,9 @@ export function buildQueueState(forIp: string): QueueState {
  */
 export function advance(): void {
   const db = getDb()
+  // New song → clear any downvotes.
+  downvoters = new Set()
+  downvoteEntryId = null
   db.prepare("DELETE FROM queue WHERE status = 'playing'").run()
 
   const next = db
@@ -210,6 +233,28 @@ export function reorder(entryId: number, toIndex: number): void {
 /** Admin: skip the current song. */
 export function skip(): void {
   advance()
+}
+
+/** Guest: downvote the current song; skips it once the threshold is reached. */
+export function downvote(ip: string): void {
+  const raw = loadConfig().downvoteSkipThreshold
+  if (raw === 0) return // feature disabled
+  const threshold = Math.abs(raw) // negative = same logic, count hidden in the UI
+  const playingId = playingRowId()
+  if (playingId == null) return // nothing playing
+
+  if (downvoteEntryId !== playingId) {
+    // First vote on this song.
+    downvoteEntryId = playingId
+    downvoters = new Set()
+  }
+  downvoters.add(ip)
+
+  if (downvoters.size >= threshold) {
+    advance() // enough downvotes → skip (advance clears the vote state)
+  } else {
+    broadcastQueue()
+  }
 }
 
 /** Admin: clear all pending entries (keeps the current song playing). */

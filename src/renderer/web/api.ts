@@ -97,6 +97,8 @@ export const enqueue = (trackId: number, name?: string): Promise<QueueState> =>
   jsonFetch('/api/queue', { method: 'POST', body: JSON.stringify({ trackId, name }) })
 export const removeEntry = (id: number): Promise<QueueState> =>
   jsonFetch(`/api/queue/${id}`, { method: 'DELETE' })
+export const downvote = (): Promise<QueueState> =>
+  jsonFetch('/api/queue/downvote', { method: 'POST' })
 
 // ---- Admin: queue ------------------------------------------------------------
 export const moveEntry = (id: number, toIndex: number): Promise<QueueState> =>

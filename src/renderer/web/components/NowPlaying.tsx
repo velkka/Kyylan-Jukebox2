@@ -4,9 +4,13 @@ import { formatTime, subtitle } from '../util'
 import TrackArt from './TrackArt'
 
 export default function NowPlaying(): JSX.Element {
-  const { queue, progress, isAdmin, refresh } = useJukebox()
+  const { queue, progress, isAdmin, refresh, downvote } = useJukebox()
   const livePosition = useLivePosition(progress)
   const entry = queue?.nowPlaying.entry ?? null
+  const np = queue?.nowPlaying
+  // 0 = off; negative = enabled but hide the count/threshold.
+  const downvotesOn = (np?.downvoteThreshold ?? 0) !== 0
+  const showDownvoteCount = (np?.downvoteThreshold ?? 0) > 0
   // When nothing is playing, show an empty bar rather than stale progress.
   const position = entry ? livePosition : 0
   const duration = entry ? progress.duration || entry.track.duration || 0 : 0
@@ -32,23 +36,37 @@ export default function NowPlaying(): JSX.Element {
             {entry ? subtitle(entry.track.artist, entry.track.album) : 'Add a song to get started'}
           </p>
         </div>
-        {isAdmin && entry && (
+        {entry && (
           <div className="flex shrink-0 items-center gap-2">
-            <button
-              onClick={() => (progress.playing ? playerPause() : playerPlay())}
-              className="rounded-lg bg-white/10 px-3 py-2 text-sm font-medium hover:bg-white/20"
-              title={progress.playing ? 'Pause' : 'Play'}
-              aria-label={progress.playing ? 'Pause' : 'Play'}
-            >
-              {progress.playing ? '⏸' : '▶'}
-            </button>
-            <button
-              onClick={() => skipCurrent().then(refresh)}
-              className="rounded-lg bg-white/10 px-3 py-2 text-sm font-medium hover:bg-white/20"
-              title="Skip"
-            >
-              ⏭ Skip
-            </button>
+            {downvotesOn && np && (
+              <button
+                onClick={() => downvote()}
+                disabled={np.downvotedByMe}
+                className="rounded-lg bg-white/10 px-3 py-2 text-sm font-medium tabular-nums hover:bg-red-500/20 disabled:opacity-60 disabled:hover:bg-white/10"
+                title={np.downvotedByMe ? 'You downvoted this song' : 'Downvote — vote to skip'}
+              >
+                👎{showDownvoteCount ? ` ${np.downvotes}/${np.downvoteThreshold}` : ''}
+              </button>
+            )}
+            {isAdmin && (
+              <>
+                <button
+                  onClick={() => (progress.playing ? playerPause() : playerPlay())}
+                  className="rounded-lg bg-white/10 px-3 py-2 text-sm font-medium hover:bg-white/20"
+                  title={progress.playing ? 'Pause' : 'Play'}
+                  aria-label={progress.playing ? 'Pause' : 'Play'}
+                >
+                  {progress.playing ? '⏸' : '▶'}
+                </button>
+                <button
+                  onClick={() => skipCurrent().then(refresh)}
+                  className="rounded-lg bg-white/10 px-3 py-2 text-sm font-medium hover:bg-white/20"
+                  title="Skip"
+                >
+                  ⏭ Skip
+                </button>
+              </>
+            )}
           </div>
         )}
       </div>

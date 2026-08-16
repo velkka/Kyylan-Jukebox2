@@ -27,6 +27,7 @@ interface JukeboxValue {
   setName: (name: string) => void
   add: (trackId: number) => Promise<void>
   remove: (entryId: number) => Promise<void>
+  downvote: () => Promise<void>
   login: (password: string) => Promise<void>
   logout: () => Promise<void>
   refresh: () => void
@@ -116,6 +117,11 @@ export function JukeboxProvider({ children }: { children: ReactNode }): JSX.Elem
     setQueue(next)
   }, [])
 
+  const downvote = useCallback(async () => {
+    const next = await api.downvote()
+    setQueue(next)
+  }, [])
+
   const login = useCallback(async (password: string) => {
     const a = await api.login(password)
     setIsAdmin(a.isAdmin)
@@ -135,6 +141,7 @@ export function JukeboxProvider({ children }: { children: ReactNode }): JSX.Elem
     setName,
     add,
     remove,
+    downvote,
     login,
     logout,
     refresh
