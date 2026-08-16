@@ -8,8 +8,9 @@ export default function NowPlaying(): JSX.Element {
   const livePosition = useLivePosition(progress)
   const entry = queue?.nowPlaying.entry ?? null
   const np = queue?.nowPlaying
-  // 0 = off; negative = enabled but hide the count/threshold.
-  const downvotesOn = (np?.downvoteThreshold ?? 0) !== 0
+  // 0 = off; negative = enabled but hide the count/threshold. Standby filler
+  // isn't anyone's pick, so it can't be voted off.
+  const downvotesOn = (np?.downvoteThreshold ?? 0) !== 0 && !np?.isStandby
   const showDownvoteCount = (np?.downvoteThreshold ?? 0) > 0
   // When nothing is playing, show an empty bar rather than stale progress.
   const position = entry ? livePosition : 0

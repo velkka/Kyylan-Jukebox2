@@ -28,11 +28,13 @@ function pendingCountFor(ip: string): number {
   ).c
 }
 
-function playingRowId(): number | null {
-  const row = getDb().prepare("SELECT id FROM queue WHERE status = 'playing' LIMIT 1").get() as
-    | { id: number }
-    | undefined
-  return row?.id ?? null
+/** The currently playing entry's id, or null when it's a standby (filler) track. */
+function votableEntryId(): number | null {
+  const row = getDb()
+    .prepare("SELECT id, added_by_ip FROM queue WHERE status = 'playing' LIMIT 1")
+    .get() as { id: number; added_by_ip: string } | undefined
+  if (!row || row.added_by_ip === STANDBY_IP) return null
+  return row.id
 }
 
 /** Chooses the next standby track (sequential or shuffled), or null if none. */
@@ -253,8 +255,10 @@ export function downvote(ip: string): void {
   const raw = loadConfig().downvoteSkipThreshold
   if (raw === 0) return // feature disabled
   const threshold = Math.abs(raw) // negative = same logic, count hidden in the UI
-  const playingId = playingRowId()
-  if (playingId == null) return // nothing playing
+  // Null when nothing is playing, or when the current song is standby filler —
+  // filler isn't a guest's pick, so there's nothing to vote off.
+  const playingId = votableEntryId()
+  if (playingId == null) return
 
   if (downvoteEntryId !== playingId) {
     // First vote on this song.
