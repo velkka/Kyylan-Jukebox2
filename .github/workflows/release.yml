@@ -55,16 +55,39 @@ jobs:
     needs: [build-mac, build-win]
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # full history + tags so we can diff against the previous release
       - uses: actions/download-artifact@v4
         with:
           path: dist
+      - name: Generate changelog
+        run: |
+          TAG="${GITHUB_REF_NAME}"
+          # Previous release = the most recent "Release X" commit before this tag
+          # (robust even if version tags were rewritten onto a different history).
+          PREV_COMMIT="$(git log "${TAG}^" --grep='^Release ' -n 1 --pretty=%H 2>/dev/null || true)"
+          PREV_VER="$(git log "${TAG}^" --grep='^Release ' -n 1 --pretty=%s 2>/dev/null | awk '{print $2}')"
+          {
+            echo "## What's changed"
+            echo
+            if [ -n "$PREV_COMMIT" ]; then
+              git log "${PREV_COMMIT}..${TAG}" --no-merges --invert-grep --grep='^Release ' --pretty='- %s'
+              if [ -n "$PREV_VER" ]; then
+                echo
+                echo "**Full changelog**: https://github.com/${GITHUB_REPOSITORY}/compare/v${PREV_VER}...${TAG}"
+              fi
+            else
+              git log "${TAG}" --no-merges --invert-grep --grep='^Release ' --pretty='- %s'
+            fi
+            echo
+            echo "---"
+            echo "> **Unsigned builds.** macOS: ad-hoc signed, runs locally (Gatekeeper may warn on first open — right-click → **Open**). Windows: SmartScreen warns until the \`.exe\` is code-signed."
+          } > RELEASE_NOTES.md
+          echo "----- generated notes -----"; cat RELEASE_NOTES.md
       - name: Publish GitHub Release
         uses: softprops/action-gh-release@v2
         with:
           files: dist/**/*
           fail_on_unmatched_files: true
-          generate_release_notes: true
-          body: |
-            > **Unsigned builds.**
-            > - **macOS**: ad-hoc signed and runs locally, but Gatekeeper may warn on first open — right-click → **Open**, or `xattr -cr` then `codesign --force --deep --sign -` the app.
-            > - **Windows**: SmartScreen will warn until the `.exe` is code-signed.
+          body_path: RELEASE_NOTES.md
