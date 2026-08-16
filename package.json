@@ -1,6 +1,6 @@
 {
   "name": "kyylan-jukebox",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "description": "LAN party jukebox — host plays local music, guests queue songs from their browsers",
   "author": "Kyylan",
   "license": "MIT",
