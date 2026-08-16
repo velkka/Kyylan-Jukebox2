@@ -53,6 +53,7 @@ export const getTracks = (params: {
   artist?: string
   album?: string
   albumArtist?: string
+  noAlbum?: boolean
   limit?: number
   offset?: number
 }): Promise<TracksResponse> => {
@@ -61,6 +62,7 @@ export const getTracks = (params: {
   if (params.artist) q.set('artist', params.artist)
   if (params.album) q.set('album', params.album)
   if (params.albumArtist) q.set('albumArtist', params.albumArtist)
+  if (params.noAlbum) q.set('noAlbum', '1')
   if (params.limit != null) q.set('limit', String(params.limit))
   if (params.offset != null) q.set('offset', String(params.offset))
   return jsonFetch(`/api/tracks?${q.toString()}`)

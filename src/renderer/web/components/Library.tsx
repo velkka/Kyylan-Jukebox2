@@ -196,9 +196,14 @@ function ArtistAlbums({
   onError: (m: string) => void
 }): JSX.Element {
   const [albums, setAlbums] = useState<AlbumSummary[]>([])
+  const [looseTracks, setLooseTracks] = useState<Track[]>([])
   useEffect(() => {
     getAlbums({ artist, limit: 500 })
       .then((r) => setAlbums(r.albums))
+      .catch((e) => onError(String(e.message ?? e)))
+    // Songs by this artist that aren't part of any album.
+    getTracks({ artist, noAlbum: true, limit: 500 })
+      .then((r) => setLooseTracks(r.tracks))
       .catch((e) => onError(String(e.message ?? e)))
   }, [artist, onError])
 
@@ -225,6 +230,19 @@ function ArtistAlbums({
           </li>
         ))}
       </ul>
+
+      {looseTracks.length > 0 && (
+        <>
+          <p className="mb-1 mt-4 text-xs font-medium uppercase tracking-wide text-white/40">
+            Songs without an album
+          </p>
+          <ul className="space-y-1">
+            {looseTracks.map((t) => (
+              <AddRow key={t.id} track={t} sub={t.genre ?? artist} onError={onError} />
+            ))}
+          </ul>
+        </>
+      )}
     </>
   )
 }

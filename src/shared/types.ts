@@ -99,6 +99,8 @@ export interface TracksQuery {
   /** Filter to a single album (use with albumArtist to disambiguate). */
   album?: string
   albumArtist?: string
+  /** With `artist`, return only that artist's tracks that have no album. */
+  noAlbum?: boolean
   limit?: number
   offset?: number
 }

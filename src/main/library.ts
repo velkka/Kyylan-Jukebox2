@@ -271,7 +271,12 @@ export function queryTracks(query: TracksQuery): TracksResponse {
   } else if (artist) {
     where = '(artist = @artist COLLATE NOCASE OR album_artist = @artist COLLATE NOCASE)'
     params.artist = artist
-    order = 'album COLLATE NOCASE, disc_no, track_no, title COLLATE NOCASE'
+    if (query.noAlbum) {
+      where += " AND (album IS NULL OR album = '')"
+      order = 'title COLLATE NOCASE'
+    } else {
+      order = 'album COLLATE NOCASE, disc_no, track_no, title COLLATE NOCASE'
+    }
   }
 
   const whereSql = where ? `WHERE ${where}` : ''

@@ -218,6 +218,7 @@ export function createApiRouter(getRunningPort: () => number): Router {
         artist: str(req.query.artist),
         album: str(req.query.album),
         albumArtist: str(req.query.albumArtist),
+        noAlbum: req.query.noAlbum === '1' || req.query.noAlbum === 'true',
         limit: req.query.limit ? Number(req.query.limit) : undefined,
         offset: req.query.offset ? Number(req.query.offset) : undefined
       })
