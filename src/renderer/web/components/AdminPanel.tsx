@@ -396,12 +396,15 @@ function Settings({ onError }: { onError: (msg: string) => void }): JSX.Element 
           <span className="text-white/60">Songs per guest</span>
           <input
             type="number"
-            min={1}
+            min={-100}
             max={100}
             value={limit}
             onChange={(e) => setLimit(e.target.value)}
             className="mt-1 w-full rounded-lg bg-black/40 px-3 py-2 outline-none ring-1 ring-white/10 focus:ring-jukebox-accent"
           />
+          <span className="mt-1 block text-xs text-white/40">
+            0 = no limit · negative = hide the counter
+          </span>
         </label>
         <label className="text-sm">
           <span className="text-white/60">Server port</span>

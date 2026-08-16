@@ -118,8 +118,9 @@ export function createApiRouter(getRunningPort: () => number): Router {
 
     if (body.perUserQueueLimit !== undefined) {
       const n = Number(body.perUserQueueLimit)
-      if (!Number.isInteger(n) || n < 1 || n > 100) {
-        res.status(400).json({ error: 'Per-user limit must be between 1 and 100' })
+      // 0 = no limit; negative applies |n| as the limit but hides the counter.
+      if (!Number.isInteger(n) || n < -100 || n > 100) {
+        res.status(400).json({ error: 'Per-guest limit must be between -100 and 100' })
         return
       }
       patch.perUserQueueLimit = n

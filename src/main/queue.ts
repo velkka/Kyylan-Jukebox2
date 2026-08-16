@@ -19,6 +19,15 @@ let lastStandbyTrack: number | null = null
 let downvoteEntryId: number | null = null
 let downvoters = new Set<string>()
 
+/** Pending (not-yet-played) songs queued by one guest — what the limit counts. */
+function pendingCountFor(ip: string): number {
+  return (
+    getDb()
+      .prepare("SELECT COUNT(*) AS c FROM queue WHERE added_by_ip = ? AND status = 'pending'")
+      .get(ip) as { c: number }
+  ).c
+}
+
 function playingRowId(): number | null {
   const row = getDb().prepare("SELECT id FROM queue WHERE status = 'playing' LIMIT 1").get() as
     | { id: number }
@@ -113,7 +122,12 @@ export function buildQueueState(forIp: string): QueueState {
     .map((r) => toEntry(r, forIp))
     .filter((e): e is QueueEntry => e !== null)
 
-  return { nowPlaying, queue, perUserLimit: loadConfig().perUserQueueLimit }
+  return {
+    nowPlaying,
+    queue,
+    perUserLimit: loadConfig().perUserQueueLimit,
+    myQueueCount: pendingCountFor(forIp)
+  }
 }
 
 /**
@@ -163,17 +177,16 @@ export function enqueue(trackId: number, ip: string, name?: string): void {
   const db = getDb()
   if (!getTrackById(trackId)) throw new QueueError('Track not found', 404)
 
-  const limit = loadConfig().perUserQueueLimit
-  const mine = (
-    db
-      .prepare("SELECT COUNT(*) AS c FROM queue WHERE added_by_ip = ? AND status = 'pending'")
-      .get(ip) as { c: number }
-  ).c
-  if (mine >= limit) {
-    throw new QueueError(
-      `You can have at most ${limit} song${limit === 1 ? '' : 's'} in the queue.`,
-      409
-    )
+  // 0 = no limit; negative applies |value| but keeps the counter hidden.
+  const raw = loadConfig().perUserQueueLimit
+  if (raw !== 0) {
+    const limit = Math.abs(raw)
+    if (pendingCountFor(ip) >= limit) {
+      throw new QueueError(
+        `You can have at most ${limit} song${limit === 1 ? '' : 's'} in the queue.`,
+        409
+      )
+    }
   }
 
   const nextPos =

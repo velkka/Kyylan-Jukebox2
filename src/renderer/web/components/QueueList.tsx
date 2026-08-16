@@ -22,6 +22,8 @@ import TrackArt from './TrackArt'
 
 export default function QueueList({ onError }: { onError: (msg: string) => void }): JSX.Element {
   const { queue, isAdmin, remove } = useJukebox()
+  // Only a positive limit shows the counter (0 = no limit, negative = hidden).
+  const showMyLimit = (queue?.perUserLimit ?? 0) > 0
   const serverEntries = queue?.queue ?? []
   // Local copy so drag reordering feels instant; re-syncs from server updates.
   const [entries, setEntries] = useState<QueueEntry[]>(serverEntries)
@@ -48,6 +50,15 @@ export default function QueueList({ onError }: { onError: (msg: string) => void 
       <div className="mb-3 flex items-center justify-between">
         <h3 className="font-semibold">Up next</h3>
         <div className="flex items-center gap-2">
+          {/* Personal allowance — hidden when the limit is 0 (none) or negative. */}
+          {showMyLimit && (
+            <span
+              className="rounded bg-white/10 px-1.5 py-0.5 text-xs tabular-nums text-white/60"
+              title="Songs you have queued, out of your limit"
+            >
+              {queue?.myQueueCount ?? 0}/{queue?.perUserLimit} yours
+            </span>
+          )}
           <span className="text-xs text-white/40">
             {entries.length} queued{isAdmin && entries.length > 1 ? ' · drag to reorder' : ''}
           </span>

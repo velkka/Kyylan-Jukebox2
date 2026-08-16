@@ -9,7 +9,10 @@ export interface AppConfig {
   adminPassword: string
   /** Folders scanned to build the music library. */
   libraryPaths: string[]
-  /** Max number of queued (not-yet-played) songs one guest IP may hold. */
+  /**
+   * Max queued (not-yet-played) songs one guest IP may hold. 0 = no limit;
+   * negative applies |value| as the limit but hides the counter in the UI.
+   */
   perUserQueueLimit: number
   /** Output device id (MediaDeviceInfo.deviceId) the player renderer should use. */
   outputDeviceId: string | null
@@ -240,7 +243,13 @@ export interface StandbyState {
 export interface QueueState {
   nowPlaying: NowPlaying
   queue: QueueEntry[]
+  /**
+   * Per-guest queue setting: 0 = no limit, positive = max queued songs with the
+   * counter shown, negative = same |N| limit but the counter is hidden in the UI.
+   */
   perUserLimit: number
+  /** How many pending songs the requesting client currently has queued. */
+  myQueueCount: number
 }
 
 export interface EnqueueRequest {
