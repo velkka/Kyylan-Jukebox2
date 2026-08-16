@@ -1,6 +1,6 @@
 import express, { Router } from 'express'
 import cookieParser from 'cookie-parser'
-import { app } from 'electron'
+import { app, dialog } from 'electron'
 import { createReadStream, existsSync, statSync } from 'node:fs'
 import { extname } from 'node:path'
 import { loadConfig, updateConfig } from './config'
@@ -49,7 +49,9 @@ import {
   setOutputDevice,
   setVolume
 } from './player'
+import { getHostWindow } from './hostWindow'
 import {
+  BrowseFolderResponse,
   HealthResponse,
   LibraryPathsResponse,
   PublicConfig,
@@ -67,10 +69,14 @@ export function createApiRouter(getRunningPort: () => number): Router {
   router.use(express.json())
   router.use(cookieParser())
 
+  /** True when the request originates from the host machine itself. */
+  const isLocal = (req: express.Request): boolean =>
+    normalizeIp(req.socket.remoteAddress ?? undefined) === '127.0.0.1'
+
   // ---- Auth -----------------------------------------------------------------
 
   router.get('/auth', (req, res) => {
-    res.json({ isAdmin: isAdminRequest(req) })
+    res.json({ isAdmin: isAdminRequest(req), isLocal: isLocal(req) })
   })
 
   router.post('/login', (req, res) => {
@@ -81,13 +87,13 @@ export function createApiRouter(getRunningPort: () => number): Router {
       return
     }
     res.cookie(SESSION_COOKIE, token, sessionCookieOptions)
-    res.json({ isAdmin: true })
+    res.json({ isAdmin: true, isLocal: isLocal(req) })
   })
 
   router.post('/logout', (req, res) => {
     logout(req.cookies?.[SESSION_COOKIE])
     res.clearCookie(SESSION_COOKIE)
-    res.json({ isAdmin: false })
+    res.json({ isAdmin: false, isLocal: isLocal(req) })
   })
 
   // ---- Admin settings -------------------------------------------------------
@@ -276,6 +282,36 @@ export function createApiRouter(getRunningPort: () => number): Router {
   router.delete('/library/paths', requireAdmin, (req, res) => {
     removePath(String((req.body ?? {}).path ?? ''))
     res.json(listPathsWithCounts() satisfies LibraryPathsResponse)
+  })
+
+  // Native folder picker. Host-machine only: a LAN admin must not be able to pop
+  // a modal dialog on the host, so remote requests are refused.
+  router.post('/library/browse', requireAdmin, async (req, res) => {
+    if (!isLocal(req)) {
+      res.status(403).json({ error: 'The folder picker is only available on the host machine' })
+      return
+    }
+    const parent = getHostWindow()
+    const options: Electron.OpenDialogOptions = {
+      title: 'Choose a music folder',
+      buttonLabel: 'Add folder',
+      properties: ['openDirectory', 'createDirectory']
+    }
+    const result = parent
+      ? await dialog.showOpenDialog(parent, options)
+      : await dialog.showOpenDialog(options)
+    const chosen = result.filePaths[0]
+    if (result.canceled || !chosen) {
+      res.json({ canceled: true } satisfies BrowseFolderResponse)
+      return
+    }
+    try {
+      addPath(chosen)
+    } catch (err) {
+      res.status(400).json({ error: err instanceof Error ? err.message : String(err) })
+      return
+    }
+    res.json({ canceled: false, path: chosen } satisfies BrowseFolderResponse)
   })
 
   router.post('/library/scan', requireAdmin, (_req, res) => {

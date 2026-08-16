@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from 'react'
 import type { AudioDevice, LibraryPath, ScanStatus, StandbyEntry, Track } from '@shared/types'
 import * as api from '../api'
+import { useJukebox } from '../JukeboxContext'
 import { subtitle } from '../util'
 import TrackArt from './TrackArt'
 
@@ -216,9 +217,11 @@ function Standby({ onError }: { onError: (msg: string) => void }): JSX.Element {
 }
 
 function MusicFolders({ onError }: { onError: (msg: string) => void }): JSX.Element {
+  const { isLocal } = useJukebox()
   const [paths, setPaths] = useState<LibraryPath[]>([])
   const [total, setTotal] = useState(0)
   const [input, setInput] = useState('')
+  const [browsing, setBrowsing] = useState(false)
   const [scan, setScan] = useState<ScanStatus | null>(null)
 
   const apply = (r: { paths: LibraryPath[]; total: number }): void => {
@@ -247,6 +250,19 @@ function MusicFolders({ onError }: { onError: (msg: string) => void }): JSX.Elem
       apply(await api.removeLibraryPath(p))
     } catch (e) {
       fail(e)
+    }
+  }
+
+  /** Opens the host machine's folder picker; the chosen folder is added directly. */
+  async function browse(): Promise<void> {
+    setBrowsing(true)
+    try {
+      const r = await api.browseForFolder()
+      if (!r.canceled) load()
+    } catch (e) {
+      fail(e)
+    } finally {
+      setBrowsing(false)
     }
   }
 
@@ -306,6 +322,17 @@ function MusicFolders({ onError }: { onError: (msg: string) => void }): JSX.Elem
         <button onClick={add} className="shrink-0 rounded-lg bg-white/10 px-3 text-sm hover:bg-white/20">
           Add
         </button>
+        {/* Native picker only works on the host machine, so hide it for LAN admins. */}
+        {isLocal && (
+          <button
+            onClick={browse}
+            disabled={browsing}
+            className="shrink-0 rounded-lg bg-white/10 px-3 text-sm hover:bg-white/20 disabled:opacity-50"
+            title="Choose a folder on this computer"
+          >
+            {browsing ? '…' : 'Browse…'}
+          </button>
+        )}
       </div>
       <div className="mt-2 flex items-center gap-3">
         <button

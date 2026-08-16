@@ -5,6 +5,7 @@ import type {
   ArtistsResponse,
   AudioDevice,
   AuthStatus,
+  BrowseFolderResponse,
   HealthResponse,
   LibraryPathsResponse,
   PublicConfig,
@@ -125,6 +126,9 @@ export const addLibraryPath = (path: string): Promise<LibraryPathsResponse> =>
   jsonFetch('/api/library/paths', { method: 'POST', body: JSON.stringify({ path }) })
 export const removeLibraryPath = (path: string): Promise<LibraryPathsResponse> =>
   jsonFetch('/api/library/paths', { method: 'DELETE', body: JSON.stringify({ path }) })
+/** Opens the host machine's native folder picker (local admin only). */
+export const browseForFolder = (): Promise<BrowseFolderResponse> =>
+  jsonFetch('/api/library/browse', { method: 'POST' })
 export const startScan = (): Promise<ScanStatus> =>
   jsonFetch('/api/library/scan', { method: 'POST' })
 export const getScanStatus = (): Promise<ScanStatus> => jsonFetch('/api/library/scan/status')

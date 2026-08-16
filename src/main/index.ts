@@ -8,6 +8,7 @@ import { initPlayerIpc, onReady, onStateChange, onTrackEnded, setPlayerWindow } 
 import { advance, buildQueueState, initQueue, maybeStart } from './queue'
 import { initRealtime, pushProgress } from './realtime'
 import { destroyTray, initTray } from './tray'
+import { setHostWindow } from './hostWindow'
 
 // Let the hidden player window start audio without a user gesture.
 app.commandLine.appendSwitch('autoplay-policy', 'no-user-gesture-required')
@@ -51,8 +52,11 @@ function createHostWindow(port: number): void {
     hostWindow.loadURL(`http://localhost:${port}/`)
   }
 
+  setHostWindow(hostWindow)
+
   hostWindow.on('closed', () => {
     hostWindow = null
+    setHostWindow(null)
   })
 }
 

@@ -53,6 +53,16 @@ export interface LoginRequest {
 
 export interface AuthStatus {
   isAdmin: boolean
+  /**
+   * True when the request came from the host machine itself (loopback), which
+   * gates host-only affordances like the native folder picker.
+   */
+  isLocal: boolean
+}
+
+export interface BrowseFolderResponse {
+  canceled: boolean
+  path?: string
 }
 
 export interface AdminSettings {

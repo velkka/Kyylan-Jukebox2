@@ -23,6 +23,8 @@ interface JukeboxValue {
   queue: QueueState | null
   progress: Progress
   isAdmin: boolean
+  /** Client is on the host machine (enables host-only affordances). */
+  isLocal: boolean
   name: string
   setName: (name: string) => void
   add: (trackId: number) => Promise<void>
@@ -48,6 +50,7 @@ export function JukeboxProvider({ children }: { children: ReactNode }): JSX.Elem
   const [queue, setQueue] = useState<QueueState | null>(null)
   const [progress, setProgress] = useState<Progress>(EMPTY_PROGRESS)
   const [isAdmin, setIsAdmin] = useState(false)
+  const [isLocal, setIsLocal] = useState(false)
   const [name, setNameState] = useState<string>(() => localStorage.getItem('kj_name') ?? '')
   const wsRef = useRef<WebSocket | null>(null)
 
@@ -58,7 +61,13 @@ export function JukeboxProvider({ children }: { children: ReactNode }): JSX.Elem
 
   // Auth status on mount.
   useEffect(() => {
-    api.getAuth().then((a) => setIsAdmin(a.isAdmin)).catch(() => setIsAdmin(false))
+    api
+      .getAuth()
+      .then((a) => {
+        setIsAdmin(a.isAdmin)
+        setIsLocal(a.isLocal)
+      })
+      .catch(() => setIsAdmin(false))
   }, [])
 
   // WebSocket with auto-reconnect.
@@ -125,6 +134,7 @@ export function JukeboxProvider({ children }: { children: ReactNode }): JSX.Elem
   const login = useCallback(async (password: string) => {
     const a = await api.login(password)
     setIsAdmin(a.isAdmin)
+    setIsLocal(a.isLocal)
   }, [])
 
   const logout = useCallback(async () => {
@@ -137,6 +147,7 @@ export function JukeboxProvider({ children }: { children: ReactNode }): JSX.Elem
     queue,
     progress,
     isAdmin,
+    isLocal,
     name,
     setName,
     add,
