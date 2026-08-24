@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import type { AlbumSummary, ArtistSummary, Track } from '@shared/types'
 import { getAlbums, getArtists, getTracks } from '../api'
 import { useJukebox } from '../JukeboxContext'
@@ -358,10 +358,18 @@ function AddRow({
 }): JSX.Element {
   const { add } = useJukebox()
   const [adding, setAdding] = useState(false)
+  const [added, setAdded] = useState(false)
+  // The queue lives above the library, so confirm on the button itself.
+  const confirmTimer = useRef<ReturnType<typeof setTimeout>>()
+  useEffect(() => () => clearTimeout(confirmTimer.current), [])
+
   async function onAdd(): Promise<void> {
     setAdding(true)
     try {
       await add(track.id)
+      setAdded(true)
+      clearTimeout(confirmTimer.current)
+      confirmTimer.current = setTimeout(() => setAdded(false), 1600)
     } catch (e) {
       onError(e instanceof Error ? e.message : String(e))
     } finally {
@@ -383,9 +391,12 @@ function AddRow({
       <button
         onClick={onAdd}
         disabled={adding}
-        className="shrink-0 rounded-lg bg-jukebox-accent/90 px-3 py-1.5 text-sm font-medium text-white hover:bg-jukebox-accent disabled:opacity-50"
+        aria-live="polite"
+        className={`w-[5.5rem] shrink-0 rounded-lg px-3 py-1.5 text-sm font-medium text-white transition-colors disabled:opacity-50 ${
+          added ? 'bg-green-600' : 'bg-jukebox-accent/90 hover:bg-jukebox-accent'
+        }`}
       >
-        {adding ? '…' : '+ Add'}
+        {adding ? '…' : added ? '✓ Added' : '+ Add'}
       </button>
     </li>
   )
