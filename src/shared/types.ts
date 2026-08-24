@@ -142,6 +142,8 @@ export interface AlbumSummary {
 export interface ArtistsResponse {
   artists: ArtistSummary[]
   total: number
+  /** Initials present in the library (A–Z, plus '#' for anything else). */
+  letters: string[]
 }
 
 export interface AlbumsResponse {

@@ -236,6 +236,7 @@ export function createApiRouter(getRunningPort: () => number): Router {
     res.json(
       queryArtists({
         search: str(req.query.search),
+        letter: str(req.query.letter),
         limit: req.query.limit ? Number(req.query.limit) : undefined,
         offset: req.query.offset ? Number(req.query.offset) : undefined
       })

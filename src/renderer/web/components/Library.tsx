@@ -99,6 +99,8 @@ function SearchTab({ onError }: { onError: (m: string) => void }): JSX.Element {
 function BrowseTab({ onError }: { onError: (m: string) => void }): JSX.Element {
   const [artist, setArtist] = useState<string | null>(null)
   const [album, setAlbum] = useState<AlbumSummary | null>(null)
+  // Kept here so the chosen letter survives drilling into an artist and back.
+  const [letter, setLetter] = useState<string | null>(null)
 
   if (artist && album) {
     return (
@@ -119,26 +121,41 @@ function BrowseTab({ onError }: { onError: (m: string) => void }): JSX.Element {
       />
     )
   }
-  return <ArtistsList onOpen={(name) => setArtist(name)} onError={onError} />
+  return (
+    <ArtistsList
+      letter={letter}
+      onLetter={setLetter}
+      onOpen={(name) => setArtist(name)}
+      onError={onError}
+    />
+  )
 }
 
+const ALPHABET = [...'ABCDEFGHIJKLMNOPQRSTUVWXYZ', '#']
+
 function ArtistsList({
+  letter,
+  onLetter,
   onOpen,
   onError
 }: {
+  letter: string | null
+  onLetter: (l: string | null) => void
   onOpen: (name: string) => void
   onError: (m: string) => void
 }): JSX.Element {
   const [artists, setArtists] = useState<ArtistSummary[]>([])
   const [total, setTotal] = useState(0)
+  const [available, setAvailable] = useState<Set<string>>(new Set())
   const [loading, setLoading] = useState(false)
 
   const load = useCallback(
     async (offset: number) => {
       setLoading(true)
       try {
-        const r = await getArtists({ limit: PAGE, offset })
+        const r = await getArtists({ letter: letter ?? undefined, limit: PAGE, offset })
         setTotal(r.total)
+        setAvailable(new Set(r.letters))
         setArtists((p) => (offset === 0 ? r.artists : [...p, ...r.artists]))
       } catch (e) {
         onError(e instanceof Error ? e.message : String(e))
@@ -146,17 +163,61 @@ function ArtistsList({
         setLoading(false)
       }
     },
-    [onError]
+    [letter, onError]
   )
   useEffect(() => {
     load(0)
   }, [load])
 
-  if (!loading && artists.length === 0) return <Empty text="No music yet." />
+  const bar = (
+    <div className="mb-2 flex flex-wrap gap-0.5">
+      <button
+        onClick={() => onLetter(null)}
+        className={`rounded px-1.5 py-0.5 text-xs font-medium ${
+          letter === null ? 'bg-jukebox-accent text-white' : 'text-white/60 hover:bg-white/10'
+        }`}
+      >
+        All
+      </button>
+      {ALPHABET.map((l) => {
+        const has = available.has(l)
+        return (
+          <button
+            key={l}
+            onClick={() => has && onLetter(letter === l ? null : l)}
+            disabled={!has}
+            aria-label={`Artists starting with ${l}`}
+            className={`w-6 rounded py-0.5 text-xs font-medium tabular-nums ${
+              letter === l
+                ? 'bg-jukebox-accent text-white'
+                : has
+                  ? 'text-white/60 hover:bg-white/10'
+                  : 'cursor-default text-white/15'
+            }`}
+          >
+            {l}
+          </button>
+        )
+      })}
+    </div>
+  )
+
+  if (!loading && artists.length === 0) {
+    return (
+      <>
+        {bar}
+        <Empty text={letter ? `No artists under “${letter}”.` : 'No music yet.'} />
+      </>
+    )
+  }
 
   return (
     <>
-      <p className="mb-1 text-xs text-white/40">{total} artists</p>
+      {bar}
+      <p className="mb-1 text-xs text-white/40">
+        {total} artist{total === 1 ? '' : 's'}
+        {letter ? ` under “${letter}”` : ''}
+      </p>
       <ul className="space-y-1">
         {artists.map((a) => (
           <li key={a.artist}>

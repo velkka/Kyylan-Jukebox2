@@ -306,21 +306,69 @@ export function queryTracks(query: TracksQuery): TracksResponse {
   return { tracks: rows.map(rowToTrack), total, limit, offset }
 }
 
-export function queryArtists(query: { search?: string; limit?: number; offset?: number }): {
+/**
+ * Maps each distinct artist initial in the library to its index bucket (A–Z, or
+ * '#' for digits/symbols). Bucketing happens in JS so accents fold correctly
+ * (Ä → A) — SQLite's built-in upper() is ASCII-only.
+ */
+function artistInitialBuckets(): Map<string, string[]> {
+  const rows = getDb()
+    .prepare(
+      "SELECT DISTINCT substr(artist, 1, 1) AS c FROM tracks WHERE artist IS NOT NULL AND artist <> ''"
+    )
+    .all() as { c: string }[]
+  const buckets = new Map<string, string[]>()
+  for (const { c } of rows) {
+    if (!c) continue
+    const folded = c.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toUpperCase()
+    const bucket = /^[A-Z]$/.test(folded) ? folded : '#'
+    buckets.set(bucket, [...(buckets.get(bucket) ?? []), c])
+  }
+  return buckets
+}
+
+export function queryArtists(query: {
+  search?: string
+  letter?: string
+  limit?: number
+  offset?: number
+}): {
   artists: { artist: string; trackCount: number; albumCount: number }[]
   total: number
+  letters: string[]
 } {
   const db = getDb()
   const limit = Number.isFinite(query.limit) ? Math.min(Math.max(query.limit as number, 1), 1000) : 200
   const offset = Number.isFinite(query.offset) ? Math.max(query.offset as number, 0) : 0
   const search = query.search?.trim()
   const like = search ? `%${search}%` : null
-  const filter = "artist IS NOT NULL AND artist <> ''" + (like ? ' AND artist LIKE @like' : '')
+
+  const buckets = artistInitialBuckets()
+  // '#' last so the bar reads A…Z then #.
+  const letters = [...buckets.keys()].sort((a, b) =>
+    a === '#' ? 1 : b === '#' ? -1 : a.localeCompare(b)
+  )
+
+  let filter = "artist IS NOT NULL AND artist <> ''"
+  const params: Record<string, unknown> = { like, limit, offset }
+  if (like) filter += ' AND artist LIKE @like'
+
+  const letterKey = query.letter?.trim().toUpperCase()
+  if (letterKey) {
+    // Match on the exact initials that fall in this bucket (case/accent variants).
+    const chars = buckets.get(letterKey) ?? []
+    if (chars.length === 0) return { artists: [], total: 0, letters }
+    const names = chars.map((c, i) => {
+      params[`c${i}`] = c
+      return `@c${i}`
+    })
+    filter += ` AND substr(artist, 1, 1) IN (${names.join(', ')})`
+  }
 
   const total = (
     db
       .prepare(`SELECT COUNT(*) AS c FROM (SELECT 1 FROM tracks WHERE ${filter} GROUP BY artist COLLATE NOCASE)`)
-      .get({ like }) as { c: number }
+      .get(params) as { c: number }
   ).c
   const artists = db
     .prepare(
@@ -330,8 +378,8 @@ export function queryArtists(query: { search?: string; limit?: number; offset?: 
        ORDER BY artist COLLATE NOCASE
        LIMIT @limit OFFSET @offset`
     )
-    .all({ like, limit, offset }) as { artist: string; trackCount: number; albumCount: number }[]
-  return { artists, total }
+    .all(params) as { artist: string; trackCount: number; albumCount: number }[]
+  return { artists, total, letters }
 }
 
 export function queryAlbums(query: {

@@ -70,11 +70,13 @@ export const getTracks = (params: {
 }
 export const getArtists = (params: {
   search?: string
+  letter?: string
   limit?: number
   offset?: number
 }): Promise<ArtistsResponse> => {
   const q = new URLSearchParams()
   if (params.search) q.set('search', params.search)
+  if (params.letter) q.set('letter', params.letter)
   if (params.limit != null) q.set('limit', String(params.limit))
   if (params.offset != null) q.set('offset', String(params.offset))
   return jsonFetch(`/api/artists?${q.toString()}`)
