@@ -87,10 +87,20 @@ jobs:
       - name: Generate changelog
         run: |
           TAG="${GITHUB_REF_NAME}"
-          # Previous release = the most recent "Release X" commit before this tag
-          # (robust even if version tags were rewritten onto a different history).
-          PREV_COMMIT="$(git log "${TAG}^" --grep='^Release ' -n 1 --pretty=%H 2>/dev/null || true)"
-          PREV_VER="$(git log "${TAG}^" --grep='^Release ' -n 1 --pretty=%s 2>/dev/null | awk '{print $2}')"
+          VER="${TAG#v}"
+          # Previous release = the most recent "Release X" commit before this tag,
+          # skipping a bump for *this* version (which exists when a failed release
+          # is re-tagged after a fix). Anchoring on commits rather than tags keeps
+          # this working even if version tags were rewritten onto another history.
+          PREV_COMMIT=""
+          PREV_VER=""
+          while read -r sha subject; do
+            if [ "$subject" != "Release ${VER}" ]; then
+              PREV_COMMIT="$sha"
+              PREV_VER="${subject#Release }"
+              break
+            fi
+          done < <(git log "${TAG}^" --grep='^Release ' --pretty='%H %s' 2>/dev/null || true)
           {
             echo "## What's changed"
             echo
