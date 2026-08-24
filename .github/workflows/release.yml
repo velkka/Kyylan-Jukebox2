@@ -51,8 +51,27 @@ jobs:
             release/*portable.exe
           if-no-files-found: error
 
+  build-linux:
+    runs-on: ubuntu-latest # native build; better-sqlite3 is rebuilt for Linux here
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci
+      - name: Build Linux packages
+        run: npm run package:linux
+      - uses: actions/upload-artifact@v4
+        with:
+          name: linux
+          path: |
+            release/*.AppImage
+            release/*.deb
+          if-no-files-found: error
+
   release:
-    needs: [build-mac, build-win]
+    needs: [build-mac, build-win, build-linux]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4

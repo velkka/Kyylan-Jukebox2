@@ -47,3 +47,14 @@ nsis:
   artifactName: Kyylan-Jukebox-${version}-setup.${ext}
 portable:
   artifactName: Kyylan-Jukebox-${version}-portable.${ext}
+linux:
+  target:
+    - AppImage   # runs on any distro, no install — the Linux "portable"
+    - deb        # Debian/Ubuntu
+  icon: build/icon.png
+  category: AudioVideo
+  synopsis: LAN party jukebox
+  description: >-
+    Plays local music through this machine's speakers while guests browse the
+    library and queue songs from their own browsers over the LAN.
+  artifactName: Kyylan-Jukebox-${version}-${arch}.${ext}

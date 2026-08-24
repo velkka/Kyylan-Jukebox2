@@ -44,8 +44,9 @@ server; API/WebSocket calls are proxied to the embedded Express server on port 8
 
 ```bash
 npm run build          # regenerate icons + compile main/preload/renderers into out/
-npm run package:mac    # -> release/Kyylan Jukebox-<ver>-arm64.dmg
+npm run package:mac    # -> release/Kyylan-Jukebox-<ver>-arm64.dmg
 npm run package:win    # -> release/…-setup.exe (installer) + …-portable.exe (x64)
+npm run package:linux  # -> release/…-x86_64.AppImage + …-amd64.deb  (run on Linux)
 ```
 
 Windows installers build **from macOS** — electron-builder downloads a bundled
@@ -55,8 +56,10 @@ for a party host — run it without installing). Use `package:win:arm64` for ARM
 
 ### Automated releases
 
-Pushing a version tag builds both platforms on GitHub-hosted runners and publishes
-a GitHub Release with the `.dmg` + Windows `.exe`s attached (`.github/workflows/release.yml`):
+Pushing a version tag builds all three platforms on GitHub-hosted runners (macOS,
+Windows and Linux each build natively) and publishes a GitHub Release with the
+`.dmg`, Windows `.exe`s and Linux `.AppImage`/`.deb` attached
+(`.github/workflows/release.yml`):
 
 ```bash
 npm version 0.3.0            # bump + commit + tag v0.3.0
