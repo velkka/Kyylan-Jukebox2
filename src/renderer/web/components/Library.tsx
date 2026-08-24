@@ -169,11 +169,13 @@ function ArtistsList({
     load(0)
   }, [load])
 
+  // One row, never wrapping: "All" keeps its width and the 27 letters share the
+  // rest evenly, so the index fits any screen width down to a phone.
   const bar = (
-    <div className="mb-2 flex flex-wrap gap-0.5">
+    <div className="mb-2 flex items-center gap-px">
       <button
         onClick={() => onLetter(null)}
-        className={`rounded px-1.5 py-0.5 text-xs font-medium ${
+        className={`shrink-0 rounded px-1.5 py-0.5 text-[11px] font-medium ${
           letter === null ? 'bg-jukebox-accent text-white' : 'text-white/60 hover:bg-white/10'
         }`}
       >
@@ -187,7 +189,7 @@ function ArtistsList({
             onClick={() => has && onLetter(letter === l ? null : l)}
             disabled={!has}
             aria-label={`Artists starting with ${l}`}
-            className={`w-6 rounded py-0.5 text-xs font-medium tabular-nums ${
+            className={`min-w-0 flex-1 rounded py-0.5 text-center text-[11px] font-medium leading-5 ${
               letter === l
                 ? 'bg-jukebox-accent text-white'
                 : has
