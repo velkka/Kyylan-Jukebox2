@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import type { AudioDevice, LibraryPath, ScanStatus, StandbyEntry, Track } from '@shared/types'
 import * as api from '../api'
 import { useJukebox } from '../JukeboxContext'
@@ -71,7 +71,55 @@ function OutputDevice({ onError }: { onError: (msg: string) => void }): JSX.Elem
           ↻
         </button>
       </div>
+      <Volume onError={onError} />
     </Group>
+  )
+}
+
+function Volume({ onError }: { onError: (msg: string) => void }): JSX.Element {
+  const [volume, setVolume] = useState(1)
+  // Dragging fires continuously — move the slider instantly but throttle the
+  // requests so the player isn't spammed on every pixel.
+  const pending = useRef<ReturnType<typeof setTimeout>>()
+  useEffect(() => () => clearTimeout(pending.current), [])
+
+  useEffect(() => {
+    api
+      .getPlayerState()
+      .then((s) => setVolume(s.volume))
+      .catch((e) => onError(String(e.message ?? e)))
+  }, [])
+
+  function change(value: number): void {
+    setVolume(value)
+    clearTimeout(pending.current)
+    pending.current = setTimeout(() => {
+      api.setPlayerVolume(value).catch((e) => onError(String(e.message ?? e)))
+    }, 120)
+  }
+
+  const pct = Math.round(volume * 100)
+  return (
+    <div className="mt-3 flex items-center gap-3">
+      <button
+        onClick={() => change(volume === 0 ? 1 : 0)}
+        className="shrink-0 rounded-md px-1 text-base leading-none hover:opacity-80"
+        title={volume === 0 ? 'Unmute' : 'Mute'}
+        aria-label={volume === 0 ? 'Unmute' : 'Mute'}
+      >
+        {volume === 0 ? '🔇' : '🔊'}
+      </button>
+      <input
+        type="range"
+        min={0}
+        max={100}
+        value={pct}
+        onChange={(e) => change(Number(e.target.value) / 100)}
+        aria-label="Output volume"
+        className="h-1.5 min-w-0 flex-1 cursor-pointer accent-jukebox-accent"
+      />
+      <span className="w-9 shrink-0 text-right text-xs tabular-nums text-white/50">{pct}%</span>
+    </div>
   )
 }
 

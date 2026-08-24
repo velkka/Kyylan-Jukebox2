@@ -8,6 +8,7 @@ import type {
   BrowseFolderResponse,
   HealthResponse,
   LibraryPathsResponse,
+  PlaybackState,
   PublicConfig,
   QueueState,
   ScanStatus,
@@ -121,6 +122,10 @@ export const setOutput = (deviceId: string): Promise<{ selected: string | null }
 export const playerPlay = (): Promise<unknown> => jsonFetch('/api/player/play', { method: 'POST' })
 export const playerPause = (): Promise<unknown> =>
   jsonFetch('/api/player/pause', { method: 'POST' })
+export const getPlayerState = (): Promise<PlaybackState> => jsonFetch('/api/player/state')
+/** Output volume, 0–1. */
+export const setPlayerVolume = (value: number): Promise<PlaybackState> =>
+  jsonFetch('/api/player/volume', { method: 'POST', body: JSON.stringify({ value }) })
 
 // ---- Admin: library ----------------------------------------------------------
 export const getPaths = (): Promise<LibraryPathsResponse> => jsonFetch('/api/library/paths')
