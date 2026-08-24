@@ -53,6 +53,8 @@ linux:
     - deb        # Debian/Ubuntu
   icon: build/icon.png
   category: AudioVideo
+  # .deb requires a maintainer; package.json's author has no email address.
+  maintainer: Kyylan <velkka@snoerf.org>
   synopsis: LAN party jukebox
   description: >-
     Plays local music through this machine's speakers while guests browse the
