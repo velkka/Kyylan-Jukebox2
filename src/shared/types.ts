@@ -256,7 +256,6 @@ export interface QueueState {
 
 export interface EnqueueRequest {
   trackId: number
-  name?: string
 }
 
 /** Real-time messages pushed server → client over the WebSocket. */

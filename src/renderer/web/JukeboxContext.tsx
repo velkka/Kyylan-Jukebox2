@@ -25,8 +25,6 @@ interface JukeboxValue {
   isAdmin: boolean
   /** Client is on the host machine (enables host-only affordances). */
   isLocal: boolean
-  name: string
-  setName: (name: string) => void
   add: (trackId: number) => Promise<void>
   remove: (entryId: number) => Promise<void>
   downvote: () => Promise<void>
@@ -51,13 +49,7 @@ export function JukeboxProvider({ children }: { children: ReactNode }): JSX.Elem
   const [progress, setProgress] = useState<Progress>(EMPTY_PROGRESS)
   const [isAdmin, setIsAdmin] = useState(false)
   const [isLocal, setIsLocal] = useState(false)
-  const [name, setNameState] = useState<string>(() => localStorage.getItem('kj_name') ?? '')
   const wsRef = useRef<WebSocket | null>(null)
-
-  const setName = useCallback((next: string) => {
-    setNameState(next)
-    localStorage.setItem('kj_name', next)
-  }, [])
 
   // Auth status on mount.
   useEffect(() => {
@@ -113,13 +105,10 @@ export function JukeboxProvider({ children }: { children: ReactNode }): JSX.Elem
     api.getQueue().then(setQueue).catch(() => undefined)
   }, [])
 
-  const add = useCallback(
-    async (trackId: number) => {
-      const next = await api.enqueue(trackId, name || undefined)
-      setQueue(next)
-    },
-    [name]
-  )
+  const add = useCallback(async (trackId: number) => {
+    const next = await api.enqueue(trackId)
+    setQueue(next)
+  }, [])
 
   const remove = useCallback(async (entryId: number) => {
     const next = await api.removeEntry(entryId)
@@ -148,8 +137,6 @@ export function JukeboxProvider({ children }: { children: ReactNode }): JSX.Elem
     progress,
     isAdmin,
     isLocal,
-    name,
-    setName,
     add,
     remove,
     downvote,

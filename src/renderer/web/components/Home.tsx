@@ -8,7 +8,7 @@ import AdminPanel from './AdminPanel'
 import logo from '../logo.png'
 
 export default function Home(): JSX.Element {
-  const { connected, isAdmin, name, setName, logout } = useJukebox()
+  const { connected, isAdmin, logout } = useJukebox()
   const [loginOpen, setLoginOpen] = useState(false)
   const [showAdmin, setShowAdmin] = useState(false)
   const [toast, setToast] = useState<string | null>(null)
@@ -66,16 +66,6 @@ export default function Home(): JSX.Element {
           <AdminPanel onError={setToast} />
         </div>
       )}
-
-      <div className="mb-4">
-        <input
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          placeholder="Your name (shown on songs you add)"
-          maxLength={24}
-          className="w-full rounded-lg bg-black/30 px-4 py-2 text-sm outline-none ring-1 ring-white/10 focus:ring-jukebox-accent2"
-        />
-      </div>
 
       <div className="space-y-4">
         <NowPlaying />

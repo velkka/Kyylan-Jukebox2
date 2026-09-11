@@ -99,8 +99,9 @@ export const artUrl = (hash: string): string => `/api/art/${hash}`
 
 // ---- Queue -------------------------------------------------------------------
 export const getQueue = (): Promise<QueueState> => jsonFetch('/api/queue')
-export const enqueue = (trackId: number, name?: string): Promise<QueueState> =>
-  jsonFetch('/api/queue', { method: 'POST', body: JSON.stringify({ trackId, name }) })
+/** The server labels the entry with the requester's hostname. */
+export const enqueue = (trackId: number): Promise<QueueState> =>
+  jsonFetch('/api/queue', { method: 'POST', body: JSON.stringify({ trackId }) })
 export const removeEntry = (id: number): Promise<QueueState> =>
   jsonFetch(`/api/queue/${id}`, { method: 'DELETE' })
 export const downvote = (): Promise<QueueState> =>

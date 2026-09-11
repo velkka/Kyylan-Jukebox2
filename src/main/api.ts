@@ -4,7 +4,7 @@ import { app, dialog } from 'electron'
 import { createReadStream, existsSync, statSync } from 'node:fs'
 import { extname } from 'node:path'
 import { loadConfig, updateConfig } from './config'
-import { lanAddresses, normalizeIp } from './net'
+import { lanAddresses, normalizeIp, resolveHostname } from './net'
 import {
   isAdminRequest,
   login,
@@ -423,14 +423,15 @@ export function createApiRouter(getRunningPort: () => number): Router {
     res.json(buildQueueState(clientIp(req)))
   })
 
-  router.post('/queue', (req, res) => {
+  router.post('/queue', async (req, res) => {
     const ip = clientIp(req)
     const trackId = Number((req.body ?? {}).trackId)
-    const name = typeof (req.body ?? {}).name === 'string' ? (req.body.name as string) : undefined
     if (!Number.isInteger(trackId)) {
       res.status(400).json({ error: 'trackId required' })
       return
     }
+    // Guests are labelled by their device's hostname rather than a name they type.
+    const name = await resolveHostname(ip)
     try {
       enqueue(trackId, ip, name)
       res.json(buildQueueState(ip))
