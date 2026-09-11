@@ -4,7 +4,7 @@ import { getTrackById } from './library'
 import { getState, loadTrack, pause } from './player'
 import { broadcastQueue } from './realtime'
 import { standbyTrackIds } from './standby'
-import { NowPlaying, QueueEntry, QueueState } from '@shared/types'
+import { NowPlaying, QueueEntry, QueueState, Track } from '@shared/types'
 
 // Sentinel "added by" for standby (filler) tracks, so they never count against a
 // guest's limit and are visually distinguished from guest songs.
@@ -18,6 +18,52 @@ let lastStandbyTrack: number | null = null
 // set of guest IPs that have downvoted it. Reset whenever the song changes.
 let downvoteEntryId: number | null = null
 let downvoters = new Set<string>()
+
+const minutesAgo = (m: number): string => new Date(Date.now() - m * 60_000).toISOString()
+
+/**
+ * Repeat cooldowns. A song/artist is blocked while it is still in rotation:
+ * already playing or queued (it would come round again almost immediately), or
+ * played within the configured window. Each window is independent and 0 is off,
+ * so with both at 0 nothing here applies — including duplicate detection.
+ */
+function cooldownError(track: Track): string | null {
+  const db = getDb()
+  const cfg = loadConfig()
+
+  if (cfg.sameSongCooldownMinutes > 0) {
+    const queued = db
+      .prepare("SELECT 1 FROM queue WHERE track_id = ? AND status IN ('playing', 'pending')")
+      .get(track.id)
+    if (queued) return `"${track.title}" is already in the queue.`
+
+    const played = db
+      .prepare('SELECT 1 FROM play_history WHERE track_id = ? AND played_at >= ?')
+      .get(track.id, minutesAgo(cfg.sameSongCooldownMinutes))
+    if (played) {
+      return `"${track.title}" was played in the last ${cfg.sameSongCooldownMinutes} min — pick something else.`
+    }
+  }
+
+  if (cfg.sameArtistCooldownMinutes > 0 && track.artist) {
+    const queued = db
+      .prepare(
+        `SELECT 1 FROM queue q JOIN tracks t ON t.id = q.track_id
+         WHERE q.status IN ('playing', 'pending') AND t.artist = ? COLLATE NOCASE`
+      )
+      .get(track.artist)
+    if (queued) return `${track.artist} is already in the queue — try another artist.`
+
+    const played = db
+      .prepare('SELECT 1 FROM play_history WHERE artist = ? COLLATE NOCASE AND played_at >= ?')
+      .get(track.artist, minutesAgo(cfg.sameArtistCooldownMinutes))
+    if (played) {
+      return `${track.artist} was played in the last ${cfg.sameArtistCooldownMinutes} min — try another artist.`
+    }
+  }
+
+  return null
+}
 
 /** Pending (not-yet-played) songs queued by one guest — what the limit counts. */
 function pendingCountFor(ip: string): number {
@@ -151,6 +197,7 @@ export function advance(): void {
 
   if (next) {
     db.prepare("UPDATE queue SET status = 'playing' WHERE id = ?").run(next.id)
+    recordPlay(next.track_id)
     loadTrack(next.track_id, true)
   } else if (loadConfig().standbyEnabled) {
     const trackId = pickStandbyTrack()
@@ -159,6 +206,7 @@ export function advance(): void {
         `INSERT INTO queue (track_id, added_by_ip, added_by_name, added_at, position, status)
          VALUES (?, ?, NULL, ?, 0, 'playing')`
       ).run(trackId, STANDBY_IP, new Date().toISOString())
+      recordPlay(trackId)
       loadTrack(trackId, true)
     } else {
       pause()
@@ -169,6 +217,19 @@ export function advance(): void {
   broadcastQueue()
 }
 
+/** Logs a play for the repeat cooldowns, and trims history older than a day. */
+function recordPlay(trackId: number): void {
+  const db = getDb()
+  const track = getTrackById(trackId)
+  db.prepare('INSERT INTO play_history (track_id, artist, played_at) VALUES (?, ?, ?)').run(
+    trackId,
+    track?.artist ?? null,
+    new Date().toISOString()
+  )
+  const dayAgo = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString()
+  db.prepare('DELETE FROM play_history WHERE played_at < ?').run(dayAgo)
+}
+
 /** Starts playback if nothing is currently playing but songs are queued. */
 export function maybeStart(): void {
   const playing = getDb().prepare("SELECT 1 FROM queue WHERE status = 'playing'").get()
@@ -177,7 +238,11 @@ export function maybeStart(): void {
 
 export function enqueue(trackId: number, ip: string, name?: string): void {
   const db = getDb()
-  if (!getTrackById(trackId)) throw new QueueError('Track not found', 404)
+  const track = getTrackById(trackId)
+  if (!track) throw new QueueError('Track not found', 404)
+
+  const cooldown = cooldownError(track)
+  if (cooldown) throw new QueueError(cooldown, 409)
 
   // 0 = no limit; negative applies |value| but keeps the counter hidden.
   const raw = loadConfig().perUserQueueLimit

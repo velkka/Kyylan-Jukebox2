@@ -22,6 +22,10 @@ export interface AppConfig {
   standbyShuffle: boolean
   /** Downvotes needed to auto-skip the current song. 0 disables downvoting. */
   downvoteSkipThreshold: number
+  /** Minutes before the same song may be queued again. 0 = no restriction. */
+  sameSongCooldownMinutes: number
+  /** Minutes before the same artist may be queued again. 0 = no restriction. */
+  sameArtistCooldownMinutes: number
 }
 
 export const DEFAULT_CONFIG: AppConfig = {
@@ -33,7 +37,9 @@ export const DEFAULT_CONFIG: AppConfig = {
   outputDeviceId: null,
   standbyEnabled: false,
   standbyShuffle: false,
-  downvoteSkipThreshold: 0
+  downvoteSkipThreshold: 0,
+  sameSongCooldownMinutes: 0,
+  sameArtistCooldownMinutes: 0
 }
 
 /** Non-sensitive settings safe to expose to any guest. Never includes the password. */
@@ -72,12 +78,16 @@ export interface AdminSettings {
   port: number
   perUserQueueLimit: number
   downvoteSkipThreshold: number
+  sameSongCooldownMinutes: number
+  sameArtistCooldownMinutes: number
 }
 
 export interface AdminSettingsUpdate {
   port?: number
   perUserQueueLimit?: number
   downvoteSkipThreshold?: number
+  sameSongCooldownMinutes?: number
+  sameArtistCooldownMinutes?: number
   adminPassword?: string
 }
 

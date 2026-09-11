@@ -406,6 +406,8 @@ function Settings({ onError }: { onError: (msg: string) => void }): JSX.Element 
   const [limit, setLimit] = useState('')
   const [port, setPort] = useState('')
   const [downvotes, setDownvotes] = useState('')
+  const [songCooldown, setSongCooldown] = useState('')
+  const [artistCooldown, setArtistCooldown] = useState('')
   const [note, setNote] = useState<string | null>(null)
   const [busy, setBusy] = useState(false)
 
@@ -416,6 +418,8 @@ function Settings({ onError }: { onError: (msg: string) => void }): JSX.Element 
         setLimit(String(s.perUserQueueLimit))
         setPort(String(s.port))
         setDownvotes(String(s.downvoteSkipThreshold))
+        setSongCooldown(String(s.sameSongCooldownMinutes))
+        setArtistCooldown(String(s.sameArtistCooldownMinutes))
       })
       .catch((e) => onError(String(e.message ?? e)))
   }, [])
@@ -427,7 +431,9 @@ function Settings({ onError }: { onError: (msg: string) => void }): JSX.Element 
       const r = await api.saveSettings({
         perUserQueueLimit: Number(limit),
         port: Number(port),
-        downvoteSkipThreshold: Number(downvotes)
+        downvoteSkipThreshold: Number(downvotes),
+        sameSongCooldownMinutes: Number(songCooldown),
+        sameArtistCooldownMinutes: Number(artistCooldown)
       })
       setNote(r.restartRequired ? 'Saved. Restart the app for the new port to take effect.' : 'Saved.')
     } catch (e) {
@@ -478,6 +484,30 @@ function Settings({ onError }: { onError: (msg: string) => void }): JSX.Element 
           <span className="mt-1 block text-xs text-white/40">
             0 = disabled · negative = hide the count
           </span>
+        </label>
+        <label className="text-sm">
+          <span className="text-white/60">Same song cooldown</span>
+          <input
+            type="number"
+            min={0}
+            max={1440}
+            value={songCooldown}
+            onChange={(e) => setSongCooldown(e.target.value)}
+            className="mt-1 w-full rounded-lg bg-black/40 px-3 py-2 outline-none ring-1 ring-white/10 focus:ring-jukebox-accent"
+          />
+          <span className="mt-1 block text-xs text-white/40">minutes · 0 = off</span>
+        </label>
+        <label className="text-sm">
+          <span className="text-white/60">Same artist cooldown</span>
+          <input
+            type="number"
+            min={0}
+            max={1440}
+            value={artistCooldown}
+            onChange={(e) => setArtistCooldown(e.target.value)}
+            className="mt-1 w-full rounded-lg bg-black/40 px-3 py-2 outline-none ring-1 ring-white/10 focus:ring-jukebox-accent"
+          />
+          <span className="mt-1 block text-xs text-white/40">minutes · 0 = off</span>
         </label>
       </div>
       {note && <p className="mt-2 text-xs text-jukebox-accent2">{note}</p>}

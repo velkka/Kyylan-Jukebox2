@@ -83,7 +83,18 @@ const MIGRATIONS: string[] = [
      track_id INTEGER NOT NULL REFERENCES tracks(id) ON DELETE CASCADE,
      position INTEGER NOT NULL,
      added_at TEXT NOT NULL
-   );`
+   );`,
+
+  // 7: what has been played, for the repeat cooldowns. Deliberately not a
+  // foreign key: history should outlive a track being pruned by a rescan, and
+  // `artist` is stored inline so artist cooldowns work without a join.
+  `CREATE TABLE play_history (
+     id        INTEGER PRIMARY KEY AUTOINCREMENT,
+     track_id  INTEGER NOT NULL,
+     artist    TEXT,
+     played_at TEXT NOT NULL
+   );
+   CREATE INDEX idx_history_played_at ON play_history(played_at);`
 ]
 
 function migrate(d: Database.Database): void {

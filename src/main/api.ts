@@ -103,7 +103,9 @@ export function createApiRouter(getRunningPort: () => number): Router {
     res.json({
       port: c.port,
       perUserQueueLimit: c.perUserQueueLimit,
-      downvoteSkipThreshold: c.downvoteSkipThreshold
+      downvoteSkipThreshold: c.downvoteSkipThreshold,
+      sameSongCooldownMinutes: c.sameSongCooldownMinutes,
+      sameArtistCooldownMinutes: c.sameArtistCooldownMinutes
     })
   })
 
@@ -112,9 +114,22 @@ export function createApiRouter(getRunningPort: () => number): Router {
       port?: number
       perUserQueueLimit?: number
       downvoteSkipThreshold?: number
+      sameSongCooldownMinutes?: number
+      sameArtistCooldownMinutes?: number
       adminPassword?: string
     }
     const patch: Partial<ReturnType<typeof loadConfig>> = {}
+
+    // Repeat cooldowns, in minutes. 0 = off, capped at a day.
+    for (const key of ['sameSongCooldownMinutes', 'sameArtistCooldownMinutes'] as const) {
+      if (body[key] === undefined) continue
+      const n = Number(body[key])
+      if (!Number.isInteger(n) || n < 0 || n > 1440) {
+        res.status(400).json({ error: 'Cooldowns must be between 0 and 1440 minutes' })
+        return
+      }
+      patch[key] = n
+    }
 
     if (body.perUserQueueLimit !== undefined) {
       const n = Number(body.perUserQueueLimit)
