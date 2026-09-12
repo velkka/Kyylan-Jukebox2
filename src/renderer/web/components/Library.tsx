@@ -2,6 +2,7 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 import type { AlbumSummary, ArtistSummary, Track } from '@shared/types'
 import { getAlbums, getArtists, getTracks } from '../api'
 import { useJukebox } from '../JukeboxContext'
+import { togglePreview, usePreviewing } from '../preview'
 import { formatTime, subtitle } from '../util'
 import TrackArt from './TrackArt'
 
@@ -357,6 +358,7 @@ function AddRow({
   onError: (msg: string) => void
 }): JSX.Element {
   const { add } = useJukebox()
+  const previewing = usePreviewing() === track.id
   const [adding, setAdding] = useState(false)
   const [added, setAdded] = useState(false)
   // The queue lives above the library, so confirm on the button itself.
@@ -388,6 +390,19 @@ function AddRow({
           {formatTime(track.duration)}
         </span>
       )}
+      <button
+        onClick={() => togglePreview(track.id, onError)}
+        title={previewing ? 'Stop the preview' : 'Listen on this device'}
+        aria-label={previewing ? `Stop previewing ${track.title}` : `Preview ${track.title}`}
+        aria-pressed={previewing}
+        className={`shrink-0 rounded-lg px-2.5 py-1.5 text-sm transition-colors ${
+          previewing
+            ? 'bg-jukebox-accent/25 text-jukebox-accent'
+            : 'text-white/45 hover:bg-white/10 hover:text-white'
+        }`}
+      >
+        {previewing ? '■' : '▶'}
+      </button>
       <button
         onClick={onAdd}
         disabled={adding}
