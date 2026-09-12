@@ -41,13 +41,16 @@ function SearchTab({ onError }: { onError: (m: string) => void }): JSX.Element {
   const [total, setTotal] = useState(0)
   const [loading, setLoading] = useState(false)
 
+  const [page, setPage] = useState(0)
+  const top = useRef<HTMLParagraphElement>(null)
+
   const load = useCallback(
-    async (offset: number) => {
+    async (p: number) => {
       setLoading(true)
       try {
-        const r = await getTracks({ search, limit: PAGE, offset })
+        const r = await getTracks({ search, limit: PAGE, offset: p * PAGE })
         setTotal(r.total)
-        setTracks((p) => (offset === 0 ? r.tracks : [...p, ...r.tracks]))
+        setTracks(r.tracks)
       } catch (e) {
         onError(e instanceof Error ? e.message : String(e))
       } finally {
@@ -57,22 +60,35 @@ function SearchTab({ onError }: { onError: (m: string) => void }): JSX.Element {
     [search, onError]
   )
 
+  // Debounce typing, but not page clicks — a quarter-second lag on a button press
+  // reads as lag, whereas on a keystroke it reads as waiting for you to finish.
+  const lastSearch = useRef(search)
   useEffect(() => {
     if (!search.trim()) {
       setTracks([])
       setTotal(0)
       return
     }
-    const t = setTimeout(() => load(0), 250)
+    const typed = lastSearch.current !== search
+    lastSearch.current = search
+    const t = setTimeout(() => load(page), typed ? 250 : 0)
     return () => clearTimeout(t)
-  }, [search, load])
+  }, [search, page, load])
+
+  function goPage(p: number): void {
+    setPage(p)
+    top.current?.scrollIntoView({ block: 'start' })
+  }
 
   return (
     <>
       <input
         value={search}
         autoFocus
-        onChange={(e) => setSearch(e.target.value)}
+        onChange={(e) => {
+          setSearch(e.target.value)
+          setPage(0) // a new query always starts from the first page
+        }}
         placeholder="Search songs, artists, albums…"
         className="w-full rounded-lg bg-black/40 px-4 py-2.5 outline-none ring-1 ring-white/10 focus:ring-jukebox-accent"
       />
@@ -82,13 +98,15 @@ function SearchTab({ onError }: { onError: (m: string) => void }): JSX.Element {
         <Empty text="No matches." />
       ) : (
         <>
-          <p className="mb-1 mt-3 text-xs text-white/40">{total} results</p>
+          <p ref={top} className="mb-1 mt-3 text-xs text-white/40">
+            {total} results{total > PAGE ? ` · ${showing(page, tracks.length, total)}` : ''}
+          </p>
           <ul className="space-y-1">
             {tracks.map((t) => (
               <AddRow key={t.id} track={t} sub={subtitle(t.artist, t.album)} onError={onError} />
             ))}
           </ul>
-          <LoadMore shown={tracks.length} total={total} loading={loading} onClick={() => load(tracks.length)} />
+          <Pager page={page} pageCount={Math.ceil(total / PAGE)} loading={loading} onPage={goPage} />
         </>
       )}
     </>
@@ -170,15 +188,17 @@ function ArtistsList({
   const [total, setTotal] = useState(0)
   const [available, setAvailable] = useState<Set<string>>(new Set())
   const [loading, setLoading] = useState(false)
+  const [page, setPage] = useState(0)
+  const top = useRef<HTMLDivElement>(null)
 
   const load = useCallback(
-    async (offset: number) => {
+    async (p: number) => {
       setLoading(true)
       try {
-        const r = await getArtists({ letter: letter ?? undefined, limit: PAGE, offset })
+        const r = await getArtists({ letter: letter ?? undefined, limit: PAGE, offset: p * PAGE })
         setTotal(r.total)
         setAvailable(new Set(r.letters))
-        setArtists((p) => (offset === 0 ? r.artists : [...p, ...r.artists]))
+        setArtists(r.artists)
       } catch (e) {
         onError(e instanceof Error ? e.message : String(e))
       } finally {
@@ -188,15 +208,26 @@ function ArtistsList({
     [letter, onError]
   )
   useEffect(() => {
-    load(0)
-  }, [load])
+    load(page)
+  }, [load, page])
+
+  function goPage(p: number): void {
+    setPage(p)
+    top.current?.scrollIntoView({ block: 'start' })
+  }
+
+  /** Picking a letter narrows the list, so any page number from the old one is meaningless. */
+  function pick(l: string | null): void {
+    setPage(0)
+    onLetter(l)
+  }
 
   // One row, never wrapping: "All" keeps its width and the 27 letters share the
   // rest evenly, so the index fits any screen width down to a phone.
   const bar = (
-    <div className="mb-2 flex items-center gap-px">
+    <div ref={top} className="mb-2 flex items-center gap-px">
       <button
-        onClick={() => onLetter(null)}
+        onClick={() => pick(null)}
         className={`shrink-0 rounded px-1.5 py-0.5 text-[11px] font-medium ${
           letter === null ? 'bg-jukebox-accent text-white' : 'text-white/60 hover:bg-white/10'
         }`}
@@ -208,7 +239,7 @@ function ArtistsList({
         return (
           <button
             key={l}
-            onClick={() => has && onLetter(letter === l ? null : l)}
+            onClick={() => has && pick(letter === l ? null : l)}
             disabled={!has}
             aria-label={`Artists starting with ${l}`}
             className={`min-w-0 flex-1 rounded py-0.5 text-center text-[11px] font-medium leading-5 ${
@@ -241,6 +272,7 @@ function ArtistsList({
       <p className="mb-1 text-xs text-white/40">
         {total} artist{total === 1 ? '' : 's'}
         {letter ? ` under “${letter}”` : ''}
+        {total > PAGE ? ` · ${showing(page, artists.length, total)}` : ''}
       </p>
       <ul className="space-y-1">
         {artists.map((a) => (
@@ -264,7 +296,7 @@ function ArtistsList({
           </li>
         ))}
       </ul>
-      <LoadMore shown={artists.length} total={total} loading={loading} onClick={() => load(artists.length)} />
+      <Pager page={page} pageCount={Math.ceil(total / PAGE)} loading={loading} onPage={goPage} />
     </>
   )
 }
@@ -436,26 +468,68 @@ function AddRow({
   )
 }
 
-function LoadMore({
-  shown,
-  total,
+/** "61–120 of 516", for the line above a paged list. */
+function showing(page: number, count: number, total: number): string {
+  const first = page * PAGE + 1
+  return `${first}–${Math.min(first + count - 1, total)} of ${total}`
+}
+
+/** How many page numbers to show around the current one. */
+const WINDOW = 5
+
+/**
+ * Page controls for the long lists. A letter like "S" can hold hundreds of
+ * artists, so stepping through with a Load-more button meant a tap per 60 rows;
+ * numbered pages let you jump. Only a window of pages is rendered, with the
+ * first and last always reachable, so 95 pages still fits a phone.
+ */
+function Pager({
+  page,
+  pageCount,
   loading,
-  onClick
+  onPage
 }: {
-  shown: number
-  total: number
+  page: number
+  pageCount: number
   loading: boolean
-  onClick: () => void
+  onPage: (p: number) => void
 }): JSX.Element | null {
-  if (shown >= total) return null
-  return (
+  if (pageCount <= 1) return null
+
+  const span = Math.min(WINDOW, pageCount)
+  const start = Math.max(0, Math.min(page - Math.floor(span / 2), pageCount - span))
+  const numbers = Array.from({ length: span }, (_, i) => start + i)
+
+  const cell = (label: string, to: number, opts: { disabled?: boolean; active?: boolean } = {}) => (
     <button
-      onClick={onClick}
-      disabled={loading}
-      className="mt-3 w-full rounded-lg bg-white/5 py-2 text-sm text-white/70 hover:bg-white/10 disabled:opacity-50"
+      key={label + to}
+      onClick={() => onPage(to)}
+      disabled={loading || opts.disabled}
+      aria-current={opts.active ? 'page' : undefined}
+      aria-label={/^[‹›]$/.test(label) ? (label === '‹' ? 'Previous page' : 'Next page') : `Page ${label}`}
+      className={`min-w-[1.75rem] rounded-md px-1.5 py-1 text-xs tabular-nums transition-colors ${
+        opts.active
+          ? 'bg-jukebox-accent text-white'
+          : 'text-white/60 hover:bg-white/10 disabled:opacity-30 disabled:hover:bg-transparent'
+      }`}
     >
-      {loading ? 'Loading…' : `Load more (${total - shown} left)`}
+      {label}
     </button>
+  )
+  const gap = (key: string): JSX.Element => (
+    <span key={key} className="px-0.5 text-xs text-white/25">
+      …
+    </span>
+  )
+
+  return (
+    <nav className="mt-3 flex items-center justify-center gap-0.5" aria-label="Pagination">
+      {cell('‹', page - 1, { disabled: page === 0 })}
+      {start > 0 && [cell('1', 0), gap('lead')]}
+      {numbers.map((p) => cell(String(p + 1), p, { active: p === page }))}
+      {start + span < pageCount && [gap('trail'), cell(String(pageCount), pageCount - 1)]}
+      {cell('›', page + 1, { disabled: page >= pageCount - 1 })}
+    </nav>
   )
 }
 
