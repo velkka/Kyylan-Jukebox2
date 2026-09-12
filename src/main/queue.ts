@@ -57,14 +57,30 @@ function cooldownError(track: Track): string | null {
   const cfg = loadConfig()
 
   if (cfg.sameSongCooldownMinutes > 0) {
+    // Matched on title + artist rather than track id: a library often holds the
+    // same song several times over (a single, an album, a compilation), and
+    // those are the same song to everyone in the room. IFNULL keeps two
+    // untagged-artist tracks comparable instead of NULL != NULL.
     const queued = db
-      .prepare("SELECT 1 FROM queue WHERE track_id = ? AND status IN ('playing', 'pending')")
-      .get(track.id)
+      .prepare(
+        `SELECT 1 FROM queue q JOIN tracks t ON t.id = q.track_id
+          WHERE q.status IN ('playing', 'pending')
+            AND t.title COLLATE NOCASE = ?
+            AND IFNULL(t.artist, '') COLLATE NOCASE = IFNULL(?, '')`
+      )
+      .get(track.title, track.artist)
     if (queued) return `"${track.title}" is already in the queue.`
 
+    // Old history rows predate the inline title, so fall back to the track id.
     const played = db
-      .prepare('SELECT 1 FROM play_history WHERE track_id = ? AND played_at >= ?')
-      .get(track.id, minutesAgo(cfg.sameSongCooldownMinutes))
+      .prepare(
+        `SELECT 1 FROM play_history
+          WHERE played_at >= ?
+            AND (track_id = ?
+                 OR (title COLLATE NOCASE = ?
+                     AND IFNULL(artist, '') COLLATE NOCASE = IFNULL(?, '')))`
+      )
+      .get(minutesAgo(cfg.sameSongCooldownMinutes), track.id, track.title, track.artist)
     if (played) {
       return `"${track.title}" was played in the last ${cfg.sameSongCooldownMinutes} min — pick something else.`
     }

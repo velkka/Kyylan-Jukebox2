@@ -12,6 +12,7 @@ export default function Home(): JSX.Element {
   const { connected, isAdmin, logout } = useJukebox()
   const [loginOpen, setLoginOpen] = useState(false)
   const [showAdmin, setShowAdmin] = useState(false)
+  const [showStats, setShowStats] = useState(false)
   const [toast, setToast] = useState<string | null>(null)
 
   useEffect(() => {
@@ -32,6 +33,16 @@ export default function Home(): JSX.Element {
           title={connected ? 'Live' : 'Reconnecting…'}
         />
         <div className="ml-auto flex items-center gap-2">
+          <button
+            onClick={() => setShowStats((v) => !v)}
+            className={`rounded-lg px-3 py-1.5 text-xs font-medium ${
+              showStats
+                ? 'bg-jukebox-accent text-white'
+                : 'bg-white/5 text-white/60 hover:bg-white/10'
+            }`}
+          >
+            History
+          </button>
           {isAdmin ? (
             <>
               <button
@@ -68,11 +79,16 @@ export default function Home(): JSX.Element {
         </div>
       )}
 
+      {showStats && (
+        <div className="mb-4">
+          <StatsPanel onError={setToast} />
+        </div>
+      )}
+
       <div className="space-y-4">
         <NowPlaying />
         <QueueList onError={setToast} />
         <Library onError={setToast} />
-        <StatsPanel onError={setToast} />
       </div>
 
       {toast && (
