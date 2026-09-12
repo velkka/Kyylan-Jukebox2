@@ -154,6 +154,7 @@ export const clearStandby = (): Promise<StandbyState> =>
 export const setStandbySettings = (patch: {
   enabled?: boolean
   shuffle?: boolean
+  random?: boolean
 }): Promise<StandbyState> =>
   jsonFetch('/api/standby/settings', { method: 'POST', body: JSON.stringify(patch) })
 

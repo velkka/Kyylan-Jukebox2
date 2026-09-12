@@ -20,6 +20,12 @@ export interface AppConfig {
   standbyEnabled: boolean
   /** Pick standby tracks at random instead of in order. */
   standbyShuffle: boolean
+  /**
+   * Fill an empty queue with random songs from the whole library. Used when the
+   * standby playlist is off or empty. Unlike playlist filler these count as
+   * normal plays: they appear in the stats and guests can downvote them.
+   */
+  standbyRandomEnabled: boolean
   /** Downvotes needed to auto-skip the current song. 0 disables downvoting. */
   downvoteSkipThreshold: number
   /** Minutes before the same song may be queued again. 0 = no restriction. */
@@ -39,6 +45,7 @@ export const DEFAULT_CONFIG: AppConfig = {
   outputDeviceId: null,
   standbyEnabled: false,
   standbyShuffle: false,
+  standbyRandomEnabled: false,
   downvoteSkipThreshold: 0,
   sameSongCooldownMinutes: 0,
   sameArtistCooldownMinutes: 0,
@@ -254,6 +261,7 @@ export interface StandbyEntry {
 export interface StandbyState {
   enabled: boolean
   shuffle: boolean
+  random: boolean
   entries: StandbyEntry[]
 }
 
@@ -275,6 +283,9 @@ export interface EnqueueRequest {
 
 // ---- History & stats ---------------------------------------------------------
 
+/** Where a play came from: a guest's request, the standby playlist, or a random fill. */
+export type PlaySource = 'guest' | 'standby' | 'random'
+
 /** One song that went on air, newest first in the history list. */
 export interface PlayHistoryItem {
   id: number
@@ -283,9 +294,9 @@ export interface PlayHistoryItem {
   artist: string | null
   /** Null once the track has been pruned from the library. */
   artHash: string | null
-  /** Hostname of the guest who requested it; null for standby filler. */
+  /** Hostname of the guest who requested it; null for filler. */
   requestedByName: string | null
-  isStandby: boolean
+  source: PlaySource
   playedAt: string
 }
 

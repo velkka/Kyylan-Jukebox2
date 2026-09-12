@@ -2,7 +2,7 @@ import { createHash } from 'node:crypto'
 import { getDb } from './db'
 import { getTrackById } from './library'
 import { listBans } from './bans'
-import type { PlayHistoryItem, StatsResponse, TrackStat, UserStat } from '@shared/types'
+import type { PlayHistoryItem, PlaySource, StatsResponse, TrackStat, UserStat } from '@shared/types'
 
 /**
  * Play / request / downvote logging, and the aggregates the admin panel shows.
@@ -25,19 +25,23 @@ export function recordRequest(trackId: number, ip: string, name?: string | null)
     .run(trackId, track?.title ?? null, track?.artist ?? null, ip, name?.trim() || null, now())
 }
 
-/** Logs a song going on air. Drives both the repeat cooldowns and the play stats. */
+/**
+ * Logs a song going on air. Drives both the repeat cooldowns and the play stats.
+ * `is_standby` is written alongside `source` purely to keep the older column
+ * truthful; every read goes through `source`.
+ */
 export function recordPlay(
   trackId: number,
   requestedByIp: string | null,
   requestedByName: string | null,
-  isStandby: boolean
+  source: PlaySource
 ): void {
   const track = getTrackById(trackId)
   getDb()
     .prepare(
       `INSERT INTO play_history
-         (track_id, title, artist, requested_by_ip, requested_by_name, is_standby, played_at)
-       VALUES (?, ?, ?, ?, ?, ?, ?)`
+         (track_id, title, artist, requested_by_ip, requested_by_name, is_standby, source, played_at)
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?)`
     )
     .run(
       trackId,
@@ -45,7 +49,8 @@ export function recordPlay(
       track?.artist ?? null,
       requestedByIp,
       requestedByName,
-      isStandby ? 1 : 0,
+      source === 'standby' ? 1 : 0,
+      source,
       now()
     )
 }
@@ -68,7 +73,7 @@ interface HistoryRow {
   artist: string | null
   artHash: string | null
   requestedByName: string | null
-  isStandby: number
+  source: PlaySource
   playedAt: string
 }
 
@@ -82,16 +87,16 @@ export function playHistory(limit = 100, offset = 0): PlayHistoryItem[] {
               COALESCE(h.artist, t.artist)              AS artist,
               t.art_hash                                AS artHash,
               h.requested_by_name                       AS requestedByName,
-              h.is_standby                              AS isStandby,
+              h.source                                  AS source,
               h.played_at                               AS playedAt
          FROM play_history h
          LEFT JOIN tracks t ON t.id = h.track_id
-        WHERE h.is_standby = 0
+        WHERE h.source != 'standby'
         ORDER BY h.id DESC
         LIMIT ? OFFSET ?`
     )
     .all(limit, offset) as HistoryRow[]
-  return rows.map((r) => ({ ...r, isStandby: r.isStandby === 1 }))
+  return rows
 }
 
 function topFrom(
@@ -199,19 +204,20 @@ function redact(users: UserStat[]): UserStat[] {
 }
 
 /**
- * Standby filler is excluded throughout — it is the admin's playlist, not a
- * record of what the party asked for. Those plays are still logged, because the
- * repeat cooldowns read the same table.
+ * Standby playlist filler is excluded throughout — it is the admin's playlist,
+ * not a record of what the party asked for. Those plays are still logged,
+ * because the repeat cooldowns read the same table. Random library fills do
+ * count: they are ordinary songs that anyone can downvote off.
  */
 export function buildStats(historyLimit = 100, topLimit = 10, forAdmin = false): StatsResponse {
   const users = userStats()
   return {
     history: playHistory(historyLimit),
-    topPlayed: topFrom('play_history', topLimit, 'WHERE x.is_standby = 0'),
+    topPlayed: topFrom('play_history', topLimit, "WHERE x.source != 'standby'"),
     topDownvoted: topFrom('downvote_log', topLimit),
     users: forAdmin ? users : redact(users),
     totals: {
-      plays: countOf('play_history', 'WHERE is_standby = 0'),
+      plays: countOf('play_history', "WHERE source != 'standby'"),
       requests: countOf('request_log'),
       downvotes: countOf('downvote_log')
     }

@@ -549,7 +549,12 @@ export function createApiRouter(getRunningPort: () => number): Router {
 
   const standbyState = () => {
     const c = loadConfig()
-    return { enabled: c.standbyEnabled, shuffle: c.standbyShuffle, entries: listStandby() }
+    return {
+      enabled: c.standbyEnabled,
+      shuffle: c.standbyShuffle,
+      random: c.standbyRandomEnabled,
+      entries: listStandby()
+    }
   }
 
   router.get('/standby', requireAdmin, (_req, res) => res.json(standbyState()))
@@ -581,12 +586,14 @@ export function createApiRouter(getRunningPort: () => number): Router {
   })
 
   router.post('/standby/settings', requireAdmin, (req, res) => {
-    const body = (req.body ?? {}) as { enabled?: boolean; shuffle?: boolean }
+    const body = (req.body ?? {}) as { enabled?: boolean; shuffle?: boolean; random?: boolean }
     const patch: Partial<ReturnType<typeof loadConfig>> = {}
     if (typeof body.enabled === 'boolean') patch.standbyEnabled = body.enabled
     if (typeof body.shuffle === 'boolean') patch.standbyShuffle = body.shuffle
+    if (typeof body.random === 'boolean') patch.standbyRandomEnabled = body.random
     updateConfig(patch)
-    if (patch.standbyEnabled) maybeStart() // enabling while idle kicks off filler
+    // Turning either filler on while idle kicks it off straight away.
+    if (patch.standbyEnabled || patch.standbyRandomEnabled) maybeStart()
     res.json(standbyState())
   })
 

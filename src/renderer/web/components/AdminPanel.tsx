@@ -149,13 +149,20 @@ function Toggle({
 function Standby({ onError }: { onError: (msg: string) => void }): JSX.Element {
   const [enabled, setEnabled] = useState(false)
   const [shuffle, setShuffle] = useState(false)
+  const [random, setRandom] = useState(false)
   const [entries, setEntries] = useState<StandbyEntry[]>([])
   const [search, setSearch] = useState('')
   const [results, setResults] = useState<Track[]>([])
 
-  const apply = (s: { enabled: boolean; shuffle: boolean; entries: StandbyEntry[] }): void => {
+  const apply = (s: {
+    enabled: boolean
+    shuffle: boolean
+    random: boolean
+    entries: StandbyEntry[]
+  }): void => {
     setEnabled(s.enabled)
     setShuffle(s.shuffle)
+    setRandom(s.random)
     setEntries(s.entries)
   }
   const fail = (e: unknown): void => onError(e instanceof Error ? e.message : String(e))
@@ -191,7 +198,18 @@ function Standby({ onError }: { onError: (msg: string) => void }): JSX.Element {
           checked={shuffle}
           onChange={(v) => api.setStandbySettings({ shuffle: v }).then(apply).catch(fail)}
         />
+        <Toggle
+          label="Random from library"
+          checked={random}
+          onChange={(v) => api.setStandbySettings({ random: v }).then(apply).catch(fail)}
+        />
       </div>
+      {random && (
+        <p className="mt-2 text-xs text-white/40">
+          Used when the playlist above is off or empty. Random picks count in the stats and can be
+          downvoted like any other song.
+        </p>
+      )}
 
       {entries.length === 0 ? (
         <p className="mt-3 text-sm text-white/40">No standby songs yet — add some below.</p>

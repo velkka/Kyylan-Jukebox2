@@ -134,7 +134,13 @@ const MIGRATIONS: string[] = [
      name       TEXT,
      banned_at  TEXT NOT NULL,
      expires_at TEXT
-   );`
+   );`,
+
+  // 10: where a play came from — 'guest', 'standby' or 'random'. Supersedes the
+  // is_standby flag, which is kept in sync but no longer read: random library
+  // fills count as normal plays, so one boolean can no longer say it all.
+  `ALTER TABLE play_history ADD COLUMN source TEXT NOT NULL DEFAULT 'guest';
+   UPDATE play_history SET source = 'standby' WHERE is_standby = 1;`
 ]
 
 function migrate(d: Database.Database): void {

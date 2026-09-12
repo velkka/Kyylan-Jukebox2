@@ -6,11 +6,18 @@ import { broadcastQueue } from './realtime'
 import { standbyTrackIds } from './standby'
 import { recordDownvote, recordPlay, recordRequest } from './stats'
 import { banError } from './bans'
-import { NowPlaying, QueueEntry, QueueState, Track } from '@shared/types'
+import { NowPlaying, PlaySource, QueueEntry, QueueState, Track } from '@shared/types'
 
 // Sentinel "added by" for standby (filler) tracks, so they never count against a
 // guest's limit and are visually distinguished from guest songs.
 const STANDBY_IP = '__standby__'
+
+// Random library fills use a sentinel of their own. They are also nobody's
+// request, but unlike playlist filler they behave like an ordinary song from
+// here on: they count in the stats and guests can downvote them off.
+const RANDOM_IP = '__random__'
+
+const FILLER_IPS = [STANDBY_IP, RANDOM_IP]
 
 // Cursor for sequential standby playback; last id to avoid immediate repeats when shuffling.
 let standbyCursor = -1
@@ -124,6 +131,27 @@ function votableEntry(): { id: number; trackId: number } | null {
   return { id: row.id, trackId: row.track_id }
 }
 
+/**
+ * Picks a random library track for the random-fill mode, avoiding anything in
+ * the last 50 plays so a small library does not loop tightly. Falls back to a
+ * plain random pick when that leaves nothing (a library smaller than the window).
+ */
+function pickRandomTrack(): number | null {
+  const db = getDb()
+  const fresh = db
+    .prepare(
+      `SELECT id FROM tracks
+        WHERE id NOT IN (SELECT track_id FROM play_history ORDER BY id DESC LIMIT 50)
+        ORDER BY RANDOM() LIMIT 1`
+    )
+    .get() as { id: number } | undefined
+  if (fresh) return fresh.id
+  const any = db.prepare('SELECT id FROM tracks ORDER BY RANDOM() LIMIT 1').get() as
+    | { id: number }
+    | undefined
+  return any?.id ?? null
+}
+
 /** Chooses the next standby track (sequential or shuffled), or null if none. */
 function pickStandbyTrack(): number | null {
   const ids = standbyTrackIds()
@@ -175,7 +203,7 @@ function toEntry(row: QueueRow, forIp: string): QueueEntry | null {
 export function initQueue(): void {
   const db = getDb()
   // Drop any leftover standby track, then demote a guest "playing" row to pending.
-  db.prepare('DELETE FROM queue WHERE added_by_ip = ?').run(STANDBY_IP)
+  db.prepare('DELETE FROM queue WHERE added_by_ip IN (?, ?)').run(...FILLER_IPS)
   db.prepare("UPDATE queue SET status = 'pending' WHERE status = 'playing'").run()
 }
 
@@ -186,9 +214,10 @@ export function buildQueueState(forIp: string): QueueState {
     .get() as QueueRow | undefined
   const pendingRows = db
     .prepare(
-      "SELECT * FROM queue WHERE status = 'pending' AND added_by_ip != ? ORDER BY position ASC"
+      `SELECT * FROM queue WHERE status = 'pending' AND added_by_ip NOT IN (?, ?)
+        ORDER BY position ASC`
     )
-    .all(STANDBY_IP) as QueueRow[]
+    .all(...FILLER_IPS) as QueueRow[]
 
   const state = getState()
   // Downvotes only apply to the song currently being voted on. A negative
@@ -232,26 +261,37 @@ export function advance(): void {
 
   const next = db
     .prepare(
-      "SELECT * FROM queue WHERE status = 'pending' AND added_by_ip != ? ORDER BY position ASC LIMIT 1"
+      `SELECT * FROM queue WHERE status = 'pending' AND added_by_ip NOT IN (?, ?)
+        ORDER BY position ASC LIMIT 1`
     )
-    .get(STANDBY_IP) as QueueRow | undefined
+    .get(...FILLER_IPS) as QueueRow | undefined
+
+  // Guests first; then the curated playlist, which is the admin's explicit
+  // choice and so outranks random fill; then random fill for everything else.
+  // pickStandbyTrack() advances the playlist cursor, so it is called only once.
+  let filler: { trackId: number; ip: string; source: PlaySource } | null = null
+  if (!next) {
+    const cfg = loadConfig()
+    const standbyId = cfg.standbyEnabled ? pickStandbyTrack() : null
+    if (standbyId != null) {
+      filler = { trackId: standbyId, ip: STANDBY_IP, source: 'standby' }
+    } else if (cfg.standbyRandomEnabled) {
+      const randomId = pickRandomTrack()
+      if (randomId != null) filler = { trackId: randomId, ip: RANDOM_IP, source: 'random' }
+    }
+  }
 
   if (next) {
     db.prepare("UPDATE queue SET status = 'playing' WHERE id = ?").run(next.id)
-    recordPlay(next.track_id, next.added_by_ip, next.added_by_name, false)
+    recordPlay(next.track_id, next.added_by_ip, next.added_by_name, 'guest')
     loadTrack(next.track_id, true)
-  } else if (loadConfig().standbyEnabled) {
-    const trackId = pickStandbyTrack()
-    if (trackId != null) {
-      db.prepare(
-        `INSERT INTO queue (track_id, added_by_ip, added_by_name, added_at, position, status)
-         VALUES (?, ?, NULL, ?, 0, 'playing')`
-      ).run(trackId, STANDBY_IP, new Date().toISOString())
-      recordPlay(trackId, null, null, true)
-      loadTrack(trackId, true)
-    } else {
-      pause()
-    }
+  } else if (filler) {
+    db.prepare(
+      `INSERT INTO queue (track_id, added_by_ip, added_by_name, added_at, position, status)
+       VALUES (?, ?, NULL, ?, 0, 'playing')`
+    ).run(filler.trackId, filler.ip, new Date().toISOString())
+    recordPlay(filler.trackId, null, null, filler.source)
+    loadTrack(filler.trackId, true)
   } else {
     pause()
   }
@@ -303,8 +343,8 @@ export function enqueue(trackId: number, ip: string, name?: string): void {
   const playing = db
     .prepare("SELECT added_by_ip AS ip FROM queue WHERE status = 'playing' LIMIT 1")
     .get() as { ip: string } | undefined
-  if (!playing || playing.ip === STANDBY_IP) {
-    // Idle → start; filler playing → take over from the standby track now.
+  if (!playing || FILLER_IPS.includes(playing.ip)) {
+    // Idle → start; filler playing → take over from it now.
     advance()
   } else {
     broadcastQueue()
