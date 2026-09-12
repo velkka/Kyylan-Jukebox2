@@ -395,10 +395,8 @@ function AddRow({
         title={previewing ? 'Stop the preview' : 'Listen on this device'}
         aria-label={previewing ? `Stop previewing ${track.title}` : `Preview ${track.title}`}
         aria-pressed={previewing}
-        className={`shrink-0 rounded-lg px-2.5 py-1.5 text-sm transition-colors ${
-          previewing
-            ? 'bg-jukebox-accent/25 text-jukebox-accent'
-            : 'text-white/45 hover:bg-white/10 hover:text-white'
+        className={`w-10 shrink-0 rounded-lg py-1.5 text-sm font-medium text-white transition-colors ${
+          previewing ? 'bg-jukebox-accent' : 'bg-white/10 hover:bg-white/20'
         }`}
       >
         {previewing ? '■' : '▶'}
