@@ -4,7 +4,6 @@ import * as api from '../api'
 import { useJukebox } from '../JukeboxContext'
 import { subtitle } from '../util'
 import Group from './Group'
-import StatsPanel from './StatsPanel'
 import TrackArt from './TrackArt'
 
 export default function AdminPanel({ onError }: { onError: (msg: string) => void }): JSX.Element {
@@ -16,7 +15,6 @@ export default function AdminPanel({ onError }: { onError: (msg: string) => void
       <OutputDevice onError={onError} />
       <Standby onError={onError} />
       <MusicFolders onError={onError} />
-      <StatsPanel onError={onError} />
       <Settings onError={onError} />
     </section>
   )

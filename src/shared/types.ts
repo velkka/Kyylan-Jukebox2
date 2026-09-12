@@ -297,13 +297,16 @@ export interface TrackStat {
   count: number
 }
 
-/** A guest, keyed by IP and labelled with the most recent hostname seen. */
+/** A guest, labelled with the most recent hostname seen for their address. */
 export interface UserStat {
-  ip: string
+  /** Stable list key: the IP for admins, an opaque digest of it for guests. */
+  id: string
+  /** Admins only — guests never see each other's addresses. */
+  ip: string | null
   name: string | null
   requests: number
   downvotes: number
-  /** True while an add ban is in force. */
+  /** True while an add ban is in force. Always false for non-admin viewers. */
   banned: boolean
   /** When the ban lifts; null means permanent (or not banned at all). */
   bannedUntil: string | null

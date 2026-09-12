@@ -1,3 +1,4 @@
+import { createHash } from 'node:crypto'
 import { getDb } from './db'
 import { getTrackById } from './library'
 import { listBans } from './bans'
@@ -85,6 +86,7 @@ export function playHistory(limit = 100, offset = 0): PlayHistoryItem[] {
               h.played_at                               AS playedAt
          FROM play_history h
          LEFT JOIN tracks t ON t.id = h.track_id
+        WHERE h.is_standby = 0
         ORDER BY h.id DESC
         LIMIT ? OFFSET ?`
     )
@@ -92,7 +94,11 @@ export function playHistory(limit = 100, offset = 0): PlayHistoryItem[] {
   return rows.map((r) => ({ ...r, isStandby: r.isStandby === 1 }))
 }
 
-function topFrom(table: 'play_history' | 'downvote_log', limit: number): TrackStat[] {
+function topFrom(
+  table: 'play_history' | 'downvote_log',
+  limit: number,
+  where = ''
+): TrackStat[] {
   return getDb()
     .prepare(
       `SELECT x.track_id                                AS trackId,
@@ -101,6 +107,7 @@ function topFrom(table: 'play_history' | 'downvote_log', limit: number): TrackSt
               COUNT(*)                                  AS count
          FROM ${table} x
          LEFT JOIN tracks t ON t.id = x.track_id
+         ${where}
         GROUP BY x.track_id
         ORDER BY count DESC, title ASC
         LIMIT ?`
@@ -147,6 +154,7 @@ function userStats(): UserStat[] {
       return existing
     }
     const created: UserStat = {
+      id: ip,
       ip,
       name,
       requests: 0,
@@ -172,17 +180,38 @@ function userStats(): UserStat[] {
   )
 }
 
-const countOf = (table: string): number =>
-  (getDb().prepare(`SELECT COUNT(*) AS c FROM ${table}`).get() as { c: number }).c
+const countOf = (table: string, where = ''): number =>
+  (getDb().prepare(`SELECT COUNT(*) AS c FROM ${table} ${where}`).get() as { c: number }).c
 
-export function buildStats(historyLimit = 100, topLimit = 10): StatsResponse {
+/**
+ * Strips everything a guest has no business seeing: other guests' addresses and
+ * who is currently blocked. The list key becomes an opaque digest so the UI
+ * still has something stable to key rows on.
+ */
+function redact(users: UserStat[]): UserStat[] {
+  return users.map((u) => ({
+    ...u,
+    id: createHash('sha1').update(u.id).digest('hex').slice(0, 8),
+    ip: null,
+    banned: false,
+    bannedUntil: null
+  }))
+}
+
+/**
+ * Standby filler is excluded throughout — it is the admin's playlist, not a
+ * record of what the party asked for. Those plays are still logged, because the
+ * repeat cooldowns read the same table.
+ */
+export function buildStats(historyLimit = 100, topLimit = 10, forAdmin = false): StatsResponse {
+  const users = userStats()
   return {
     history: playHistory(historyLimit),
-    topPlayed: topFrom('play_history', topLimit),
+    topPlayed: topFrom('play_history', topLimit, 'WHERE x.is_standby = 0'),
     topDownvoted: topFrom('downvote_log', topLimit),
-    users: userStats(),
+    users: forAdmin ? users : redact(users),
     totals: {
-      plays: countOf('play_history'),
+      plays: countOf('play_history', 'WHERE is_standby = 0'),
       requests: countOf('request_log'),
       downvotes: countOf('downvote_log')
     }

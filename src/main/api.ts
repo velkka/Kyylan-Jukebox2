@@ -482,17 +482,18 @@ export function createApiRouter(getRunningPort: () => number): Router {
     res.json(buildQueueState(ip))
   })
 
-  // ---- History & stats — admin ----------------------------------------------
+  // ---- History & stats ------------------------------------------------------
 
-  // Admin-only: the per-guest counts identify individual devices on the LAN.
-  router.get('/stats', requireAdmin, (req, res) => {
+  // Public, but guests get a redacted guest list: hostnames and counts without
+  // addresses or who is blocked.
+  router.get('/stats', (req, res) => {
     const limit = Math.min(Math.max(Number(req.query.limit) || 100, 1), 500)
-    res.json(buildStats(limit))
+    res.json(buildStats(limit, 10, isAdminRequest(req)))
   })
 
   router.post('/stats/reset', requireAdmin, (_req, res) => {
     clearStats()
-    res.json(buildStats())
+    res.json(buildStats(100, 10, true))
   })
 
   // ---- Bans — admin ---------------------------------------------------------

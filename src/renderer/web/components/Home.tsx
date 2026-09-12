@@ -3,6 +3,7 @@ import { useJukebox } from '../JukeboxContext'
 import NowPlaying from './NowPlaying'
 import QueueList from './QueueList'
 import Library from './Library'
+import StatsPanel from './StatsPanel'
 import AdminLogin from './AdminLogin'
 import AdminPanel from './AdminPanel'
 import logo from '../logo.png'
@@ -71,6 +72,7 @@ export default function Home(): JSX.Element {
         <NowPlaying />
         <QueueList onError={setToast} />
         <Library onError={setToast} />
+        <StatsPanel onError={setToast} />
       </div>
 
       {toast && (
