@@ -1,5 +1,6 @@
 import { getDb } from './db'
 import { getTrackById } from './library'
+import { listBans } from './bans'
 import type { PlayHistoryItem, StatsResponse, TrackStat, UserStat } from '@shared/types'
 
 /**
@@ -145,12 +146,26 @@ function userStats(): UserStat[] {
       existing.name ??= name
       return existing
     }
-    const created: UserStat = { ip, name, requests: 0, downvotes: 0 }
+    const created: UserStat = {
+      ip,
+      name,
+      requests: 0,
+      downvotes: 0,
+      banned: false,
+      bannedUntil: null
+    }
     users.set(ip, created)
     return created
   }
   for (const r of requests) upsert(r.ip, r.name).requests = r.c
   for (const d of downvotes) upsert(d.ip, d.name).downvotes = d.c
+  // A guest can be banned before they ever add anything, so bans contribute
+  // rows of their own rather than only annotating existing ones.
+  for (const b of listBans()) {
+    const u = upsert(b.ip, b.name)
+    u.banned = true
+    u.bannedUntil = b.expiresAt
+  }
 
   return [...users.values()].sort(
     (a, b) => b.requests - a.requests || b.downvotes - a.downvotes

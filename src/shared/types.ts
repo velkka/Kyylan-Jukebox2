@@ -26,6 +26,8 @@ export interface AppConfig {
   sameSongCooldownMinutes: number
   /** Minutes before the same artist may be queued again. 0 = no restriction. */
   sameArtistCooldownMinutes: number
+  /** Minimum minutes between one guest's adds. 0 = no rate limit. */
+  addRateLimitMinutes: number
 }
 
 export const DEFAULT_CONFIG: AppConfig = {
@@ -39,7 +41,8 @@ export const DEFAULT_CONFIG: AppConfig = {
   standbyShuffle: false,
   downvoteSkipThreshold: 0,
   sameSongCooldownMinutes: 0,
-  sameArtistCooldownMinutes: 0
+  sameArtistCooldownMinutes: 0,
+  addRateLimitMinutes: 0
 }
 
 /** Non-sensitive settings safe to expose to any guest. Never includes the password. */
@@ -80,6 +83,7 @@ export interface AdminSettings {
   downvoteSkipThreshold: number
   sameSongCooldownMinutes: number
   sameArtistCooldownMinutes: number
+  addRateLimitMinutes: number
 }
 
 export interface AdminSettingsUpdate {
@@ -88,6 +92,7 @@ export interface AdminSettingsUpdate {
   downvoteSkipThreshold?: number
   sameSongCooldownMinutes?: number
   sameArtistCooldownMinutes?: number
+  addRateLimitMinutes?: number
   adminPassword?: string
 }
 
@@ -298,6 +303,29 @@ export interface UserStat {
   name: string | null
   requests: number
   downvotes: number
+  /** True while an add ban is in force. */
+  banned: boolean
+  /** When the ban lifts; null means permanent (or not banned at all). */
+  bannedUntil: string | null
+}
+
+/** A guest barred from adding songs. */
+export interface BanEntry {
+  ip: string
+  name: string | null
+  bannedAt: string
+  /** ISO timestamp when the ban lifts; null = permanent. */
+  expiresAt: string | null
+}
+
+export interface BansResponse {
+  bans: BanEntry[]
+}
+
+export interface BanRequest {
+  ip: string
+  /** Omit or 0 for a permanent ban. */
+  minutes?: number
 }
 
 export interface StatsResponse {

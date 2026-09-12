@@ -107,7 +107,7 @@ export default function StatsPanel({ onError }: { onError: (msg: string) => void
       {tab === 'downvoted' && (
         <Ranking items={stats?.topDownvoted ?? []} unit="downvote" empty="No downvotes yet." />
       )}
-      {tab === 'guests' && <Guests items={stats?.users ?? []} />}
+      {tab === 'guests' && <Guests items={stats?.users ?? []} onChange={load} onError={onError} />}
     </Group>
   )
 }
@@ -171,22 +171,98 @@ function Ranking({
   )
 }
 
-function Guests({ items }: { items: UserStat[] }): JSX.Element {
+/** Preset ban lengths; 0 is permanent. */
+const BAN_OPTIONS: { label: string; minutes: number }[] = [
+  { label: '15 min', minutes: 15 },
+  { label: '1 h', minutes: 60 },
+  { label: '24 h', minutes: 60 * 24 },
+  { label: 'Forever', minutes: 0 }
+]
+
+/** "42 min left" / "3 h left" until a ban lifts. */
+function banLeft(until: string): string {
+  const mins = Math.max(1, Math.ceil((new Date(until).getTime() - Date.now()) / 60_000))
+  if (mins < 60) return `${mins} min left`
+  if (mins < 48 * 60) return `${Math.round(mins / 60)} h left`
+  return `${Math.round(mins / (60 * 24))} days left`
+}
+
+function Guests({
+  items,
+  onChange,
+  onError
+}: {
+  items: UserStat[]
+  onChange: () => void
+  onError: (msg: string) => void
+}): JSX.Element {
+  // IP of the row currently showing its ban-length choices.
+  const [picking, setPicking] = useState<string | null>(null)
+
+  const fail = (e: unknown): void => onError(e instanceof Error ? e.message : String(e))
+  const run = (p: Promise<unknown>): void => {
+    p.then(() => {
+      setPicking(null)
+      onChange()
+    }).catch(fail)
+  }
+
   if (items.length === 0) return <Empty text="No guest activity yet." />
   return (
     <ul className="max-h-80 space-y-1 overflow-y-auto pr-1">
       {items.map((u) => (
         <li key={u.ip} className="flex items-center gap-2 text-sm">
           <div className="min-w-0 flex-1">
-            <p className="truncate">{u.name ?? u.ip}</p>
-            {u.name && <p className="truncate text-xs text-white/35">{u.ip}</p>}
+            <p className={`truncate ${u.banned ? 'text-white/45 line-through' : ''}`}>
+              {u.name ?? u.ip}
+            </p>
+            <p className="truncate text-xs text-white/35">
+              {u.name ? `${u.ip} · ` : ''}
+              {u.requests} added · {u.downvotes} downvoted
+              {u.banned && (
+                <span className="text-red-300/80">
+                  {' · '}
+                  {u.bannedUntil ? banLeft(u.bannedUntil) : 'blocked'}
+                </span>
+              )}
+            </p>
           </div>
-          <span className="shrink-0 rounded-full bg-white/10 px-2 py-0.5 text-xs tabular-nums">
-            {u.requests} added
-          </span>
-          <span className="shrink-0 rounded-full bg-white/10 px-2 py-0.5 text-xs tabular-nums">
-            {u.downvotes} downvoted
-          </span>
+
+          {u.banned ? (
+            <button
+              onClick={() => run(api.unbanGuest(u.ip))}
+              className="shrink-0 rounded-md px-2 py-0.5 text-xs text-white/50 hover:bg-white/15 hover:text-white"
+            >
+              Unblock
+            </button>
+          ) : picking === u.ip ? (
+            <div className="flex shrink-0 items-center gap-1">
+              {BAN_OPTIONS.map((o) => (
+                <button
+                  key={o.label}
+                  onClick={() => run(api.banGuest(u.ip, o.minutes))}
+                  className="rounded-md bg-red-500/20 px-1.5 py-0.5 text-xs text-red-200 hover:bg-red-500/35"
+                >
+                  {o.label}
+                </button>
+              ))}
+              <button
+                onClick={() => setPicking(null)}
+                className="rounded-md px-1 py-0.5 text-xs text-white/40 hover:text-white"
+                aria-label="Cancel"
+              >
+                ✕
+              </button>
+            </div>
+          ) : (
+            <button
+              onClick={() => setPicking(u.ip)}
+              className="shrink-0 rounded-md px-2 py-0.5 text-xs text-white/50 hover:bg-red-500/20 hover:text-red-300"
+              title="Block this guest from adding songs"
+            >
+              Block
+            </button>
+          )}
         </li>
       ))}
     </ul>

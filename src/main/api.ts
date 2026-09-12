@@ -26,6 +26,7 @@ import {
 } from './queue'
 import { addStandby, clearStandby, listStandby, removeStandby } from './standby'
 import { buildStats, clearStats } from './stats'
+import { banIp, listBans, unbanIp } from './bans'
 import { broadcastQueue } from './realtime'
 import {
   addPath,
@@ -106,7 +107,8 @@ export function createApiRouter(getRunningPort: () => number): Router {
       perUserQueueLimit: c.perUserQueueLimit,
       downvoteSkipThreshold: c.downvoteSkipThreshold,
       sameSongCooldownMinutes: c.sameSongCooldownMinutes,
-      sameArtistCooldownMinutes: c.sameArtistCooldownMinutes
+      sameArtistCooldownMinutes: c.sameArtistCooldownMinutes,
+      addRateLimitMinutes: c.addRateLimitMinutes
     })
   })
 
@@ -117,12 +119,17 @@ export function createApiRouter(getRunningPort: () => number): Router {
       downvoteSkipThreshold?: number
       sameSongCooldownMinutes?: number
       sameArtistCooldownMinutes?: number
+      addRateLimitMinutes?: number
       adminPassword?: string
     }
     const patch: Partial<ReturnType<typeof loadConfig>> = {}
 
     // Repeat cooldowns, in minutes. 0 = off, capped at a day.
-    for (const key of ['sameSongCooldownMinutes', 'sameArtistCooldownMinutes'] as const) {
+    for (const key of [
+      'sameSongCooldownMinutes',
+      'sameArtistCooldownMinutes',
+      'addRateLimitMinutes'
+    ] as const) {
       if (body[key] === undefined) continue
       const n = Number(body[key])
       if (!Number.isInteger(n) || n < 0 || n > 1440) {
@@ -486,6 +493,33 @@ export function createApiRouter(getRunningPort: () => number): Router {
   router.post('/stats/reset', requireAdmin, (_req, res) => {
     clearStats()
     res.json(buildStats())
+  })
+
+  // ---- Bans — admin ---------------------------------------------------------
+
+  router.get('/bans', requireAdmin, (_req, res) => {
+    res.json({ bans: listBans() })
+  })
+
+  router.post('/bans', requireAdmin, async (req, res) => {
+    const body = (req.body ?? {}) as { ip?: string; minutes?: number }
+    const raw = String(body.ip ?? '').trim()
+    if (!raw) {
+      res.status(400).json({ error: 'ip required' })
+      return
+    }
+    const ip = normalizeIp(raw)
+    // 0 / omitted = permanent; otherwise a window no longer than a month.
+    const minutes = body.minutes === undefined ? 0 : Number(body.minutes)
+    if (!Number.isInteger(minutes) || minutes < 0 || minutes > 60 * 24 * 31) {
+      res.status(400).json({ error: 'minutes must be between 0 and 44640' })
+      return
+    }
+    res.json({ bans: banIp(ip, await resolveHostname(ip), minutes) })
+  })
+
+  router.delete('/bans/:ip', requireAdmin, (req, res) => {
+    res.json({ bans: unbanIp(req.params.ip) })
   })
 
   // ---- Queue admin ----------------------------------------------------------

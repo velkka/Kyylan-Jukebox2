@@ -402,6 +402,7 @@ function Settings({ onError }: { onError: (msg: string) => void }): JSX.Element 
   const [downvotes, setDownvotes] = useState('')
   const [songCooldown, setSongCooldown] = useState('')
   const [artistCooldown, setArtistCooldown] = useState('')
+  const [rateLimit, setRateLimit] = useState('')
   const [note, setNote] = useState<string | null>(null)
   const [busy, setBusy] = useState(false)
 
@@ -414,6 +415,7 @@ function Settings({ onError }: { onError: (msg: string) => void }): JSX.Element 
         setDownvotes(String(s.downvoteSkipThreshold))
         setSongCooldown(String(s.sameSongCooldownMinutes))
         setArtistCooldown(String(s.sameArtistCooldownMinutes))
+        setRateLimit(String(s.addRateLimitMinutes))
       })
       .catch((e) => onError(String(e.message ?? e)))
   }, [])
@@ -427,7 +429,8 @@ function Settings({ onError }: { onError: (msg: string) => void }): JSX.Element 
         port: Number(port),
         downvoteSkipThreshold: Number(downvotes),
         sameSongCooldownMinutes: Number(songCooldown),
-        sameArtistCooldownMinutes: Number(artistCooldown)
+        sameArtistCooldownMinutes: Number(artistCooldown),
+        addRateLimitMinutes: Number(rateLimit)
       })
       setNote(r.restartRequired ? 'Saved. Restart the app for the new port to take effect.' : 'Saved.')
     } catch (e) {
@@ -502,6 +505,20 @@ function Settings({ onError }: { onError: (msg: string) => void }): JSX.Element 
             className="mt-1 w-full rounded-lg bg-black/40 px-3 py-2 outline-none ring-1 ring-white/10 focus:ring-jukebox-accent"
           />
           <span className="mt-1 block text-xs text-white/40">minutes · 0 = off</span>
+        </label>
+        <label className="text-sm">
+          <span className="text-white/60">Add rate limit</span>
+          <input
+            type="number"
+            min={0}
+            max={1440}
+            value={rateLimit}
+            onChange={(e) => setRateLimit(e.target.value)}
+            className="mt-1 w-full rounded-lg bg-black/40 px-3 py-2 outline-none ring-1 ring-white/10 focus:ring-jukebox-accent"
+          />
+          <span className="mt-1 block text-xs text-white/40">
+            minutes between one guest&apos;s adds · 0 = off
+          </span>
         </label>
       </div>
       {note && <p className="mt-2 text-xs text-jukebox-accent2">{note}</p>}

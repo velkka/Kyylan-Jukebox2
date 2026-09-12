@@ -15,6 +15,7 @@ import type {
   SetupRequest,
   SetupResponse,
   StandbyState,
+  BansResponse,
   StatsResponse,
   TracksResponse
 } from '@shared/types'
@@ -168,3 +169,11 @@ export const getStats = (limit?: number): Promise<StatsResponse> =>
   jsonFetch(`/api/stats${limit ? `?limit=${limit}` : ''}`)
 export const resetStats = (): Promise<StatsResponse> =>
   jsonFetch('/api/stats/reset', { method: 'POST' })
+
+// ---- Admin: bans -------------------------------------------------------------
+export const getBans = (): Promise<BansResponse> => jsonFetch('/api/bans')
+/** `minutes` of 0 (or omitted) bans permanently. */
+export const banGuest = (ip: string, minutes = 0): Promise<BansResponse> =>
+  jsonFetch('/api/bans', { method: 'POST', body: JSON.stringify({ ip, minutes }) })
+export const unbanGuest = (ip: string): Promise<BansResponse> =>
+  jsonFetch(`/api/bans/${encodeURIComponent(ip)}`, { method: 'DELETE' })

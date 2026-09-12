@@ -5,6 +5,7 @@ import { getState, loadTrack, pause } from './player'
 import { broadcastQueue } from './realtime'
 import { standbyTrackIds } from './standby'
 import { recordDownvote, recordPlay, recordRequest } from './stats'
+import { banError } from './bans'
 import { NowPlaying, QueueEntry, QueueState, Track } from '@shared/types'
 
 // Sentinel "added by" for standby (filler) tracks, so they never count against a
@@ -21,6 +22,29 @@ let downvoteEntryId: number | null = null
 let downvoters = new Set<string>()
 
 const minutesAgo = (m: number): string => new Date(Date.now() - m * 60_000).toISOString()
+
+/**
+ * Minimum gap between one guest's adds. Measured from their last successful
+ * add, so it throttles how often they may queue rather than how many at once
+ * (that is `perUserQueueLimit`). 0 is off.
+ */
+function rateLimitError(ip: string): string | null {
+  const minutes = loadConfig().addRateLimitMinutes
+  if (minutes <= 0) return null
+
+  const last = getDb()
+    .prepare(
+      'SELECT requested_at FROM request_log WHERE requested_by_ip = ? ORDER BY id DESC LIMIT 1'
+    )
+    .get(ip) as { requested_at: string } | undefined
+  if (!last) return null
+
+  const leftMs = minutes * 60_000 - (Date.now() - new Date(last.requested_at).getTime())
+  if (leftMs <= 0) return null
+  const left =
+    leftMs < 60_000 ? `${Math.ceil(leftMs / 1000)} s` : `${Math.ceil(leftMs / 60_000)} min`
+  return `You're adding songs too quickly — try again in ${left}.`
+}
 
 /**
  * Repeat cooldowns. A song/artist is blocked while it is still in rotation:
@@ -228,6 +252,14 @@ export function enqueue(trackId: number, ip: string, name?: string): void {
   const db = getDb()
   const track = getTrackById(trackId)
   if (!track) throw new QueueError('Track not found', 404)
+
+  // Order matters: the most decisive reason first, so a banned guest is never
+  // told merely to wait.
+  const banned = banError(ip)
+  if (banned) throw new QueueError(banned, 403)
+
+  const tooSoon = rateLimitError(ip)
+  if (tooSoon) throw new QueueError(tooSoon, 429)
 
   const cooldown = cooldownError(track)
   if (cooldown) throw new QueueError(cooldown, 409)

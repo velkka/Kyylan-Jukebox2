@@ -125,7 +125,16 @@ const MIGRATIONS: string[] = [
      voter_name TEXT,
      voted_at   TEXT NOT NULL
    );
-   CREATE INDEX idx_downvotes_ip ON downvote_log(voter_ip);`
+   CREATE INDEX idx_downvotes_ip ON downvote_log(voter_ip);`,
+
+  // 9: guests barred from adding songs. One row per IP; `expires_at` NULL means
+  // permanent. Expired rows are pruned lazily on read rather than by a timer.
+  `CREATE TABLE bans (
+     ip         TEXT PRIMARY KEY,
+     name       TEXT,
+     banned_at  TEXT NOT NULL,
+     expires_at TEXT
+   );`
 ]
 
 function migrate(d: Database.Database): void {
