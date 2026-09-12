@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react'
 import type { AlbumSummary, ArtistSummary, Track } from '@shared/types'
 import { getAlbums, getArtists, getTracks } from '../api'
 import { useJukebox } from '../JukeboxContext'
@@ -103,32 +103,53 @@ function BrowseTab({ onError }: { onError: (m: string) => void }): JSX.Element {
   // Kept here so the chosen letter survives drilling into an artist and back.
   const [letter, setLetter] = useState<string | null>(null)
 
-  if (artist && album) {
-    return (
-      <AlbumSongs
-        album={album}
-        onBack={() => setAlbum(null)}
-        onError={onError}
-      />
-    )
+  // 0 = artists, 1 = that artist's albums, 2 = that album's songs.
+  const level = artist == null ? 0 : album == null ? 1 : 2
+  // Where the reader was on each level. Outer levels stay mounted (merely
+  // hidden) rather than being torn down, so their loaded pages survive too —
+  // without that a remembered offset could point past the end of a freshly
+  // refetched first page.
+  const offsets = useRef<number[]>([0, 0, 0])
+  const restoreTo = useRef<number | null>(null)
+
+  /** Moves to another level, remembering where we were and where to land. */
+  const navigate = (to: number, apply: () => void): void => {
+    offsets.current[level] = window.scrollY
+    restoreTo.current = to < level ? offsets.current[to] : 0 // deeper = start at the top
+    apply()
   }
-  if (artist) {
-    return (
-      <ArtistAlbums
-        artist={artist}
-        onBack={() => setArtist(null)}
-        onOpen={(a) => setAlbum(a)}
-        onError={onError}
-      />
-    )
-  }
+
+  // Before paint, so the reader never sees the list flash at the wrong offset.
+  useLayoutEffect(() => {
+    if (restoreTo.current == null) return
+    window.scrollTo(0, restoreTo.current)
+    restoreTo.current = null
+  }, [artist, album])
+
   return (
-    <ArtistsList
-      letter={letter}
-      onLetter={setLetter}
-      onOpen={(name) => setArtist(name)}
-      onError={onError}
-    />
+    <>
+      <div className={level === 0 ? undefined : 'hidden'}>
+        <ArtistsList
+          letter={letter}
+          onLetter={setLetter}
+          onOpen={(name) => navigate(1, () => setArtist(name))}
+          onError={onError}
+        />
+      </div>
+      {artist != null && (
+        <div className={level === 1 ? undefined : 'hidden'}>
+          <ArtistAlbums
+            artist={artist}
+            onBack={() => navigate(0, () => setArtist(null))}
+            onOpen={(a) => navigate(2, () => setAlbum(a))}
+            onError={onError}
+          />
+        </div>
+      )}
+      {artist != null && album != null && (
+        <AlbumSongs album={album} onBack={() => navigate(1, () => setAlbum(null))} onError={onError} />
+      )}
+    </>
   )
 }
 
