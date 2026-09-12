@@ -268,6 +268,46 @@ export interface EnqueueRequest {
   trackId: number
 }
 
+// ---- History & stats ---------------------------------------------------------
+
+/** One song that went on air, newest first in the history list. */
+export interface PlayHistoryItem {
+  id: number
+  trackId: number
+  title: string
+  artist: string | null
+  /** Null once the track has been pruned from the library. */
+  artHash: string | null
+  /** Hostname of the guest who requested it; null for standby filler. */
+  requestedByName: string | null
+  isStandby: boolean
+  playedAt: string
+}
+
+/** A song ranked by how often it was played or downvoted. */
+export interface TrackStat {
+  trackId: number
+  title: string
+  artist: string | null
+  count: number
+}
+
+/** A guest, keyed by IP and labelled with the most recent hostname seen. */
+export interface UserStat {
+  ip: string
+  name: string | null
+  requests: number
+  downvotes: number
+}
+
+export interface StatsResponse {
+  history: PlayHistoryItem[]
+  topPlayed: TrackStat[]
+  topDownvoted: TrackStat[]
+  users: UserStat[]
+  totals: { plays: number; requests: number; downvotes: number }
+}
+
 /** Real-time messages pushed server → client over the WebSocket. */
 export type RealtimeMessage =
   | { type: 'queue'; payload: QueueState }

@@ -15,6 +15,7 @@ import type {
   SetupRequest,
   SetupResponse,
   StandbyState,
+  StatsResponse,
   TracksResponse
 } from '@shared/types'
 
@@ -161,3 +162,9 @@ export const saveSettings = (
   patch: AdminSettingsUpdate
 ): Promise<{ restartRequired: boolean }> =>
   jsonFetch('/api/admin/settings', { method: 'POST', body: JSON.stringify(patch) })
+
+// ---- Admin: history & stats --------------------------------------------------
+export const getStats = (limit?: number): Promise<StatsResponse> =>
+  jsonFetch(`/api/stats${limit ? `?limit=${limit}` : ''}`)
+export const resetStats = (): Promise<StatsResponse> =>
+  jsonFetch('/api/stats/reset', { method: 'POST' })

@@ -25,6 +25,7 @@ import {
   skip
 } from './queue'
 import { addStandby, clearStandby, listStandby, removeStandby } from './standby'
+import { buildStats, clearStats } from './stats'
 import { broadcastQueue } from './realtime'
 import {
   addPath,
@@ -468,10 +469,23 @@ export function createApiRouter(getRunningPort: () => number): Router {
     }
   })
 
-  router.post('/queue/downvote', (req, res) => {
+  router.post('/queue/downvote', async (req, res) => {
     const ip = clientIp(req)
-    downvote(ip)
+    downvote(ip, await resolveHostname(ip))
     res.json(buildQueueState(ip))
+  })
+
+  // ---- History & stats — admin ----------------------------------------------
+
+  // Admin-only: the per-guest counts identify individual devices on the LAN.
+  router.get('/stats', requireAdmin, (req, res) => {
+    const limit = Math.min(Math.max(Number(req.query.limit) || 100, 1), 500)
+    res.json(buildStats(limit))
+  })
+
+  router.post('/stats/reset', requireAdmin, (_req, res) => {
+    clearStats()
+    res.json(buildStats())
   })
 
   // ---- Queue admin ----------------------------------------------------------

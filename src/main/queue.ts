@@ -4,6 +4,7 @@ import { getTrackById } from './library'
 import { getState, loadTrack, pause } from './player'
 import { broadcastQueue } from './realtime'
 import { standbyTrackIds } from './standby'
+import { recordDownvote, recordPlay, recordRequest } from './stats'
 import { NowPlaying, QueueEntry, QueueState, Track } from '@shared/types'
 
 // Sentinel "added by" for standby (filler) tracks, so they never count against a
@@ -74,13 +75,13 @@ function pendingCountFor(ip: string): number {
   ).c
 }
 
-/** The currently playing entry's id, or null when it's a standby (filler) track. */
-function votableEntryId(): number | null {
+/** The currently playing entry, or null when it's a standby (filler) track. */
+function votableEntry(): { id: number; trackId: number } | null {
   const row = getDb()
-    .prepare("SELECT id, added_by_ip FROM queue WHERE status = 'playing' LIMIT 1")
-    .get() as { id: number; added_by_ip: string } | undefined
+    .prepare("SELECT id, track_id, added_by_ip FROM queue WHERE status = 'playing' LIMIT 1")
+    .get() as { id: number; track_id: number; added_by_ip: string } | undefined
   if (!row || row.added_by_ip === STANDBY_IP) return null
-  return row.id
+  return { id: row.id, trackId: row.track_id }
 }
 
 /** Chooses the next standby track (sequential or shuffled), or null if none. */
@@ -197,7 +198,7 @@ export function advance(): void {
 
   if (next) {
     db.prepare("UPDATE queue SET status = 'playing' WHERE id = ?").run(next.id)
-    recordPlay(next.track_id)
+    recordPlay(next.track_id, next.added_by_ip, next.added_by_name, false)
     loadTrack(next.track_id, true)
   } else if (loadConfig().standbyEnabled) {
     const trackId = pickStandbyTrack()
@@ -206,7 +207,7 @@ export function advance(): void {
         `INSERT INTO queue (track_id, added_by_ip, added_by_name, added_at, position, status)
          VALUES (?, ?, NULL, ?, 0, 'playing')`
       ).run(trackId, STANDBY_IP, new Date().toISOString())
-      recordPlay(trackId)
+      recordPlay(trackId, null, null, true)
       loadTrack(trackId, true)
     } else {
       pause()
@@ -215,19 +216,6 @@ export function advance(): void {
     pause()
   }
   broadcastQueue()
-}
-
-/** Logs a play for the repeat cooldowns, and trims history older than a day. */
-function recordPlay(trackId: number): void {
-  const db = getDb()
-  const track = getTrackById(trackId)
-  db.prepare('INSERT INTO play_history (track_id, artist, played_at) VALUES (?, ?, ?)').run(
-    trackId,
-    track?.artist ?? null,
-    new Date().toISOString()
-  )
-  const dayAgo = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString()
-  db.prepare('DELETE FROM play_history WHERE played_at < ?').run(dayAgo)
 }
 
 /** Starts playback if nothing is currently playing but songs are queued. */
@@ -262,6 +250,7 @@ export function enqueue(trackId: number, ip: string, name?: string): void {
     `INSERT INTO queue (track_id, added_by_ip, added_by_name, added_at, position, status)
      VALUES (?, ?, ?, ?, ?, 'pending')`
   ).run(trackId, ip, name?.trim() || null, new Date().toISOString(), nextPos)
+  recordRequest(trackId, ip, name)
 
   const playing = db
     .prepare("SELECT added_by_ip AS ip FROM queue WHERE status = 'playing' LIMIT 1")
@@ -316,21 +305,23 @@ export function skip(): void {
 }
 
 /** Guest: downvote the current song; skips it once the threshold is reached. */
-export function downvote(ip: string): void {
+export function downvote(ip: string, name?: string): void {
   const raw = loadConfig().downvoteSkipThreshold
   if (raw === 0) return // feature disabled
   const threshold = Math.abs(raw) // negative = same logic, count hidden in the UI
   // Null when nothing is playing, or when the current song is standby filler —
   // filler isn't a guest's pick, so there's nothing to vote off.
-  const playingId = votableEntryId()
-  if (playingId == null) return
+  const playing = votableEntry()
+  if (playing == null) return
 
-  if (downvoteEntryId !== playingId) {
+  if (downvoteEntryId !== playing.id) {
     // First vote on this song.
-    downvoteEntryId = playingId
+    downvoteEntryId = playing.id
     downvoters = new Set()
   }
+  if (downvoters.has(ip)) return // already voted — don't double-count
   downvoters.add(ip)
+  recordDownvote(playing.trackId, ip, name)
 
   if (downvoters.size >= threshold) {
     advance() // enough downvotes → skip (advance clears the vote state)

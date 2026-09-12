@@ -94,7 +94,38 @@ const MIGRATIONS: string[] = [
      artist    TEXT,
      played_at TEXT NOT NULL
    );
-   CREATE INDEX idx_history_played_at ON play_history(played_at);`
+   CREATE INDEX idx_history_played_at ON play_history(played_at);`,
+
+  // 8: history & stats. `play_history` gains the requester and an inline title
+  // so the log stays readable after a rescan prunes the track; `request_log`
+  // counts adds (including ones removed before they played) and `downvote_log`
+  // persists votes, which until now only lived in memory for the current song.
+  `ALTER TABLE play_history ADD COLUMN title TEXT;
+   ALTER TABLE play_history ADD COLUMN requested_by_ip TEXT;
+   ALTER TABLE play_history ADD COLUMN requested_by_name TEXT;
+   ALTER TABLE play_history ADD COLUMN is_standby INTEGER NOT NULL DEFAULT 0;
+
+   CREATE TABLE request_log (
+     id                INTEGER PRIMARY KEY AUTOINCREMENT,
+     track_id          INTEGER NOT NULL,
+     title             TEXT,
+     artist            TEXT,
+     requested_by_ip   TEXT NOT NULL,
+     requested_by_name TEXT,
+     requested_at      TEXT NOT NULL
+   );
+   CREATE INDEX idx_requests_ip ON request_log(requested_by_ip);
+
+   CREATE TABLE downvote_log (
+     id         INTEGER PRIMARY KEY AUTOINCREMENT,
+     track_id   INTEGER NOT NULL,
+     title      TEXT,
+     artist     TEXT,
+     voter_ip   TEXT NOT NULL,
+     voter_name TEXT,
+     voted_at   TEXT NOT NULL
+   );
+   CREATE INDEX idx_downvotes_ip ON downvote_log(voter_ip);`
 ]
 
 function migrate(d: Database.Database): void {
