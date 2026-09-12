@@ -440,6 +440,18 @@ export function queryAlbums(query: {
   return { albums, total }
 }
 
+/** One row per indexed track, for the CSV export. Ordered for a readable file. */
+export function exportRows(): Record<string, unknown>[] {
+  return getDb()
+    .prepare(
+      `SELECT id, title, artist, album, album_artist AS albumArtist, genre, year,
+              track_no AS trackNo, disc_no AS discNo, duration, path, added_at AS addedAt
+         FROM tracks
+        ORDER BY artist COLLATE NOCASE, album COLLATE NOCASE, disc_no, track_no, title COLLATE NOCASE`
+    )
+    .all() as Record<string, unknown>[]
+}
+
 export function getTrackById(id: number): Track | null {
   const row = getDb().prepare('SELECT * FROM tracks WHERE id = ?').get(id) as TrackRow | undefined
   return row ? rowToTrack(row) : null

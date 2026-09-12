@@ -32,6 +32,7 @@ import {
   addPath,
   getArt,
   getTrackPath,
+  exportRows,
   listPathsWithCounts,
   queryAlbums,
   queryArtists,
@@ -339,6 +340,31 @@ export function createApiRouter(getRunningPort: () => number): Router {
     res.json({ canceled: false, path: chosen } satisfies BrowseFolderResponse)
   })
 
+  // Admin-only: the export carries filesystem paths, which guests never see.
+  router.get('/library/export.csv', requireAdmin, (_req, res) => {
+    const rows = exportRows()
+    const columns = [
+      'id',
+      'title',
+      'artist',
+      'album',
+      'albumArtist',
+      'genre',
+      'year',
+      'trackNo',
+      'discNo',
+      'duration',
+      'path',
+      'addedAt'
+    ]
+    const body = [columns.join(','), ...rows.map((r) => columns.map((c) => csvCell(r[c])).join(','))]
+    const stamp = new Date().toISOString().slice(0, 10)
+    res.setHeader('Content-Type', 'text/csv; charset=utf-8')
+    res.setHeader('Content-Disposition', `attachment; filename="kyylan-library-${stamp}.csv"`)
+    // Leading BOM so Excel reads the accents in artist names as UTF-8.
+    res.send('\uFEFF' + body.join('\r\n') + '\r\n')
+  })
+
   router.post('/library/scan', requireAdmin, (_req, res) => {
     // Fire-and-forget; progress is polled via /library/scan/status.
     void scanAll()
@@ -598,6 +624,16 @@ export function createApiRouter(getRunningPort: () => number): Router {
   })
 
   return router
+}
+
+/**
+ * One CSV field. Quotes anything containing a delimiter, quote or newline, and
+ * doubles embedded quotes, per RFC 4180.
+ */
+function csvCell(value: unknown): string {
+  if (value === null || value === undefined) return ''
+  const text = String(value)
+  return /[",\r\n]/.test(text) ? `"${text.replace(/"/g, '""')}"` : text
 }
 
 /** Maps a file extension to a browser-friendly audio MIME type. */

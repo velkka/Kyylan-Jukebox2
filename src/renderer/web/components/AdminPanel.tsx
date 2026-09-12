@@ -400,6 +400,15 @@ function MusicFolders({ onError }: { onError: (msg: string) => void }): JSX.Elem
         >
           {scan?.scanning ? 'Scanning…' : 'Rescan library'}
         </button>
+        {/* A plain link, so the browser handles the download and its filename. */}
+        <a
+          href="/api/library/export.csv"
+          download
+          className="shrink-0 rounded-lg bg-white/10 px-3 py-1.5 text-sm hover:bg-white/20"
+          title="Download the whole library as a CSV file"
+        >
+          Export CSV
+        </a>
         {scan && (
           <span className="text-xs text-white/50">
             {scan.scanning
