@@ -1,0 +1,10 @@
+{
+  "port": 9000,
+  "futureSetting": {
+    "nested": [
+      1,
+      2
+    ]
+  },
+  "adminPassword": "x"
+}

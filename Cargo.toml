@@ -1,0 +1,12 @@
+# Rust port of Kyylan Jukebox — see the port plan. Lives alongside the Electron app on the
+# rust-port branch until cutover; the React UI is shared by both.
+[workspace]
+resolver = "2"
+members = ["crates/*"]
+
+[workspace.package]
+version = "0.3.0"
+edition = "2021"
+rust-version = "1.85"
+license = "UNLICENSED"
+publish = false

@@ -1,0 +1,45 @@
+name: Rust
+
+# The Rust port's own checks, on every platform the jukebox ships for. The Electron release
+# workflow is separate and unaffected.
+on:
+  push:
+    branches: [rust-port]
+    paths:
+      - 'crates/**'
+      - 'Cargo.toml'
+      - 'Cargo.lock'
+      # The Rust types and migrations are held to these, so a change here must re-check them.
+      - 'src/main/db.ts'
+      - 'src/shared/types.ts'
+      - '.github/workflows/rust.yml'
+  pull_request:
+    paths:
+      - 'crates/**'
+      - 'Cargo.toml'
+      - 'Cargo.lock'
+      - 'src/main/db.ts'
+      - 'src/shared/types.ts'
+      - '.github/workflows/rust.yml'
+  workflow_dispatch:
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: cargo fmt --all -- --check
+      - run: cargo clippy --workspace --all-targets --locked -- -D warnings
+
+  test:
+    name: test (${{ matrix.os }})
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      # Includes reading the data directory Electron v0.2.15 wrote, and checking this
+      # platform's default data folder is Electron's.
+      - run: cargo test --workspace --locked

@@ -1,0 +1,17 @@
+{
+  "configured": true,
+  "port": 8094,
+  "adminPassword": "fixture-admin",
+  "libraryPaths": [
+    "/fixtures/music"
+  ],
+  "perUserQueueLimit": 3,
+  "outputDeviceId": null,
+  "standbyEnabled": true,
+  "standbyShuffle": false,
+  "standbyRandomEnabled": false,
+  "downvoteSkipThreshold": 5,
+  "sameSongCooldownMinutes": 0,
+  "sameArtistCooldownMinutes": 0,
+  "addRateLimitMinutes": 0
+}

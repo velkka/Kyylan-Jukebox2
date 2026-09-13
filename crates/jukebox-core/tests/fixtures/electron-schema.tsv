@@ -1,0 +1,29 @@
+index	idx_downvotes_ip	downvote_log	CREATE INDEX idx_downvotes_ip ON downvote_log(voter_ip)
+index	idx_history_played_at	play_history	CREATE INDEX idx_history_played_at ON play_history(played_at)
+index	idx_queue_status_pos	queue	CREATE INDEX idx_queue_status_pos ON queue(status, position)
+index	idx_requests_ip	request_log	CREATE INDEX idx_requests_ip ON request_log(requested_by_ip)
+index	idx_tracks_album	tracks	CREATE INDEX idx_tracks_album  ON tracks(album COLLATE NOCASE)
+index	idx_tracks_artist	tracks	CREATE INDEX idx_tracks_artist ON tracks(artist COLLATE NOCASE)
+index	sqlite_autoindex_art_1	art	
+index	sqlite_autoindex_bans_1	bans	
+index	sqlite_autoindex_meta_1	meta	
+index	sqlite_autoindex_tracks_1	tracks	
+table	_migrations	_migrations	CREATE TABLE _migrations (\n    id         INTEGER PRIMARY KEY,\n    applied_at TEXT NOT NULL\n  )
+table	art	art	CREATE TABLE art (\n     hash TEXT PRIMARY KEY,\n     mime TEXT NOT NULL,\n     data BLOB NOT NULL\n   )
+table	bans	bans	CREATE TABLE bans (\n     ip         TEXT PRIMARY KEY,\n     name       TEXT,\n     banned_at  TEXT NOT NULL,\n     expires_at TEXT\n   )
+table	downvote_log	downvote_log	CREATE TABLE downvote_log (\n     id         INTEGER PRIMARY KEY AUTOINCREMENT,\n     track_id   INTEGER NOT NULL,\n     title      TEXT,\n     artist     TEXT,\n     voter_ip   TEXT NOT NULL,\n     voter_name TEXT,\n     voted_at   TEXT NOT NULL\n   )
+table	meta	meta	CREATE TABLE meta (\n     key   TEXT PRIMARY KEY,\n     value TEXT\n   )
+table	play_history	play_history	CREATE TABLE play_history (\n     id        INTEGER PRIMARY KEY AUTOINCREMENT,\n     track_id  INTEGER NOT NULL,\n     artist    TEXT,\n     played_at TEXT NOT NULL\n   , title TEXT, requested_by_ip TEXT, requested_by_name TEXT, is_standby INTEGER NOT NULL DEFAULT 0, source TEXT NOT NULL DEFAULT 'guest')
+table	queue	queue	CREATE TABLE queue (\n     id            INTEGER PRIMARY KEY AUTOINCREMENT,\n     track_id      INTEGER NOT NULL REFERENCES tracks(id) ON DELETE CASCADE,\n     added_by_ip   TEXT NOT NULL,\n     added_by_name TEXT,\n     added_at      TEXT NOT NULL,\n     position      INTEGER NOT NULL,\n     status        TEXT NOT NULL DEFAULT 'pending'\n   )
+table	request_log	request_log	CREATE TABLE request_log (\n     id                INTEGER PRIMARY KEY AUTOINCREMENT,\n     track_id          INTEGER NOT NULL,\n     title             TEXT,\n     artist            TEXT,\n     requested_by_ip   TEXT NOT NULL,\n     requested_by_name TEXT,\n     requested_at      TEXT NOT NULL\n   )
+table	sqlite_sequence	sqlite_sequence	CREATE TABLE sqlite_sequence(name,seq)
+table	standby	standby	CREATE TABLE standby (\n     id       INTEGER PRIMARY KEY AUTOINCREMENT,\n     track_id INTEGER NOT NULL REFERENCES tracks(id) ON DELETE CASCADE,\n     position INTEGER NOT NULL,\n     added_at TEXT NOT NULL\n   )
+table	tracks	tracks	CREATE TABLE tracks (\n     id           INTEGER PRIMARY KEY AUTOINCREMENT,\n     path         TEXT UNIQUE NOT NULL,\n     title        TEXT NOT NULL,\n     artist       TEXT,\n     album        TEXT,\n     album_artist TEXT,\n     genre        TEXT,\n     duration     REAL,\n     track_no     INTEGER,\n     disc_no      INTEGER,\n     year         INTEGER,\n     art_hash     TEXT,\n     mtime_ms     INTEGER NOT NULL,\n     added_at     TEXT NOT NULL,\n     seen         INTEGER NOT NULL DEFAULT 1\n   )
+table	tracks_fts	tracks_fts	CREATE VIRTUAL TABLE tracks_fts USING fts5(\n     title, artist, album,\n     content='tracks', content_rowid='id'\n   )
+table	tracks_fts_config	tracks_fts_config	CREATE TABLE 'tracks_fts_config'(k PRIMARY KEY, v) WITHOUT ROWID
+table	tracks_fts_data	tracks_fts_data	CREATE TABLE 'tracks_fts_data'(id INTEGER PRIMARY KEY, block BLOB)
+table	tracks_fts_docsize	tracks_fts_docsize	CREATE TABLE 'tracks_fts_docsize'(id INTEGER PRIMARY KEY, sz BLOB)
+table	tracks_fts_idx	tracks_fts_idx	CREATE TABLE 'tracks_fts_idx'(segid, term, pgno, PRIMARY KEY(segid, term)) WITHOUT ROWID
+trigger	tracks_ad	tracks	CREATE TRIGGER tracks_ad AFTER DELETE ON tracks BEGIN\n     INSERT INTO tracks_fts(tracks_fts, rowid, title, artist, album)\n       VALUES ('delete', old.id, old.title, old.artist, old.album);\n   END
+trigger	tracks_ai	tracks	CREATE TRIGGER tracks_ai AFTER INSERT ON tracks BEGIN\n     INSERT INTO tracks_fts(rowid, title, artist, album)\n       VALUES (new.id, new.title, new.artist, new.album);\n   END
+trigger	tracks_au	tracks	CREATE TRIGGER tracks_au AFTER UPDATE OF title, artist, album ON tracks BEGIN\n     INSERT INTO tracks_fts(tracks_fts, rowid, title, artist, album)\n       VALUES ('delete', old.id, old.title, old.artist, old.album);\n     INSERT INTO tracks_fts(rowid, title, artist, album)\n       VALUES (new.id, new.title, new.artist, new.album);\n   END

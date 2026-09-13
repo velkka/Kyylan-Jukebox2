@@ -1,0 +1,15 @@
+{
+  "configured": false,
+  "port": 8080,
+  "adminPassword": "",
+  "libraryPaths": [],
+  "perUserQueueLimit": 3,
+  "outputDeviceId": null,
+  "standbyEnabled": false,
+  "standbyShuffle": false,
+  "standbyRandomEnabled": false,
+  "downvoteSkipThreshold": 0,
+  "sameSongCooldownMinutes": 0,
+  "sameArtistCooldownMinutes": 0,
+  "addRateLimitMinutes": 0
+}

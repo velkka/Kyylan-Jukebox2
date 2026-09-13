@@ -1,0 +1,21 @@
+{
+  "configured": false,
+  "port": 9000,
+  "adminPassword": "x",
+  "libraryPaths": [],
+  "perUserQueueLimit": 3,
+  "outputDeviceId": null,
+  "standbyEnabled": false,
+  "standbyShuffle": false,
+  "standbyRandomEnabled": false,
+  "downvoteSkipThreshold": 0,
+  "sameSongCooldownMinutes": 0,
+  "sameArtistCooldownMinutes": 0,
+  "addRateLimitMinutes": 0,
+  "futureSetting": {
+    "nested": [
+      1,
+      2
+    ]
+  }
+}

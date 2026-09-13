@@ -1,0 +1,19 @@
+{
+  "configured": true,
+  "port": 8090,
+  "adminPassword": "party \"hat\" ö",
+  "libraryPaths": [
+    "/Users/example/Music/",
+    "D:\\Musiikki\\Äänet",
+    "/mnt/nas/music"
+  ],
+  "perUserQueueLimit": -3,
+  "outputDeviceId": "83306b786c8f45d76fd0cb9446cbc9448344f23d0af33f522500b434111febe2",
+  "standbyEnabled": true,
+  "standbyShuffle": false,
+  "standbyRandomEnabled": true,
+  "downvoteSkipThreshold": -4,
+  "sameSongCooldownMinutes": 60,
+  "sameArtistCooldownMinutes": 15,
+  "addRateLimitMinutes": 2
+}

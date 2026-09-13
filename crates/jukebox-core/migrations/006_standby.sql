@@ -1,0 +1,6 @@
+CREATE TABLE standby (
+     id       INTEGER PRIMARY KEY AUTOINCREMENT,
+     track_id INTEGER NOT NULL REFERENCES tracks(id) ON DELETE CASCADE,
+     position INTEGER NOT NULL,
+     added_at TEXT NOT NULL
+   );

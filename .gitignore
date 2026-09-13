@@ -17,3 +17,6 @@ build/tray@2x.png
 .DS_Store
 .env
 .env.*
+
+# Rust build output
+/target/
