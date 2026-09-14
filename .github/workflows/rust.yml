@@ -9,8 +9,10 @@ on:
       - 'crates/**'
       - 'Cargo.toml'
       - 'Cargo.lock'
-      # The Rust types and migrations are held to these, so a change here must re-check them.
+      # The Rust types, migrations and library are held to these, so a change here must
+      # re-check them.
       - 'src/main/db.ts'
+      - 'src/main/library.ts'
       - 'src/shared/types.ts'
       - '.github/workflows/rust.yml'
   pull_request:
@@ -19,6 +21,7 @@ on:
       - 'Cargo.toml'
       - 'Cargo.lock'
       - 'src/main/db.ts'
+      - 'src/main/library.ts'
       - 'src/shared/types.ts'
       - '.github/workflows/rust.yml'
   workflow_dispatch:

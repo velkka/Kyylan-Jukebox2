@@ -1,0 +1,4371 @@
+{
+  "electron": "31.7.7",
+  "musicMetadata": "7.14.0",
+  "sqlite": "3.49.2",
+  "scans": [
+    {
+      "setup": "first scan; the folder has a trailing slash",
+      "roots": [
+        "/music/"
+      ],
+      "status": {
+        "scanning": false,
+        "processed": 24,
+        "added": 24,
+        "updated": 0,
+        "removed": 0,
+        "total": 24,
+        "startedAt": true,
+        "finishedAt": true,
+        "error": null
+      },
+      "tracks": [
+        {
+          "id": 1,
+          "path": "/music/.hidden.mp3",
+          "title": ".hidden",
+          "artist": null,
+          "album": null,
+          "album_artist": null,
+          "genre": null,
+          "duration": 1.0710204081632653,
+          "track_no": null,
+          "disc_no": null,
+          "year": null,
+          "art_hash": null,
+          "mtime_ms": 1789372898381,
+          "added_at": "2026-09-14T08:01:38.394Z",
+          "seen": 1
+        },
+        {
+          "id": 2,
+          "path": "/music/Disc 2/bonus.mp3",
+          "title": "Full Tags",
+          "artist": "Äänitys Band",
+          "album": "Löyly Sessions",
+          "album_artist": "Various Artists",
+          "genre": "Rock",
+          "duration": 1.0710204081632653,
+          "track_no": 3,
+          "disc_no": 1,
+          "year": 1999,
+          "art_hash": "a0cc42b361c9663bdeff024d17c92b17f3e98f4e",
+          "mtime_ms": 1789372898380,
+          "added_at": "2026-09-14T08:01:38.397Z",
+          "seen": 1
+        },
+        {
+          "id": 3,
+          "path": "/music/adts-with-id3.aac",
+          "title": "ADTS Song",
+          "artist": "ADTS Artist",
+          "album": null,
+          "album_artist": null,
+          "genre": null,
+          "duration": 1.0681179138321995,
+          "track_no": null,
+          "disc_no": null,
+          "year": null,
+          "art_hash": null,
+          "mtime_ms": 1789372898381,
+          "added_at": "2026-09-14T08:01:38.399Z",
+          "seen": 1
+        },
+        {
+          "id": 4,
+          "path": "/music/album-artist-space.flac",
+          "title": "lower-case keys",
+          "artist": null,
+          "album": null,
+          "album_artist": "Spaced Key Artist",
+          "genre": null,
+          "duration": 1,
+          "track_no": null,
+          "disc_no": null,
+          "year": null,
+          "art_hash": null,
+          "mtime_ms": 1789372898384,
+          "added_at": "2026-09-14T08:01:38.400Z",
+          "seen": 1
+        },
+        {
+          "id": 5,
+          "path": "/music/ape-and-id3v2.mp3",
+          "title": "APE Title",
+          "artist": "APE Artist",
+          "album": "ID3 Album",
+          "album_artist": null,
+          "genre": null,
+          "duration": 1.0710204081632653,
+          "track_no": null,
+          "disc_no": null,
+          "year": 2010,
+          "art_hash": null,
+          "mtime_ms": 1789372898382,
+          "added_at": "2026-09-14T08:01:38.401Z",
+          "seen": 1
+        },
+        {
+          "id": 6,
+          "path": "/music/id3-chunk.wav",
+          "title": "Wave Song",
+          "artist": "Wave Artist",
+          "album": null,
+          "album_artist": null,
+          "genre": null,
+          "duration": 1,
+          "track_no": null,
+          "disc_no": null,
+          "year": null,
+          "art_hash": null,
+          "mtime_ms": 1789372898383,
+          "added_at": "2026-09-14T08:01:38.402Z",
+          "seen": 1
+        },
+        {
+          "id": 7,
+          "path": "/music/id3v1-only.mp3",
+          "title": "Only V1",
+          "artist": "Old Tagger",
+          "album": null,
+          "album_artist": null,
+          "genre": "Blues",
+          "duration": 1.0710204081632653,
+          "track_no": 2,
+          "disc_no": null,
+          "year": 1975,
+          "art_hash": null,
+          "mtime_ms": 1789372898384,
+          "added_at": "2026-09-14T08:01:38.403Z",
+          "seen": 1
+        },
+        {
+          "id": 8,
+          "path": "/music/id3v2-and-v1.mp3",
+          "title": "Long Title From ID3v2 That Is Past Thirty Chars",
+          "artist": "V2 Artist",
+          "album": "V1 Only Album",
+          "album_artist": null,
+          "genre": "Pop",
+          "duration": 1.0710204081632653,
+          "track_no": 9,
+          "disc_no": null,
+          "year": 1988,
+          "art_hash": null,
+          "mtime_ms": 1789372898382,
+          "added_at": "2026-09-14T08:01:38.404Z",
+          "seen": 1
+        },
+        {
+          "id": 9,
+          "path": "/music/id3v23-full.mp3",
+          "title": "Full Tags",
+          "artist": "Äänitys Band",
+          "album": "Löyly Sessions",
+          "album_artist": "Various Artists",
+          "genre": "Rock",
+          "duration": 1.0710204081632653,
+          "track_no": 3,
+          "disc_no": 1,
+          "year": 1999,
+          "art_hash": "a0cc42b361c9663bdeff024d17c92b17f3e98f4e",
+          "mtime_ms": 1789372898381,
+          "added_at": "2026-09-14T08:01:38.405Z",
+          "seen": 1
+        },
+        {
+          "id": 10,
+          "path": "/music/id3v23-genre-number.mp3",
+          "title": "Numbered Genre",
+          "artist": null,
+          "album": null,
+          "album_artist": null,
+          "genre": "Rock",
+          "duration": 1.0710204081632653,
+          "track_no": null,
+          "disc_no": null,
+          "year": null,
+          "art_hash": null,
+          "mtime_ms": 1789372898384,
+          "added_at": "2026-09-14T08:01:38.406Z",
+          "seen": 1
+        },
+        {
+          "id": 11,
+          "path": "/music/id3v23-latin1-utf8-bytes.mp3",
+          "title": "LÃ¶yly",
+          "artist": null,
+          "album": null,
+          "album_artist": null,
+          "genre": null,
+          "duration": 1.0710204081632653,
+          "track_no": null,
+          "disc_no": null,
+          "year": null,
+          "art_hash": null,
+          "mtime_ms": 1789372898380,
+          "added_at": "2026-09-14T08:01:38.407Z",
+          "seen": 1
+        },
+        {
+          "id": 12,
+          "path": "/music/id3v23-slash-artist.mp3",
+          "title": "Highway/Tunnel",
+          "artist": "AC",
+          "album": null,
+          "album_artist": null,
+          "genre": "Rock, Techno, Eurodisco",
+          "duration": 1.0710204081632653,
+          "track_no": null,
+          "disc_no": null,
+          "year": null,
+          "art_hash": null,
+          "mtime_ms": 1789372898383,
+          "added_at": "2026-09-14T08:01:38.408Z",
+          "seen": 1
+        },
+        {
+          "id": 13,
+          "path": "/music/id3v24-multi.mp3",
+          "title": "Second Title",
+          "artist": "Artist One",
+          "album": "Padded Album",
+          "album_artist": null,
+          "genre": "Rock, Pop",
+          "duration": 1.0710204081632653,
+          "track_no": 7,
+          "disc_no": null,
+          "year": 2001,
+          "art_hash": "d2e4930b6202f652cb1dd161d1709e799ec0e071",
+          "mtime_ms": 1789372898381,
+          "added_at": "2026-09-14T08:01:38.409Z",
+          "seen": 1
+        },
+        {
+          "id": 14,
+          "path": "/music/itunes.m4a",
+          "title": "iTunes Song",
+          "artist": "iTunes Artist",
+          "album": "iTunes Album",
+          "album_artist": "iTunes Album Artist",
+          "genre": "Electronic",
+          "duration": 1.0464399092970522,
+          "track_no": 5,
+          "disc_no": 1,
+          "year": 2004,
+          "art_hash": "a0cc42b361c9663bdeff024d17c92b17f3e98f4e",
+          "mtime_ms": 1789372898383,
+          "added_at": "2026-09-14T08:01:38.412Z",
+          "seen": 1
+        },
+        {
+          "id": 15,
+          "path": "/music/no-xing-header.mp3",
+          "title": "no-xing-header",
+          "artist": null,
+          "album": null,
+          "album_artist": null,
+          "genre": null,
+          "duration": 1.0710204081632653,
+          "track_no": null,
+          "disc_no": null,
+          "year": null,
+          "art_hash": null,
+          "mtime_ms": 1789372898382,
+          "added_at": "2026-09-14T08:01:38.413Z",
+          "seen": 1
+        },
+        {
+          "id": 16,
+          "path": "/music/not-audio.mp3",
+          "title": "not-audio",
+          "artist": null,
+          "album": null,
+          "album_artist": null,
+          "genre": null,
+          "duration": null,
+          "track_no": null,
+          "disc_no": null,
+          "year": null,
+          "art_hash": null,
+          "mtime_ms": 1789372898383,
+          "added_at": "2026-09-14T08:01:38.413Z",
+          "seen": 1
+        },
+        {
+          "id": 17,
+          "path": "/music/opus.opus",
+          "title": "Opus Song",
+          "artist": "Opus Artist",
+          "album": null,
+          "album_artist": null,
+          "genre": "Ambient",
+          "duration": 1,
+          "track_no": null,
+          "disc_no": null,
+          "year": null,
+          "art_hash": null,
+          "mtime_ms": 1789372898382,
+          "added_at": "2026-09-14T08:01:38.415Z",
+          "seen": 1
+        },
+        {
+          "id": 18,
+          "path": "/music/riff-info.wav",
+          "title": "Info Title",
+          "artist": "Info Artist",
+          "album": "Info Album",
+          "album_artist": null,
+          "genre": "Folk",
+          "duration": 1,
+          "track_no": null,
+          "disc_no": null,
+          "year": 1970,
+          "art_hash": null,
+          "mtime_ms": 1789372898384,
+          "added_at": "2026-09-14T08:01:38.416Z",
+          "seen": 1
+        },
+        {
+          "id": 19,
+          "path": "/music/txxx-artists.mp3",
+          "title": "Only Artists Frame",
+          "artist": "Duo One & Duo Two",
+          "album": null,
+          "album_artist": null,
+          "genre": null,
+          "duration": 1.0710204081632653,
+          "track_no": null,
+          "disc_no": null,
+          "year": null,
+          "art_hash": null,
+          "mtime_ms": 1789372898385,
+          "added_at": "2026-09-14T08:01:38.416Z",
+          "seen": 1
+        },
+        {
+          "id": 20,
+          "path": "/music/untagged.mp3",
+          "title": "untagged",
+          "artist": null,
+          "album": null,
+          "album_artist": null,
+          "genre": null,
+          "duration": 1.0710204081632653,
+          "track_no": null,
+          "disc_no": null,
+          "year": null,
+          "art_hash": null,
+          "mtime_ms": 1789372898381,
+          "added_at": "2026-09-14T08:01:38.417Z",
+          "seen": 1
+        },
+        {
+          "id": 21,
+          "path": "/music/vorbis-comments.flac",
+          "title": "Take Two",
+          "artist": "Main Artist",
+          "album": "FLAC Album",
+          "album_artist": "Album Artist",
+          "genre": "Jazz, Fusion",
+          "duration": 1,
+          "track_no": 4,
+          "disc_no": 2,
+          "year": 2003,
+          "art_hash": "d2e4930b6202f652cb1dd161d1709e799ec0e071",
+          "mtime_ms": 1789372898382,
+          "added_at": "2026-09-14T08:01:38.418Z",
+          "seen": 1
+        },
+        {
+          "id": 22,
+          "path": "/music/vorbis.oga",
+          "title": "Oga Extension",
+          "artist": null,
+          "album": null,
+          "album_artist": null,
+          "genre": null,
+          "duration": 1.0013605442176872,
+          "track_no": null,
+          "disc_no": null,
+          "year": null,
+          "art_hash": null,
+          "mtime_ms": 1789372898381,
+          "added_at": "2026-09-14T08:01:38.418Z",
+          "seen": 1
+        },
+        {
+          "id": 23,
+          "path": "/music/vorbis.ogg",
+          "title": "Ogg Song",
+          "artist": "Ogg Artist",
+          "album": "Ogg Album",
+          "album_artist": null,
+          "genre": null,
+          "duration": 1.0013605442176872,
+          "track_no": 2,
+          "disc_no": null,
+          "year": 1985,
+          "art_hash": "a0cc42b361c9663bdeff024d17c92b17f3e98f4e",
+          "mtime_ms": 1789372898382,
+          "added_at": "2026-09-14T08:01:38.419Z",
+          "seen": 1
+        },
+        {
+          "id": 24,
+          "path": "/music/whitespace-title.mp3",
+          "title": "whitespace-title",
+          "artist": "Spaced Artist",
+          "album": null,
+          "album_artist": null,
+          "genre": null,
+          "duration": 1.0710204081632653,
+          "track_no": null,
+          "disc_no": null,
+          "year": null,
+          "art_hash": null,
+          "mtime_ms": 1789372898383,
+          "added_at": "2026-09-14T08:01:38.420Z",
+          "seen": 1
+        }
+      ]
+    },
+    {
+      "setup": "nothing changed; the second folder is inside the first",
+      "roots": [
+        "/music",
+        "/music/Disc 2"
+      ],
+      "status": {
+        "scanning": false,
+        "processed": 25,
+        "added": 0,
+        "updated": 0,
+        "removed": 0,
+        "total": 24,
+        "startedAt": true,
+        "finishedAt": true,
+        "error": null
+      },
+      "tracks": [
+        {
+          "id": 1,
+          "path": "/music/.hidden.mp3",
+          "title": ".hidden",
+          "artist": null,
+          "album": null,
+          "album_artist": null,
+          "genre": null,
+          "duration": 1.0710204081632653,
+          "track_no": null,
+          "disc_no": null,
+          "year": null,
+          "art_hash": null,
+          "mtime_ms": 1789372898381,
+          "added_at": "2026-09-14T08:01:38.394Z",
+          "seen": 1
+        },
+        {
+          "id": 2,
+          "path": "/music/Disc 2/bonus.mp3",
+          "title": "Full Tags",
+          "artist": "Äänitys Band",
+          "album": "Löyly Sessions",
+          "album_artist": "Various Artists",
+          "genre": "Rock",
+          "duration": 1.0710204081632653,
+          "track_no": 3,
+          "disc_no": 1,
+          "year": 1999,
+          "art_hash": "a0cc42b361c9663bdeff024d17c92b17f3e98f4e",
+          "mtime_ms": 1789372898380,
+          "added_at": "2026-09-14T08:01:38.397Z",
+          "seen": 1
+        },
+        {
+          "id": 3,
+          "path": "/music/adts-with-id3.aac",
+          "title": "ADTS Song",
+          "artist": "ADTS Artist",
+          "album": null,
+          "album_artist": null,
+          "genre": null,
+          "duration": 1.0681179138321995,
+          "track_no": null,
+          "disc_no": null,
+          "year": null,
+          "art_hash": null,
+          "mtime_ms": 1789372898381,
+          "added_at": "2026-09-14T08:01:38.399Z",
+          "seen": 1
+        },
+        {
+          "id": 4,
+          "path": "/music/album-artist-space.flac",
+          "title": "lower-case keys",
+          "artist": null,
+          "album": null,
+          "album_artist": "Spaced Key Artist",
+          "genre": null,
+          "duration": 1,
+          "track_no": null,
+          "disc_no": null,
+          "year": null,
+          "art_hash": null,
+          "mtime_ms": 1789372898384,
+          "added_at": "2026-09-14T08:01:38.400Z",
+          "seen": 1
+        },
+        {
+          "id": 5,
+          "path": "/music/ape-and-id3v2.mp3",
+          "title": "APE Title",
+          "artist": "APE Artist",
+          "album": "ID3 Album",
+          "album_artist": null,
+          "genre": null,
+          "duration": 1.0710204081632653,
+          "track_no": null,
+          "disc_no": null,
+          "year": 2010,
+          "art_hash": null,
+          "mtime_ms": 1789372898382,
+          "added_at": "2026-09-14T08:01:38.401Z",
+          "seen": 1
+        },
+        {
+          "id": 6,
+          "path": "/music/id3-chunk.wav",
+          "title": "Wave Song",
+          "artist": "Wave Artist",
+          "album": null,
+          "album_artist": null,
+          "genre": null,
+          "duration": 1,
+          "track_no": null,
+          "disc_no": null,
+          "year": null,
+          "art_hash": null,
+          "mtime_ms": 1789372898383,
+          "added_at": "2026-09-14T08:01:38.402Z",
+          "seen": 1
+        },
+        {
+          "id": 7,
+          "path": "/music/id3v1-only.mp3",
+          "title": "Only V1",
+          "artist": "Old Tagger",
+          "album": null,
+          "album_artist": null,
+          "genre": "Blues",
+          "duration": 1.0710204081632653,
+          "track_no": 2,
+          "disc_no": null,
+          "year": 1975,
+          "art_hash": null,
+          "mtime_ms": 1789372898384,
+          "added_at": "2026-09-14T08:01:38.403Z",
+          "seen": 1
+        },
+        {
+          "id": 8,
+          "path": "/music/id3v2-and-v1.mp3",
+          "title": "Long Title From ID3v2 That Is Past Thirty Chars",
+          "artist": "V2 Artist",
+          "album": "V1 Only Album",
+          "album_artist": null,
+          "genre": "Pop",
+          "duration": 1.0710204081632653,
+          "track_no": 9,
+          "disc_no": null,
+          "year": 1988,
+          "art_hash": null,
+          "mtime_ms": 1789372898382,
+          "added_at": "2026-09-14T08:01:38.404Z",
+          "seen": 1
+        },
+        {
+          "id": 9,
+          "path": "/music/id3v23-full.mp3",
+          "title": "Full Tags",
+          "artist": "Äänitys Band",
+          "album": "Löyly Sessions",
+          "album_artist": "Various Artists",
+          "genre": "Rock",
+          "duration": 1.0710204081632653,
+          "track_no": 3,
+          "disc_no": 1,
+          "year": 1999,
+          "art_hash": "a0cc42b361c9663bdeff024d17c92b17f3e98f4e",
+          "mtime_ms": 1789372898381,
+          "added_at": "2026-09-14T08:01:38.405Z",
+          "seen": 1
+        },
+        {
+          "id": 10,
+          "path": "/music/id3v23-genre-number.mp3",
+          "title": "Numbered Genre",
+          "artist": null,
+          "album": null,
+          "album_artist": null,
+          "genre": "Rock",
+          "duration": 1.0710204081632653,
+          "track_no": null,
+          "disc_no": null,
+          "year": null,
+          "art_hash": null,
+          "mtime_ms": 1789372898384,
+          "added_at": "2026-09-14T08:01:38.406Z",
+          "seen": 1
+        },
+        {
+          "id": 11,
+          "path": "/music/id3v23-latin1-utf8-bytes.mp3",
+          "title": "LÃ¶yly",
+          "artist": null,
+          "album": null,
+          "album_artist": null,
+          "genre": null,
+          "duration": 1.0710204081632653,
+          "track_no": null,
+          "disc_no": null,
+          "year": null,
+          "art_hash": null,
+          "mtime_ms": 1789372898380,
+          "added_at": "2026-09-14T08:01:38.407Z",
+          "seen": 1
+        },
+        {
+          "id": 12,
+          "path": "/music/id3v23-slash-artist.mp3",
+          "title": "Highway/Tunnel",
+          "artist": "AC",
+          "album": null,
+          "album_artist": null,
+          "genre": "Rock, Techno, Eurodisco",
+          "duration": 1.0710204081632653,
+          "track_no": null,
+          "disc_no": null,
+          "year": null,
+          "art_hash": null,
+          "mtime_ms": 1789372898383,
+          "added_at": "2026-09-14T08:01:38.408Z",
+          "seen": 1
+        },
+        {
+          "id": 13,
+          "path": "/music/id3v24-multi.mp3",
+          "title": "Second Title",
+          "artist": "Artist One",
+          "album": "Padded Album",
+          "album_artist": null,
+          "genre": "Rock, Pop",
+          "duration": 1.0710204081632653,
+          "track_no": 7,
+          "disc_no": null,
+          "year": 2001,
+          "art_hash": "d2e4930b6202f652cb1dd161d1709e799ec0e071",
+          "mtime_ms": 1789372898381,
+          "added_at": "2026-09-14T08:01:38.409Z",
+          "seen": 1
+        },
+        {
+          "id": 14,
+          "path": "/music/itunes.m4a",
+          "title": "iTunes Song",
+          "artist": "iTunes Artist",
+          "album": "iTunes Album",
+          "album_artist": "iTunes Album Artist",
+          "genre": "Electronic",
+          "duration": 1.0464399092970522,
+          "track_no": 5,
+          "disc_no": 1,
+          "year": 2004,
+          "art_hash": "a0cc42b361c9663bdeff024d17c92b17f3e98f4e",
+          "mtime_ms": 1789372898383,
+          "added_at": "2026-09-14T08:01:38.412Z",
+          "seen": 1
+        },
+        {
+          "id": 15,
+          "path": "/music/no-xing-header.mp3",
+          "title": "no-xing-header",
+          "artist": null,
+          "album": null,
+          "album_artist": null,
+          "genre": null,
+          "duration": 1.0710204081632653,
+          "track_no": null,
+          "disc_no": null,
+          "year": null,
+          "art_hash": null,
+          "mtime_ms": 1789372898382,
+          "added_at": "2026-09-14T08:01:38.413Z",
+          "seen": 1
+        },
+        {
+          "id": 16,
+          "path": "/music/not-audio.mp3",
+          "title": "not-audio",
+          "artist": null,
+          "album": null,
+          "album_artist": null,
+          "genre": null,
+          "duration": null,
+          "track_no": null,
+          "disc_no": null,
+          "year": null,
+          "art_hash": null,
+          "mtime_ms": 1789372898383,
+          "added_at": "2026-09-14T08:01:38.413Z",
+          "seen": 1
+        },
+        {
+          "id": 17,
+          "path": "/music/opus.opus",
+          "title": "Opus Song",
+          "artist": "Opus Artist",
+          "album": null,
+          "album_artist": null,
+          "genre": "Ambient",
+          "duration": 1,
+          "track_no": null,
+          "disc_no": null,
+          "year": null,
+          "art_hash": null,
+          "mtime_ms": 1789372898382,
+          "added_at": "2026-09-14T08:01:38.415Z",
+          "seen": 1
+        },
+        {
+          "id": 18,
+          "path": "/music/riff-info.wav",
+          "title": "Info Title",
+          "artist": "Info Artist",
+          "album": "Info Album",
+          "album_artist": null,
+          "genre": "Folk",
+          "duration": 1,
+          "track_no": null,
+          "disc_no": null,
+          "year": 1970,
+          "art_hash": null,
+          "mtime_ms": 1789372898384,
+          "added_at": "2026-09-14T08:01:38.416Z",
+          "seen": 1
+        },
+        {
+          "id": 19,
+          "path": "/music/txxx-artists.mp3",
+          "title": "Only Artists Frame",
+          "artist": "Duo One & Duo Two",
+          "album": null,
+          "album_artist": null,
+          "genre": null,
+          "duration": 1.0710204081632653,
+          "track_no": null,
+          "disc_no": null,
+          "year": null,
+          "art_hash": null,
+          "mtime_ms": 1789372898385,
+          "added_at": "2026-09-14T08:01:38.416Z",
+          "seen": 1
+        },
+        {
+          "id": 20,
+          "path": "/music/untagged.mp3",
+          "title": "untagged",
+          "artist": null,
+          "album": null,
+          "album_artist": null,
+          "genre": null,
+          "duration": 1.0710204081632653,
+          "track_no": null,
+          "disc_no": null,
+          "year": null,
+          "art_hash": null,
+          "mtime_ms": 1789372898381,
+          "added_at": "2026-09-14T08:01:38.417Z",
+          "seen": 1
+        },
+        {
+          "id": 21,
+          "path": "/music/vorbis-comments.flac",
+          "title": "Take Two",
+          "artist": "Main Artist",
+          "album": "FLAC Album",
+          "album_artist": "Album Artist",
+          "genre": "Jazz, Fusion",
+          "duration": 1,
+          "track_no": 4,
+          "disc_no": 2,
+          "year": 2003,
+          "art_hash": "d2e4930b6202f652cb1dd161d1709e799ec0e071",
+          "mtime_ms": 1789372898382,
+          "added_at": "2026-09-14T08:01:38.418Z",
+          "seen": 1
+        },
+        {
+          "id": 22,
+          "path": "/music/vorbis.oga",
+          "title": "Oga Extension",
+          "artist": null,
+          "album": null,
+          "album_artist": null,
+          "genre": null,
+          "duration": 1.0013605442176872,
+          "track_no": null,
+          "disc_no": null,
+          "year": null,
+          "art_hash": null,
+          "mtime_ms": 1789372898381,
+          "added_at": "2026-09-14T08:01:38.418Z",
+          "seen": 1
+        },
+        {
+          "id": 23,
+          "path": "/music/vorbis.ogg",
+          "title": "Ogg Song",
+          "artist": "Ogg Artist",
+          "album": "Ogg Album",
+          "album_artist": null,
+          "genre": null,
+          "duration": 1.0013605442176872,
+          "track_no": 2,
+          "disc_no": null,
+          "year": 1985,
+          "art_hash": "a0cc42b361c9663bdeff024d17c92b17f3e98f4e",
+          "mtime_ms": 1789372898382,
+          "added_at": "2026-09-14T08:01:38.419Z",
+          "seen": 1
+        },
+        {
+          "id": 24,
+          "path": "/music/whitespace-title.mp3",
+          "title": "whitespace-title",
+          "artist": "Spaced Artist",
+          "album": null,
+          "album_artist": null,
+          "genre": null,
+          "duration": 1.0710204081632653,
+          "track_no": null,
+          "disc_no": null,
+          "year": null,
+          "art_hash": null,
+          "mtime_ms": 1789372898383,
+          "added_at": "2026-09-14T08:01:38.420Z",
+          "seen": 1
+        }
+      ]
+    },
+    {
+      "setup": "untagged.mp3 modified to 2020-01-01T00:00:00Z; not-audio.mp3 deleted",
+      "roots": [
+        "/music"
+      ],
+      "status": {
+        "scanning": false,
+        "processed": 23,
+        "added": 0,
+        "updated": 1,
+        "removed": 1,
+        "total": 23,
+        "startedAt": true,
+        "finishedAt": true,
+        "error": null
+      },
+      "tracks": [
+        {
+          "id": 1,
+          "path": "/music/.hidden.mp3",
+          "title": ".hidden",
+          "artist": null,
+          "album": null,
+          "album_artist": null,
+          "genre": null,
+          "duration": 1.0710204081632653,
+          "track_no": null,
+          "disc_no": null,
+          "year": null,
+          "art_hash": null,
+          "mtime_ms": 1789372898381,
+          "added_at": "2026-09-14T08:01:38.394Z",
+          "seen": 1
+        },
+        {
+          "id": 2,
+          "path": "/music/Disc 2/bonus.mp3",
+          "title": "Full Tags",
+          "artist": "Äänitys Band",
+          "album": "Löyly Sessions",
+          "album_artist": "Various Artists",
+          "genre": "Rock",
+          "duration": 1.0710204081632653,
+          "track_no": 3,
+          "disc_no": 1,
+          "year": 1999,
+          "art_hash": "a0cc42b361c9663bdeff024d17c92b17f3e98f4e",
+          "mtime_ms": 1789372898380,
+          "added_at": "2026-09-14T08:01:38.397Z",
+          "seen": 1
+        },
+        {
+          "id": 3,
+          "path": "/music/adts-with-id3.aac",
+          "title": "ADTS Song",
+          "artist": "ADTS Artist",
+          "album": null,
+          "album_artist": null,
+          "genre": null,
+          "duration": 1.0681179138321995,
+          "track_no": null,
+          "disc_no": null,
+          "year": null,
+          "art_hash": null,
+          "mtime_ms": 1789372898381,
+          "added_at": "2026-09-14T08:01:38.399Z",
+          "seen": 1
+        },
+        {
+          "id": 4,
+          "path": "/music/album-artist-space.flac",
+          "title": "lower-case keys",
+          "artist": null,
+          "album": null,
+          "album_artist": "Spaced Key Artist",
+          "genre": null,
+          "duration": 1,
+          "track_no": null,
+          "disc_no": null,
+          "year": null,
+          "art_hash": null,
+          "mtime_ms": 1789372898384,
+          "added_at": "2026-09-14T08:01:38.400Z",
+          "seen": 1
+        },
+        {
+          "id": 5,
+          "path": "/music/ape-and-id3v2.mp3",
+          "title": "APE Title",
+          "artist": "APE Artist",
+          "album": "ID3 Album",
+          "album_artist": null,
+          "genre": null,
+          "duration": 1.0710204081632653,
+          "track_no": null,
+          "disc_no": null,
+          "year": 2010,
+          "art_hash": null,
+          "mtime_ms": 1789372898382,
+          "added_at": "2026-09-14T08:01:38.401Z",
+          "seen": 1
+        },
+        {
+          "id": 6,
+          "path": "/music/id3-chunk.wav",
+          "title": "Wave Song",
+          "artist": "Wave Artist",
+          "album": null,
+          "album_artist": null,
+          "genre": null,
+          "duration": 1,
+          "track_no": null,
+          "disc_no": null,
+          "year": null,
+          "art_hash": null,
+          "mtime_ms": 1789372898383,
+          "added_at": "2026-09-14T08:01:38.402Z",
+          "seen": 1
+        },
+        {
+          "id": 7,
+          "path": "/music/id3v1-only.mp3",
+          "title": "Only V1",
+          "artist": "Old Tagger",
+          "album": null,
+          "album_artist": null,
+          "genre": "Blues",
+          "duration": 1.0710204081632653,
+          "track_no": 2,
+          "disc_no": null,
+          "year": 1975,
+          "art_hash": null,
+          "mtime_ms": 1789372898384,
+          "added_at": "2026-09-14T08:01:38.403Z",
+          "seen": 1
+        },
+        {
+          "id": 8,
+          "path": "/music/id3v2-and-v1.mp3",
+          "title": "Long Title From ID3v2 That Is Past Thirty Chars",
+          "artist": "V2 Artist",
+          "album": "V1 Only Album",
+          "album_artist": null,
+          "genre": "Pop",
+          "duration": 1.0710204081632653,
+          "track_no": 9,
+          "disc_no": null,
+          "year": 1988,
+          "art_hash": null,
+          "mtime_ms": 1789372898382,
+          "added_at": "2026-09-14T08:01:38.404Z",
+          "seen": 1
+        },
+        {
+          "id": 9,
+          "path": "/music/id3v23-full.mp3",
+          "title": "Full Tags",
+          "artist": "Äänitys Band",
+          "album": "Löyly Sessions",
+          "album_artist": "Various Artists",
+          "genre": "Rock",
+          "duration": 1.0710204081632653,
+          "track_no": 3,
+          "disc_no": 1,
+          "year": 1999,
+          "art_hash": "a0cc42b361c9663bdeff024d17c92b17f3e98f4e",
+          "mtime_ms": 1789372898381,
+          "added_at": "2026-09-14T08:01:38.405Z",
+          "seen": 1
+        },
+        {
+          "id": 10,
+          "path": "/music/id3v23-genre-number.mp3",
+          "title": "Numbered Genre",
+          "artist": null,
+          "album": null,
+          "album_artist": null,
+          "genre": "Rock",
+          "duration": 1.0710204081632653,
+          "track_no": null,
+          "disc_no": null,
+          "year": null,
+          "art_hash": null,
+          "mtime_ms": 1789372898384,
+          "added_at": "2026-09-14T08:01:38.406Z",
+          "seen": 1
+        },
+        {
+          "id": 11,
+          "path": "/music/id3v23-latin1-utf8-bytes.mp3",
+          "title": "LÃ¶yly",
+          "artist": null,
+          "album": null,
+          "album_artist": null,
+          "genre": null,
+          "duration": 1.0710204081632653,
+          "track_no": null,
+          "disc_no": null,
+          "year": null,
+          "art_hash": null,
+          "mtime_ms": 1789372898380,
+          "added_at": "2026-09-14T08:01:38.407Z",
+          "seen": 1
+        },
+        {
+          "id": 12,
+          "path": "/music/id3v23-slash-artist.mp3",
+          "title": "Highway/Tunnel",
+          "artist": "AC",
+          "album": null,
+          "album_artist": null,
+          "genre": "Rock, Techno, Eurodisco",
+          "duration": 1.0710204081632653,
+          "track_no": null,
+          "disc_no": null,
+          "year": null,
+          "art_hash": null,
+          "mtime_ms": 1789372898383,
+          "added_at": "2026-09-14T08:01:38.408Z",
+          "seen": 1
+        },
+        {
+          "id": 13,
+          "path": "/music/id3v24-multi.mp3",
+          "title": "Second Title",
+          "artist": "Artist One",
+          "album": "Padded Album",
+          "album_artist": null,
+          "genre": "Rock, Pop",
+          "duration": 1.0710204081632653,
+          "track_no": 7,
+          "disc_no": null,
+          "year": 2001,
+          "art_hash": "d2e4930b6202f652cb1dd161d1709e799ec0e071",
+          "mtime_ms": 1789372898381,
+          "added_at": "2026-09-14T08:01:38.409Z",
+          "seen": 1
+        },
+        {
+          "id": 14,
+          "path": "/music/itunes.m4a",
+          "title": "iTunes Song",
+          "artist": "iTunes Artist",
+          "album": "iTunes Album",
+          "album_artist": "iTunes Album Artist",
+          "genre": "Electronic",
+          "duration": 1.0464399092970522,
+          "track_no": 5,
+          "disc_no": 1,
+          "year": 2004,
+          "art_hash": "a0cc42b361c9663bdeff024d17c92b17f3e98f4e",
+          "mtime_ms": 1789372898383,
+          "added_at": "2026-09-14T08:01:38.412Z",
+          "seen": 1
+        },
+        {
+          "id": 15,
+          "path": "/music/no-xing-header.mp3",
+          "title": "no-xing-header",
+          "artist": null,
+          "album": null,
+          "album_artist": null,
+          "genre": null,
+          "duration": 1.0710204081632653,
+          "track_no": null,
+          "disc_no": null,
+          "year": null,
+          "art_hash": null,
+          "mtime_ms": 1789372898382,
+          "added_at": "2026-09-14T08:01:38.413Z",
+          "seen": 1
+        },
+        {
+          "id": 17,
+          "path": "/music/opus.opus",
+          "title": "Opus Song",
+          "artist": "Opus Artist",
+          "album": null,
+          "album_artist": null,
+          "genre": "Ambient",
+          "duration": 1,
+          "track_no": null,
+          "disc_no": null,
+          "year": null,
+          "art_hash": null,
+          "mtime_ms": 1789372898382,
+          "added_at": "2026-09-14T08:01:38.415Z",
+          "seen": 1
+        },
+        {
+          "id": 18,
+          "path": "/music/riff-info.wav",
+          "title": "Info Title",
+          "artist": "Info Artist",
+          "album": "Info Album",
+          "album_artist": null,
+          "genre": "Folk",
+          "duration": 1,
+          "track_no": null,
+          "disc_no": null,
+          "year": 1970,
+          "art_hash": null,
+          "mtime_ms": 1789372898384,
+          "added_at": "2026-09-14T08:01:38.416Z",
+          "seen": 1
+        },
+        {
+          "id": 19,
+          "path": "/music/txxx-artists.mp3",
+          "title": "Only Artists Frame",
+          "artist": "Duo One & Duo Two",
+          "album": null,
+          "album_artist": null,
+          "genre": null,
+          "duration": 1.0710204081632653,
+          "track_no": null,
+          "disc_no": null,
+          "year": null,
+          "art_hash": null,
+          "mtime_ms": 1789372898385,
+          "added_at": "2026-09-14T08:01:38.416Z",
+          "seen": 1
+        },
+        {
+          "id": 20,
+          "path": "/music/untagged.mp3",
+          "title": "untagged",
+          "artist": null,
+          "album": null,
+          "album_artist": null,
+          "genre": null,
+          "duration": 1.0710204081632653,
+          "track_no": null,
+          "disc_no": null,
+          "year": null,
+          "art_hash": null,
+          "mtime_ms": 1577836800000,
+          "added_at": "2026-09-14T08:01:38.417Z",
+          "seen": 1
+        },
+        {
+          "id": 21,
+          "path": "/music/vorbis-comments.flac",
+          "title": "Take Two",
+          "artist": "Main Artist",
+          "album": "FLAC Album",
+          "album_artist": "Album Artist",
+          "genre": "Jazz, Fusion",
+          "duration": 1,
+          "track_no": 4,
+          "disc_no": 2,
+          "year": 2003,
+          "art_hash": "d2e4930b6202f652cb1dd161d1709e799ec0e071",
+          "mtime_ms": 1789372898382,
+          "added_at": "2026-09-14T08:01:38.418Z",
+          "seen": 1
+        },
+        {
+          "id": 22,
+          "path": "/music/vorbis.oga",
+          "title": "Oga Extension",
+          "artist": null,
+          "album": null,
+          "album_artist": null,
+          "genre": null,
+          "duration": 1.0013605442176872,
+          "track_no": null,
+          "disc_no": null,
+          "year": null,
+          "art_hash": null,
+          "mtime_ms": 1789372898381,
+          "added_at": "2026-09-14T08:01:38.418Z",
+          "seen": 1
+        },
+        {
+          "id": 23,
+          "path": "/music/vorbis.ogg",
+          "title": "Ogg Song",
+          "artist": "Ogg Artist",
+          "album": "Ogg Album",
+          "album_artist": null,
+          "genre": null,
+          "duration": 1.0013605442176872,
+          "track_no": 2,
+          "disc_no": null,
+          "year": 1985,
+          "art_hash": "a0cc42b361c9663bdeff024d17c92b17f3e98f4e",
+          "mtime_ms": 1789372898382,
+          "added_at": "2026-09-14T08:01:38.419Z",
+          "seen": 1
+        },
+        {
+          "id": 24,
+          "path": "/music/whitespace-title.mp3",
+          "title": "whitespace-title",
+          "artist": "Spaced Artist",
+          "album": null,
+          "album_artist": null,
+          "genre": null,
+          "duration": 1.0710204081632653,
+          "track_no": null,
+          "disc_no": null,
+          "year": null,
+          "art_hash": null,
+          "mtime_ms": 1789372898383,
+          "added_at": "2026-09-14T08:01:38.420Z",
+          "seen": 1
+        }
+      ]
+    }
+  ],
+  "art": [
+    {
+      "hash": "a0cc42b361c9663bdeff024d17c92b17f3e98f4e",
+      "mime": "image/jpeg",
+      "data": "/9j/4AAQSkZJRgABAgAAAQABAAD//gAQTGF2YzYyLjI4LjEwMgD/2wBDAAgEBAQEBAUFBQUFBQYGBgYGBgYGBgYGBgYHBwcICAgHBwcGBgcHCAgICAkJCQgICAgJCQoKCgwMCwsODg4RERT/xABMAAEBAAAAAAAAAAAAAAAAAAAABgEBAQAAAAAAAAAAAAAAAAAABgcQAQAAAAAAAAAAAAAAAAAAAAARAQAAAAAAAAAAAAAAAAAAAAD/wAARCAAIAAgDASIAAhEAAxEA/9oADAMBAAIRAxEAPwCLAE1/f//Z"
+    },
+    {
+      "hash": "d2e4930b6202f652cb1dd161d1709e799ec0e071",
+      "mime": "image/png",
+      "data": "iVBORw0KGgoAAAANSUhEUgAAAAgAAAAICAIAAABLbSncAAAACXBIWXMAAAABAAAAAQBPJcTWAAAAFElEQVR4nGNkYPjLgA2wYBUdtBIAzzEBGxVmohQAAAAASUVORK5CYII="
+    }
+  ],
+  "database": [
+    {
+      "id": 1,
+      "path": "/music/.hidden.mp3",
+      "title": ".hidden",
+      "artist": null,
+      "album": null,
+      "album_artist": null,
+      "genre": null,
+      "duration": 1.0710204081632653,
+      "track_no": null,
+      "disc_no": null,
+      "year": null,
+      "art_hash": null,
+      "mtime_ms": 1789372898381,
+      "added_at": "2026-09-14T08:01:38.394Z",
+      "seen": 1
+    },
+    {
+      "id": 2,
+      "path": "/music/Disc 2/bonus.mp3",
+      "title": "Full Tags",
+      "artist": "Äänitys Band",
+      "album": "Löyly Sessions",
+      "album_artist": "Various Artists",
+      "genre": "Rock",
+      "duration": 1.0710204081632653,
+      "track_no": 3,
+      "disc_no": 1,
+      "year": 1999,
+      "art_hash": "a0cc42b361c9663bdeff024d17c92b17f3e98f4e",
+      "mtime_ms": 1789372898380,
+      "added_at": "2026-09-14T08:01:38.397Z",
+      "seen": 1
+    },
+    {
+      "id": 3,
+      "path": "/music/adts-with-id3.aac",
+      "title": "ADTS Song",
+      "artist": "ADTS Artist",
+      "album": null,
+      "album_artist": null,
+      "genre": null,
+      "duration": 1.0681179138321995,
+      "track_no": null,
+      "disc_no": null,
+      "year": null,
+      "art_hash": null,
+      "mtime_ms": 1789372898381,
+      "added_at": "2026-09-14T08:01:38.399Z",
+      "seen": 1
+    },
+    {
+      "id": 4,
+      "path": "/music/album-artist-space.flac",
+      "title": "lower-case keys",
+      "artist": null,
+      "album": null,
+      "album_artist": "Spaced Key Artist",
+      "genre": null,
+      "duration": 1,
+      "track_no": null,
+      "disc_no": null,
+      "year": null,
+      "art_hash": null,
+      "mtime_ms": 1789372898384,
+      "added_at": "2026-09-14T08:01:38.400Z",
+      "seen": 1
+    },
+    {
+      "id": 5,
+      "path": "/music/ape-and-id3v2.mp3",
+      "title": "APE Title",
+      "artist": "APE Artist",
+      "album": "ID3 Album",
+      "album_artist": null,
+      "genre": null,
+      "duration": 1.0710204081632653,
+      "track_no": null,
+      "disc_no": null,
+      "year": 2010,
+      "art_hash": null,
+      "mtime_ms": 1789372898382,
+      "added_at": "2026-09-14T08:01:38.401Z",
+      "seen": 1
+    },
+    {
+      "id": 6,
+      "path": "/music/id3-chunk.wav",
+      "title": "Wave Song",
+      "artist": "Wave Artist",
+      "album": null,
+      "album_artist": null,
+      "genre": null,
+      "duration": 1,
+      "track_no": null,
+      "disc_no": null,
+      "year": null,
+      "art_hash": null,
+      "mtime_ms": 1789372898383,
+      "added_at": "2026-09-14T08:01:38.402Z",
+      "seen": 1
+    },
+    {
+      "id": 7,
+      "path": "/music/id3v1-only.mp3",
+      "title": "Only V1",
+      "artist": "Old Tagger",
+      "album": null,
+      "album_artist": null,
+      "genre": "Blues",
+      "duration": 1.0710204081632653,
+      "track_no": 2,
+      "disc_no": null,
+      "year": 1975,
+      "art_hash": null,
+      "mtime_ms": 1789372898384,
+      "added_at": "2026-09-14T08:01:38.403Z",
+      "seen": 1
+    },
+    {
+      "id": 8,
+      "path": "/music/id3v2-and-v1.mp3",
+      "title": "Long Title From ID3v2 That Is Past Thirty Chars",
+      "artist": "V2 Artist",
+      "album": "V1 Only Album",
+      "album_artist": null,
+      "genre": "Pop",
+      "duration": 1.0710204081632653,
+      "track_no": 9,
+      "disc_no": null,
+      "year": 1988,
+      "art_hash": null,
+      "mtime_ms": 1789372898382,
+      "added_at": "2026-09-14T08:01:38.404Z",
+      "seen": 1
+    },
+    {
+      "id": 9,
+      "path": "/music/id3v23-full.mp3",
+      "title": "Full Tags",
+      "artist": "Äänitys Band",
+      "album": "Löyly Sessions",
+      "album_artist": "Various Artists",
+      "genre": "Rock",
+      "duration": 1.0710204081632653,
+      "track_no": 3,
+      "disc_no": 1,
+      "year": 1999,
+      "art_hash": "a0cc42b361c9663bdeff024d17c92b17f3e98f4e",
+      "mtime_ms": 1789372898381,
+      "added_at": "2026-09-14T08:01:38.405Z",
+      "seen": 1
+    },
+    {
+      "id": 10,
+      "path": "/music/id3v23-genre-number.mp3",
+      "title": "Numbered Genre",
+      "artist": null,
+      "album": null,
+      "album_artist": null,
+      "genre": "Rock",
+      "duration": 1.0710204081632653,
+      "track_no": null,
+      "disc_no": null,
+      "year": null,
+      "art_hash": null,
+      "mtime_ms": 1789372898384,
+      "added_at": "2026-09-14T08:01:38.406Z",
+      "seen": 1
+    },
+    {
+      "id": 11,
+      "path": "/music/id3v23-latin1-utf8-bytes.mp3",
+      "title": "LÃ¶yly",
+      "artist": null,
+      "album": null,
+      "album_artist": null,
+      "genre": null,
+      "duration": 1.0710204081632653,
+      "track_no": null,
+      "disc_no": null,
+      "year": null,
+      "art_hash": null,
+      "mtime_ms": 1789372898380,
+      "added_at": "2026-09-14T08:01:38.407Z",
+      "seen": 1
+    },
+    {
+      "id": 12,
+      "path": "/music/id3v23-slash-artist.mp3",
+      "title": "Highway/Tunnel",
+      "artist": "AC",
+      "album": null,
+      "album_artist": null,
+      "genre": "Rock, Techno, Eurodisco",
+      "duration": 1.0710204081632653,
+      "track_no": null,
+      "disc_no": null,
+      "year": null,
+      "art_hash": null,
+      "mtime_ms": 1789372898383,
+      "added_at": "2026-09-14T08:01:38.408Z",
+      "seen": 1
+    },
+    {
+      "id": 13,
+      "path": "/music/id3v24-multi.mp3",
+      "title": "Second Title",
+      "artist": "Artist One",
+      "album": "Padded Album",
+      "album_artist": null,
+      "genre": "Rock, Pop",
+      "duration": 1.0710204081632653,
+      "track_no": 7,
+      "disc_no": null,
+      "year": 2001,
+      "art_hash": "d2e4930b6202f652cb1dd161d1709e799ec0e071",
+      "mtime_ms": 1789372898381,
+      "added_at": "2026-09-14T08:01:38.409Z",
+      "seen": 1
+    },
+    {
+      "id": 14,
+      "path": "/music/itunes.m4a",
+      "title": "iTunes Song",
+      "artist": "iTunes Artist",
+      "album": "iTunes Album",
+      "album_artist": "iTunes Album Artist",
+      "genre": "Electronic",
+      "duration": 1.0464399092970522,
+      "track_no": 5,
+      "disc_no": 1,
+      "year": 2004,
+      "art_hash": "a0cc42b361c9663bdeff024d17c92b17f3e98f4e",
+      "mtime_ms": 1789372898383,
+      "added_at": "2026-09-14T08:01:38.412Z",
+      "seen": 1
+    },
+    {
+      "id": 15,
+      "path": "/music/no-xing-header.mp3",
+      "title": "no-xing-header",
+      "artist": null,
+      "album": null,
+      "album_artist": null,
+      "genre": null,
+      "duration": 1.0710204081632653,
+      "track_no": null,
+      "disc_no": null,
+      "year": null,
+      "art_hash": null,
+      "mtime_ms": 1789372898382,
+      "added_at": "2026-09-14T08:01:38.413Z",
+      "seen": 1
+    },
+    {
+      "id": 17,
+      "path": "/music/opus.opus",
+      "title": "Opus Song",
+      "artist": "Opus Artist",
+      "album": null,
+      "album_artist": null,
+      "genre": "Ambient",
+      "duration": 1,
+      "track_no": null,
+      "disc_no": null,
+      "year": null,
+      "art_hash": null,
+      "mtime_ms": 1789372898382,
+      "added_at": "2026-09-14T08:01:38.415Z",
+      "seen": 1
+    },
+    {
+      "id": 18,
+      "path": "/music/riff-info.wav",
+      "title": "Info Title",
+      "artist": "Info Artist",
+      "album": "Info Album",
+      "album_artist": null,
+      "genre": "Folk",
+      "duration": 1,
+      "track_no": null,
+      "disc_no": null,
+      "year": 1970,
+      "art_hash": null,
+      "mtime_ms": 1789372898384,
+      "added_at": "2026-09-14T08:01:38.416Z",
+      "seen": 1
+    },
+    {
+      "id": 19,
+      "path": "/music/txxx-artists.mp3",
+      "title": "Only Artists Frame",
+      "artist": "Duo One & Duo Two",
+      "album": null,
+      "album_artist": null,
+      "genre": null,
+      "duration": 1.0710204081632653,
+      "track_no": null,
+      "disc_no": null,
+      "year": null,
+      "art_hash": null,
+      "mtime_ms": 1789372898385,
+      "added_at": "2026-09-14T08:01:38.416Z",
+      "seen": 1
+    },
+    {
+      "id": 20,
+      "path": "/music/untagged.mp3",
+      "title": "untagged",
+      "artist": null,
+      "album": null,
+      "album_artist": null,
+      "genre": null,
+      "duration": 1.0710204081632653,
+      "track_no": null,
+      "disc_no": null,
+      "year": null,
+      "art_hash": null,
+      "mtime_ms": 1577836800000,
+      "added_at": "2026-09-14T08:01:38.417Z",
+      "seen": 1
+    },
+    {
+      "id": 21,
+      "path": "/music/vorbis-comments.flac",
+      "title": "Take Two",
+      "artist": "Main Artist",
+      "album": "FLAC Album",
+      "album_artist": "Album Artist",
+      "genre": "Jazz, Fusion",
+      "duration": 1,
+      "track_no": 4,
+      "disc_no": 2,
+      "year": 2003,
+      "art_hash": "d2e4930b6202f652cb1dd161d1709e799ec0e071",
+      "mtime_ms": 1789372898382,
+      "added_at": "2026-09-14T08:01:38.418Z",
+      "seen": 1
+    },
+    {
+      "id": 22,
+      "path": "/music/vorbis.oga",
+      "title": "Oga Extension",
+      "artist": null,
+      "album": null,
+      "album_artist": null,
+      "genre": null,
+      "duration": 1.0013605442176872,
+      "track_no": null,
+      "disc_no": null,
+      "year": null,
+      "art_hash": null,
+      "mtime_ms": 1789372898381,
+      "added_at": "2026-09-14T08:01:38.418Z",
+      "seen": 1
+    },
+    {
+      "id": 23,
+      "path": "/music/vorbis.ogg",
+      "title": "Ogg Song",
+      "artist": "Ogg Artist",
+      "album": "Ogg Album",
+      "album_artist": null,
+      "genre": null,
+      "duration": 1.0013605442176872,
+      "track_no": 2,
+      "disc_no": null,
+      "year": 1985,
+      "art_hash": "a0cc42b361c9663bdeff024d17c92b17f3e98f4e",
+      "mtime_ms": 1789372898382,
+      "added_at": "2026-09-14T08:01:38.419Z",
+      "seen": 1
+    },
+    {
+      "id": 24,
+      "path": "/music/whitespace-title.mp3",
+      "title": "whitespace-title",
+      "artist": "Spaced Artist",
+      "album": null,
+      "album_artist": null,
+      "genre": null,
+      "duration": 1.0710204081632653,
+      "track_no": null,
+      "disc_no": null,
+      "year": null,
+      "art_hash": null,
+      "mtime_ms": 1789372898383,
+      "added_at": "2026-09-14T08:01:38.420Z",
+      "seen": 1
+    },
+    {
+      "id": 25,
+      "path": "/seed/0.mp3",
+      "title": "Dancing Queen",
+      "artist": "ABBA",
+      "album": "Greatest",
+      "album_artist": "ABBA",
+      "genre": "Pop",
+      "duration": 230.5,
+      "track_no": 1,
+      "disc_no": 1,
+      "year": 1992,
+      "art_hash": null,
+      "mtime_ms": 0,
+      "added_at": "2026-01-01T00:00:00.000Z",
+      "seen": 1
+    },
+    {
+      "id": 26,
+      "path": "/seed/1.mp3",
+      "title": "Waterloo",
+      "artist": "abba",
+      "album": "Greatest",
+      "album_artist": null,
+      "genre": null,
+      "duration": 164,
+      "track_no": 2,
+      "disc_no": 1,
+      "year": 1974,
+      "art_hash": null,
+      "mtime_ms": 0,
+      "added_at": "2026-01-01T00:00:00.000Z",
+      "seen": 1
+    },
+    {
+      "id": 27,
+      "path": "/seed/2.mp3",
+      "title": "Single, With \"Quotes\"",
+      "artist": "ABBA",
+      "album": null,
+      "album_artist": null,
+      "genre": "Pop, Disco",
+      "duration": 200.25,
+      "track_no": null,
+      "disc_no": null,
+      "year": null,
+      "art_hash": null,
+      "mtime_ms": 0,
+      "added_at": "2026-01-01T00:00:00.000Z",
+      "seen": 1
+    },
+    {
+      "id": 28,
+      "path": "/seed/3.mp3",
+      "title": "Empty Album",
+      "artist": "ABBA",
+      "album": "",
+      "album_artist": null,
+      "genre": null,
+      "duration": null,
+      "track_no": null,
+      "disc_no": null,
+      "year": null,
+      "art_hash": null,
+      "mtime_ms": 0,
+      "added_at": "2026-01-01T00:00:00.000Z",
+      "seen": 1
+    },
+    {
+      "id": 29,
+      "path": "/seed/4.mp3",
+      "title": "Love Will Keep Us",
+      "artist": "Eagles",
+      "album": "Greatest",
+      "album_artist": "Eagles",
+      "genre": "Rock",
+      "duration": 301.0625,
+      "track_no": 3,
+      "disc_no": 2,
+      "year": 1994,
+      "art_hash": null,
+      "mtime_ms": 0,
+      "added_at": "2026-01-01T00:00:00.000Z",
+      "seen": 1
+    },
+    {
+      "id": 30,
+      "path": "/seed/5.mp3",
+      "title": "Love Song",
+      "artist": "élan",
+      "album": "Élan",
+      "album_artist": null,
+      "genre": null,
+      "duration": 99.9,
+      "track_no": 1,
+      "disc_no": null,
+      "year": null,
+      "art_hash": null,
+      "mtime_ms": 0,
+      "added_at": "2026-01-01T00:00:00.000Z",
+      "seen": 1
+    },
+    {
+      "id": 31,
+      "path": "/seed/6.mp3",
+      "title": "Love Around the World",
+      "artist": "Daft Punk",
+      "album": "Homework",
+      "album_artist": null,
+      "genre": "House",
+      "duration": 428.1,
+      "track_no": 7,
+      "disc_no": 1,
+      "year": 1997,
+      "art_hash": null,
+      "mtime_ms": 0,
+      "added_at": "2026-01-01T00:00:00.000Z",
+      "seen": 1
+    },
+    {
+      "id": 32,
+      "path": "/seed/7.mp3",
+      "title": "Line\nBreak",
+      "artist": "Daft Punk",
+      "album": "Homework",
+      "album_artist": null,
+      "genre": null,
+      "duration": 60,
+      "track_no": 1,
+      "disc_no": 1,
+      "year": 1997,
+      "art_hash": null,
+      "mtime_ms": 0,
+      "added_at": "2026-01-01T00:00:00.000Z",
+      "seen": 1
+    },
+    {
+      "id": 33,
+      "path": "/seed/8.mp3",
+      "title": "Numbers",
+      "artist": "1990s",
+      "album": "Digits",
+      "album_artist": null,
+      "genre": null,
+      "duration": 120,
+      "track_no": null,
+      "disc_no": null,
+      "year": 2007,
+      "art_hash": null,
+      "mtime_ms": 0,
+      "added_at": "2026-01-01T00:00:00.000Z",
+      "seen": 1
+    },
+    {
+      "id": 34,
+      "path": "/seed/9.mp3",
+      "title": "Bridge",
+      "artist": "Øresund",
+      "album": null,
+      "album_artist": null,
+      "genre": null,
+      "duration": 180,
+      "track_no": null,
+      "disc_no": null,
+      "year": null,
+      "art_hash": null,
+      "mtime_ms": 0,
+      "added_at": "2026-01-01T00:00:00.000Z",
+      "seen": 1
+    },
+    {
+      "id": 35,
+      "path": "/seed/10.mp3",
+      "title": "Irritation",
+      "artist": "Ärsytys",
+      "album": "Äänilevy",
+      "album_artist": null,
+      "genre": null,
+      "duration": 150,
+      "track_no": 1,
+      "disc_no": null,
+      "year": 2011,
+      "art_hash": null,
+      "mtime_ms": 0,
+      "added_at": "2026-01-01T00:00:00.000Z",
+      "seen": 1
+    },
+    {
+      "id": 36,
+      "path": "/seed/11.mp3",
+      "title": "Help!",
+      "artist": "beatles",
+      "album": "Help",
+      "album_artist": "The Beatles",
+      "genre": null,
+      "duration": 139,
+      "track_no": 1,
+      "disc_no": null,
+      "year": 1965,
+      "art_hash": null,
+      "mtime_ms": 0,
+      "added_at": "2026-01-01T00:00:00.000Z",
+      "seen": 1
+    },
+    {
+      "id": 37,
+      "path": "/seed/12.mp3",
+      "title": "Yesterday",
+      "artist": "Beatles",
+      "album": "Help",
+      "album_artist": "The Beatles",
+      "genre": null,
+      "duration": 125,
+      "track_no": 13,
+      "disc_no": null,
+      "year": 1965,
+      "art_hash": null,
+      "mtime_ms": 0,
+      "added_at": "2026-01-01T00:00:00.000Z",
+      "seen": 1
+    },
+    {
+      "id": 38,
+      "path": "/seed/13.mp3",
+      "title": "Nameless",
+      "artist": "",
+      "album": null,
+      "album_artist": null,
+      "genre": null,
+      "duration": 10,
+      "track_no": null,
+      "disc_no": null,
+      "year": null,
+      "art_hash": null,
+      "mtime_ms": 0,
+      "added_at": "2026-01-01T00:00:00.000Z",
+      "seen": 1
+    }
+  ],
+  "queries": [
+    {
+      "fn": "tracks",
+      "args": {},
+      "result": {
+        "tracks": [
+          {
+            "id": 1,
+            "title": ".hidden",
+            "artist": null,
+            "album": null,
+            "albumArtist": null,
+            "genre": null,
+            "duration": 1.0710204081632653,
+            "trackNo": null,
+            "discNo": null,
+            "year": null,
+            "artHash": null
+          },
+          {
+            "id": 4,
+            "title": "lower-case keys",
+            "artist": null,
+            "album": null,
+            "albumArtist": "Spaced Key Artist",
+            "genre": null,
+            "duration": 1,
+            "trackNo": null,
+            "discNo": null,
+            "year": null,
+            "artHash": null
+          },
+          {
+            "id": 11,
+            "title": "LÃ¶yly",
+            "artist": null,
+            "album": null,
+            "albumArtist": null,
+            "genre": null,
+            "duration": 1.0710204081632653,
+            "trackNo": null,
+            "discNo": null,
+            "year": null,
+            "artHash": null
+          },
+          {
+            "id": 15,
+            "title": "no-xing-header",
+            "artist": null,
+            "album": null,
+            "albumArtist": null,
+            "genre": null,
+            "duration": 1.0710204081632653,
+            "trackNo": null,
+            "discNo": null,
+            "year": null,
+            "artHash": null
+          },
+          {
+            "id": 10,
+            "title": "Numbered Genre",
+            "artist": null,
+            "album": null,
+            "albumArtist": null,
+            "genre": "Rock",
+            "duration": 1.0710204081632653,
+            "trackNo": null,
+            "discNo": null,
+            "year": null,
+            "artHash": null
+          },
+          {
+            "id": 22,
+            "title": "Oga Extension",
+            "artist": null,
+            "album": null,
+            "albumArtist": null,
+            "genre": null,
+            "duration": 1.0013605442176872,
+            "trackNo": null,
+            "discNo": null,
+            "year": null,
+            "artHash": null
+          },
+          {
+            "id": 20,
+            "title": "untagged",
+            "artist": null,
+            "album": null,
+            "albumArtist": null,
+            "genre": null,
+            "duration": 1.0710204081632653,
+            "trackNo": null,
+            "discNo": null,
+            "year": null,
+            "artHash": null
+          },
+          {
+            "id": 38,
+            "title": "Nameless",
+            "artist": "",
+            "album": null,
+            "albumArtist": null,
+            "genre": null,
+            "duration": 10,
+            "trackNo": null,
+            "discNo": null,
+            "year": null,
+            "artHash": null
+          },
+          {
+            "id": 33,
+            "title": "Numbers",
+            "artist": "1990s",
+            "album": "Digits",
+            "albumArtist": null,
+            "genre": null,
+            "duration": 120,
+            "trackNo": null,
+            "discNo": null,
+            "year": 2007,
+            "artHash": null
+          },
+          {
+            "id": 27,
+            "title": "Single, With \"Quotes\"",
+            "artist": "ABBA",
+            "album": null,
+            "albumArtist": null,
+            "genre": "Pop, Disco",
+            "duration": 200.25,
+            "trackNo": null,
+            "discNo": null,
+            "year": null,
+            "artHash": null
+          },
+          {
+            "id": 28,
+            "title": "Empty Album",
+            "artist": "ABBA",
+            "album": "",
+            "albumArtist": null,
+            "genre": null,
+            "duration": null,
+            "trackNo": null,
+            "discNo": null,
+            "year": null,
+            "artHash": null
+          },
+          {
+            "id": 25,
+            "title": "Dancing Queen",
+            "artist": "ABBA",
+            "album": "Greatest",
+            "albumArtist": "ABBA",
+            "genre": "Pop",
+            "duration": 230.5,
+            "trackNo": 1,
+            "discNo": 1,
+            "year": 1992,
+            "artHash": null
+          },
+          {
+            "id": 26,
+            "title": "Waterloo",
+            "artist": "abba",
+            "album": "Greatest",
+            "albumArtist": null,
+            "genre": null,
+            "duration": 164,
+            "trackNo": 2,
+            "discNo": 1,
+            "year": 1974,
+            "artHash": null
+          },
+          {
+            "id": 12,
+            "title": "Highway/Tunnel",
+            "artist": "AC",
+            "album": null,
+            "albumArtist": null,
+            "genre": "Rock, Techno, Eurodisco",
+            "duration": 1.0710204081632653,
+            "trackNo": null,
+            "discNo": null,
+            "year": null,
+            "artHash": null
+          },
+          {
+            "id": 3,
+            "title": "ADTS Song",
+            "artist": "ADTS Artist",
+            "album": null,
+            "albumArtist": null,
+            "genre": null,
+            "duration": 1.0681179138321995,
+            "trackNo": null,
+            "discNo": null,
+            "year": null,
+            "artHash": null
+          },
+          {
+            "id": 5,
+            "title": "APE Title",
+            "artist": "APE Artist",
+            "album": "ID3 Album",
+            "albumArtist": null,
+            "genre": null,
+            "duration": 1.0710204081632653,
+            "trackNo": null,
+            "discNo": null,
+            "year": 2010,
+            "artHash": null
+          },
+          {
+            "id": 13,
+            "title": "Second Title",
+            "artist": "Artist One",
+            "album": "Padded Album",
+            "albumArtist": null,
+            "genre": "Rock, Pop",
+            "duration": 1.0710204081632653,
+            "trackNo": 7,
+            "discNo": null,
+            "year": 2001,
+            "artHash": "d2e4930b6202f652cb1dd161d1709e799ec0e071"
+          },
+          {
+            "id": 36,
+            "title": "Help!",
+            "artist": "beatles",
+            "album": "Help",
+            "albumArtist": "The Beatles",
+            "genre": null,
+            "duration": 139,
+            "trackNo": 1,
+            "discNo": null,
+            "year": 1965,
+            "artHash": null
+          },
+          {
+            "id": 37,
+            "title": "Yesterday",
+            "artist": "Beatles",
+            "album": "Help",
+            "albumArtist": "The Beatles",
+            "genre": null,
+            "duration": 125,
+            "trackNo": 13,
+            "discNo": null,
+            "year": 1965,
+            "artHash": null
+          },
+          {
+            "id": 32,
+            "title": "Line\nBreak",
+            "artist": "Daft Punk",
+            "album": "Homework",
+            "albumArtist": null,
+            "genre": null,
+            "duration": 60,
+            "trackNo": 1,
+            "discNo": 1,
+            "year": 1997,
+            "artHash": null
+          },
+          {
+            "id": 31,
+            "title": "Love Around the World",
+            "artist": "Daft Punk",
+            "album": "Homework",
+            "albumArtist": null,
+            "genre": "House",
+            "duration": 428.1,
+            "trackNo": 7,
+            "discNo": 1,
+            "year": 1997,
+            "artHash": null
+          },
+          {
+            "id": 19,
+            "title": "Only Artists Frame",
+            "artist": "Duo One & Duo Two",
+            "album": null,
+            "albumArtist": null,
+            "genre": null,
+            "duration": 1.0710204081632653,
+            "trackNo": null,
+            "discNo": null,
+            "year": null,
+            "artHash": null
+          },
+          {
+            "id": 29,
+            "title": "Love Will Keep Us",
+            "artist": "Eagles",
+            "album": "Greatest",
+            "albumArtist": "Eagles",
+            "genre": "Rock",
+            "duration": 301.0625,
+            "trackNo": 3,
+            "discNo": 2,
+            "year": 1994,
+            "artHash": null
+          },
+          {
+            "id": 18,
+            "title": "Info Title",
+            "artist": "Info Artist",
+            "album": "Info Album",
+            "albumArtist": null,
+            "genre": "Folk",
+            "duration": 1,
+            "trackNo": null,
+            "discNo": null,
+            "year": 1970,
+            "artHash": null
+          },
+          {
+            "id": 14,
+            "title": "iTunes Song",
+            "artist": "iTunes Artist",
+            "album": "iTunes Album",
+            "albumArtist": "iTunes Album Artist",
+            "genre": "Electronic",
+            "duration": 1.0464399092970522,
+            "trackNo": 5,
+            "discNo": 1,
+            "year": 2004,
+            "artHash": "a0cc42b361c9663bdeff024d17c92b17f3e98f4e"
+          },
+          {
+            "id": 21,
+            "title": "Take Two",
+            "artist": "Main Artist",
+            "album": "FLAC Album",
+            "albumArtist": "Album Artist",
+            "genre": "Jazz, Fusion",
+            "duration": 1,
+            "trackNo": 4,
+            "discNo": 2,
+            "year": 2003,
+            "artHash": "d2e4930b6202f652cb1dd161d1709e799ec0e071"
+          },
+          {
+            "id": 23,
+            "title": "Ogg Song",
+            "artist": "Ogg Artist",
+            "album": "Ogg Album",
+            "albumArtist": null,
+            "genre": null,
+            "duration": 1.0013605442176872,
+            "trackNo": 2,
+            "discNo": null,
+            "year": 1985,
+            "artHash": "a0cc42b361c9663bdeff024d17c92b17f3e98f4e"
+          },
+          {
+            "id": 7,
+            "title": "Only V1",
+            "artist": "Old Tagger",
+            "album": null,
+            "albumArtist": null,
+            "genre": "Blues",
+            "duration": 1.0710204081632653,
+            "trackNo": 2,
+            "discNo": null,
+            "year": 1975,
+            "artHash": null
+          },
+          {
+            "id": 17,
+            "title": "Opus Song",
+            "artist": "Opus Artist",
+            "album": null,
+            "albumArtist": null,
+            "genre": "Ambient",
+            "duration": 1,
+            "trackNo": null,
+            "discNo": null,
+            "year": null,
+            "artHash": null
+          },
+          {
+            "id": 24,
+            "title": "whitespace-title",
+            "artist": "Spaced Artist",
+            "album": null,
+            "albumArtist": null,
+            "genre": null,
+            "duration": 1.0710204081632653,
+            "trackNo": null,
+            "discNo": null,
+            "year": null,
+            "artHash": null
+          },
+          {
+            "id": 8,
+            "title": "Long Title From ID3v2 That Is Past Thirty Chars",
+            "artist": "V2 Artist",
+            "album": "V1 Only Album",
+            "albumArtist": null,
+            "genre": "Pop",
+            "duration": 1.0710204081632653,
+            "trackNo": 9,
+            "discNo": null,
+            "year": 1988,
+            "artHash": null
+          },
+          {
+            "id": 6,
+            "title": "Wave Song",
+            "artist": "Wave Artist",
+            "album": null,
+            "albumArtist": null,
+            "genre": null,
+            "duration": 1,
+            "trackNo": null,
+            "discNo": null,
+            "year": null,
+            "artHash": null
+          },
+          {
+            "id": 35,
+            "title": "Irritation",
+            "artist": "Ärsytys",
+            "album": "Äänilevy",
+            "albumArtist": null,
+            "genre": null,
+            "duration": 150,
+            "trackNo": 1,
+            "discNo": null,
+            "year": 2011,
+            "artHash": null
+          },
+          {
+            "id": 2,
+            "title": "Full Tags",
+            "artist": "Äänitys Band",
+            "album": "Löyly Sessions",
+            "albumArtist": "Various Artists",
+            "genre": "Rock",
+            "duration": 1.0710204081632653,
+            "trackNo": 3,
+            "discNo": 1,
+            "year": 1999,
+            "artHash": "a0cc42b361c9663bdeff024d17c92b17f3e98f4e"
+          },
+          {
+            "id": 9,
+            "title": "Full Tags",
+            "artist": "Äänitys Band",
+            "album": "Löyly Sessions",
+            "albumArtist": "Various Artists",
+            "genre": "Rock",
+            "duration": 1.0710204081632653,
+            "trackNo": 3,
+            "discNo": 1,
+            "year": 1999,
+            "artHash": "a0cc42b361c9663bdeff024d17c92b17f3e98f4e"
+          },
+          {
+            "id": 34,
+            "title": "Bridge",
+            "artist": "Øresund",
+            "album": null,
+            "albumArtist": null,
+            "genre": null,
+            "duration": 180,
+            "trackNo": null,
+            "discNo": null,
+            "year": null,
+            "artHash": null
+          },
+          {
+            "id": 30,
+            "title": "Love Song",
+            "artist": "élan",
+            "album": "Élan",
+            "albumArtist": null,
+            "genre": null,
+            "duration": 99.9,
+            "trackNo": 1,
+            "discNo": null,
+            "year": null,
+            "artHash": null
+          }
+        ],
+        "total": 37,
+        "limit": 100,
+        "offset": 0
+      }
+    },
+    {
+      "fn": "tracks",
+      "args": {
+        "limit": 5,
+        "offset": 3
+      },
+      "result": {
+        "tracks": [
+          {
+            "id": 15,
+            "title": "no-xing-header",
+            "artist": null,
+            "album": null,
+            "albumArtist": null,
+            "genre": null,
+            "duration": 1.0710204081632653,
+            "trackNo": null,
+            "discNo": null,
+            "year": null,
+            "artHash": null
+          },
+          {
+            "id": 10,
+            "title": "Numbered Genre",
+            "artist": null,
+            "album": null,
+            "albumArtist": null,
+            "genre": "Rock",
+            "duration": 1.0710204081632653,
+            "trackNo": null,
+            "discNo": null,
+            "year": null,
+            "artHash": null
+          },
+          {
+            "id": 22,
+            "title": "Oga Extension",
+            "artist": null,
+            "album": null,
+            "albumArtist": null,
+            "genre": null,
+            "duration": 1.0013605442176872,
+            "trackNo": null,
+            "discNo": null,
+            "year": null,
+            "artHash": null
+          },
+          {
+            "id": 20,
+            "title": "untagged",
+            "artist": null,
+            "album": null,
+            "albumArtist": null,
+            "genre": null,
+            "duration": 1.0710204081632653,
+            "trackNo": null,
+            "discNo": null,
+            "year": null,
+            "artHash": null
+          },
+          {
+            "id": 38,
+            "title": "Nameless",
+            "artist": "",
+            "album": null,
+            "albumArtist": null,
+            "genre": null,
+            "duration": 10,
+            "trackNo": null,
+            "discNo": null,
+            "year": null,
+            "artHash": null
+          }
+        ],
+        "total": 37,
+        "limit": 5,
+        "offset": 3
+      }
+    },
+    {
+      "fn": "tracks",
+      "args": {
+        "limit": 0
+      },
+      "result": {
+        "tracks": [
+          {
+            "id": 1,
+            "title": ".hidden",
+            "artist": null,
+            "album": null,
+            "albumArtist": null,
+            "genre": null,
+            "duration": 1.0710204081632653,
+            "trackNo": null,
+            "discNo": null,
+            "year": null,
+            "artHash": null
+          }
+        ],
+        "total": 37,
+        "limit": 1,
+        "offset": 0
+      }
+    },
+    {
+      "fn": "tracks",
+      "args": {
+        "limit": 9999
+      },
+      "result": {
+        "tracks": [
+          {
+            "id": 1,
+            "title": ".hidden",
+            "artist": null,
+            "album": null,
+            "albumArtist": null,
+            "genre": null,
+            "duration": 1.0710204081632653,
+            "trackNo": null,
+            "discNo": null,
+            "year": null,
+            "artHash": null
+          },
+          {
+            "id": 4,
+            "title": "lower-case keys",
+            "artist": null,
+            "album": null,
+            "albumArtist": "Spaced Key Artist",
+            "genre": null,
+            "duration": 1,
+            "trackNo": null,
+            "discNo": null,
+            "year": null,
+            "artHash": null
+          },
+          {
+            "id": 11,
+            "title": "LÃ¶yly",
+            "artist": null,
+            "album": null,
+            "albumArtist": null,
+            "genre": null,
+            "duration": 1.0710204081632653,
+            "trackNo": null,
+            "discNo": null,
+            "year": null,
+            "artHash": null
+          },
+          {
+            "id": 15,
+            "title": "no-xing-header",
+            "artist": null,
+            "album": null,
+            "albumArtist": null,
+            "genre": null,
+            "duration": 1.0710204081632653,
+            "trackNo": null,
+            "discNo": null,
+            "year": null,
+            "artHash": null
+          },
+          {
+            "id": 10,
+            "title": "Numbered Genre",
+            "artist": null,
+            "album": null,
+            "albumArtist": null,
+            "genre": "Rock",
+            "duration": 1.0710204081632653,
+            "trackNo": null,
+            "discNo": null,
+            "year": null,
+            "artHash": null
+          },
+          {
+            "id": 22,
+            "title": "Oga Extension",
+            "artist": null,
+            "album": null,
+            "albumArtist": null,
+            "genre": null,
+            "duration": 1.0013605442176872,
+            "trackNo": null,
+            "discNo": null,
+            "year": null,
+            "artHash": null
+          },
+          {
+            "id": 20,
+            "title": "untagged",
+            "artist": null,
+            "album": null,
+            "albumArtist": null,
+            "genre": null,
+            "duration": 1.0710204081632653,
+            "trackNo": null,
+            "discNo": null,
+            "year": null,
+            "artHash": null
+          },
+          {
+            "id": 38,
+            "title": "Nameless",
+            "artist": "",
+            "album": null,
+            "albumArtist": null,
+            "genre": null,
+            "duration": 10,
+            "trackNo": null,
+            "discNo": null,
+            "year": null,
+            "artHash": null
+          },
+          {
+            "id": 33,
+            "title": "Numbers",
+            "artist": "1990s",
+            "album": "Digits",
+            "albumArtist": null,
+            "genre": null,
+            "duration": 120,
+            "trackNo": null,
+            "discNo": null,
+            "year": 2007,
+            "artHash": null
+          },
+          {
+            "id": 27,
+            "title": "Single, With \"Quotes\"",
+            "artist": "ABBA",
+            "album": null,
+            "albumArtist": null,
+            "genre": "Pop, Disco",
+            "duration": 200.25,
+            "trackNo": null,
+            "discNo": null,
+            "year": null,
+            "artHash": null
+          },
+          {
+            "id": 28,
+            "title": "Empty Album",
+            "artist": "ABBA",
+            "album": "",
+            "albumArtist": null,
+            "genre": null,
+            "duration": null,
+            "trackNo": null,
+            "discNo": null,
+            "year": null,
+            "artHash": null
+          },
+          {
+            "id": 25,
+            "title": "Dancing Queen",
+            "artist": "ABBA",
+            "album": "Greatest",
+            "albumArtist": "ABBA",
+            "genre": "Pop",
+            "duration": 230.5,
+            "trackNo": 1,
+            "discNo": 1,
+            "year": 1992,
+            "artHash": null
+          },
+          {
+            "id": 26,
+            "title": "Waterloo",
+            "artist": "abba",
+            "album": "Greatest",
+            "albumArtist": null,
+            "genre": null,
+            "duration": 164,
+            "trackNo": 2,
+            "discNo": 1,
+            "year": 1974,
+            "artHash": null
+          },
+          {
+            "id": 12,
+            "title": "Highway/Tunnel",
+            "artist": "AC",
+            "album": null,
+            "albumArtist": null,
+            "genre": "Rock, Techno, Eurodisco",
+            "duration": 1.0710204081632653,
+            "trackNo": null,
+            "discNo": null,
+            "year": null,
+            "artHash": null
+          },
+          {
+            "id": 3,
+            "title": "ADTS Song",
+            "artist": "ADTS Artist",
+            "album": null,
+            "albumArtist": null,
+            "genre": null,
+            "duration": 1.0681179138321995,
+            "trackNo": null,
+            "discNo": null,
+            "year": null,
+            "artHash": null
+          },
+          {
+            "id": 5,
+            "title": "APE Title",
+            "artist": "APE Artist",
+            "album": "ID3 Album",
+            "albumArtist": null,
+            "genre": null,
+            "duration": 1.0710204081632653,
+            "trackNo": null,
+            "discNo": null,
+            "year": 2010,
+            "artHash": null
+          },
+          {
+            "id": 13,
+            "title": "Second Title",
+            "artist": "Artist One",
+            "album": "Padded Album",
+            "albumArtist": null,
+            "genre": "Rock, Pop",
+            "duration": 1.0710204081632653,
+            "trackNo": 7,
+            "discNo": null,
+            "year": 2001,
+            "artHash": "d2e4930b6202f652cb1dd161d1709e799ec0e071"
+          },
+          {
+            "id": 36,
+            "title": "Help!",
+            "artist": "beatles",
+            "album": "Help",
+            "albumArtist": "The Beatles",
+            "genre": null,
+            "duration": 139,
+            "trackNo": 1,
+            "discNo": null,
+            "year": 1965,
+            "artHash": null
+          },
+          {
+            "id": 37,
+            "title": "Yesterday",
+            "artist": "Beatles",
+            "album": "Help",
+            "albumArtist": "The Beatles",
+            "genre": null,
+            "duration": 125,
+            "trackNo": 13,
+            "discNo": null,
+            "year": 1965,
+            "artHash": null
+          },
+          {
+            "id": 32,
+            "title": "Line\nBreak",
+            "artist": "Daft Punk",
+            "album": "Homework",
+            "albumArtist": null,
+            "genre": null,
+            "duration": 60,
+            "trackNo": 1,
+            "discNo": 1,
+            "year": 1997,
+            "artHash": null
+          },
+          {
+            "id": 31,
+            "title": "Love Around the World",
+            "artist": "Daft Punk",
+            "album": "Homework",
+            "albumArtist": null,
+            "genre": "House",
+            "duration": 428.1,
+            "trackNo": 7,
+            "discNo": 1,
+            "year": 1997,
+            "artHash": null
+          },
+          {
+            "id": 19,
+            "title": "Only Artists Frame",
+            "artist": "Duo One & Duo Two",
+            "album": null,
+            "albumArtist": null,
+            "genre": null,
+            "duration": 1.0710204081632653,
+            "trackNo": null,
+            "discNo": null,
+            "year": null,
+            "artHash": null
+          },
+          {
+            "id": 29,
+            "title": "Love Will Keep Us",
+            "artist": "Eagles",
+            "album": "Greatest",
+            "albumArtist": "Eagles",
+            "genre": "Rock",
+            "duration": 301.0625,
+            "trackNo": 3,
+            "discNo": 2,
+            "year": 1994,
+            "artHash": null
+          },
+          {
+            "id": 18,
+            "title": "Info Title",
+            "artist": "Info Artist",
+            "album": "Info Album",
+            "albumArtist": null,
+            "genre": "Folk",
+            "duration": 1,
+            "trackNo": null,
+            "discNo": null,
+            "year": 1970,
+            "artHash": null
+          },
+          {
+            "id": 14,
+            "title": "iTunes Song",
+            "artist": "iTunes Artist",
+            "album": "iTunes Album",
+            "albumArtist": "iTunes Album Artist",
+            "genre": "Electronic",
+            "duration": 1.0464399092970522,
+            "trackNo": 5,
+            "discNo": 1,
+            "year": 2004,
+            "artHash": "a0cc42b361c9663bdeff024d17c92b17f3e98f4e"
+          },
+          {
+            "id": 21,
+            "title": "Take Two",
+            "artist": "Main Artist",
+            "album": "FLAC Album",
+            "albumArtist": "Album Artist",
+            "genre": "Jazz, Fusion",
+            "duration": 1,
+            "trackNo": 4,
+            "discNo": 2,
+            "year": 2003,
+            "artHash": "d2e4930b6202f652cb1dd161d1709e799ec0e071"
+          },
+          {
+            "id": 23,
+            "title": "Ogg Song",
+            "artist": "Ogg Artist",
+            "album": "Ogg Album",
+            "albumArtist": null,
+            "genre": null,
+            "duration": 1.0013605442176872,
+            "trackNo": 2,
+            "discNo": null,
+            "year": 1985,
+            "artHash": "a0cc42b361c9663bdeff024d17c92b17f3e98f4e"
+          },
+          {
+            "id": 7,
+            "title": "Only V1",
+            "artist": "Old Tagger",
+            "album": null,
+            "albumArtist": null,
+            "genre": "Blues",
+            "duration": 1.0710204081632653,
+            "trackNo": 2,
+            "discNo": null,
+            "year": 1975,
+            "artHash": null
+          },
+          {
+            "id": 17,
+            "title": "Opus Song",
+            "artist": "Opus Artist",
+            "album": null,
+            "albumArtist": null,
+            "genre": "Ambient",
+            "duration": 1,
+            "trackNo": null,
+            "discNo": null,
+            "year": null,
+            "artHash": null
+          },
+          {
+            "id": 24,
+            "title": "whitespace-title",
+            "artist": "Spaced Artist",
+            "album": null,
+            "albumArtist": null,
+            "genre": null,
+            "duration": 1.0710204081632653,
+            "trackNo": null,
+            "discNo": null,
+            "year": null,
+            "artHash": null
+          },
+          {
+            "id": 8,
+            "title": "Long Title From ID3v2 That Is Past Thirty Chars",
+            "artist": "V2 Artist",
+            "album": "V1 Only Album",
+            "albumArtist": null,
+            "genre": "Pop",
+            "duration": 1.0710204081632653,
+            "trackNo": 9,
+            "discNo": null,
+            "year": 1988,
+            "artHash": null
+          },
+          {
+            "id": 6,
+            "title": "Wave Song",
+            "artist": "Wave Artist",
+            "album": null,
+            "albumArtist": null,
+            "genre": null,
+            "duration": 1,
+            "trackNo": null,
+            "discNo": null,
+            "year": null,
+            "artHash": null
+          },
+          {
+            "id": 35,
+            "title": "Irritation",
+            "artist": "Ärsytys",
+            "album": "Äänilevy",
+            "albumArtist": null,
+            "genre": null,
+            "duration": 150,
+            "trackNo": 1,
+            "discNo": null,
+            "year": 2011,
+            "artHash": null
+          },
+          {
+            "id": 2,
+            "title": "Full Tags",
+            "artist": "Äänitys Band",
+            "album": "Löyly Sessions",
+            "albumArtist": "Various Artists",
+            "genre": "Rock",
+            "duration": 1.0710204081632653,
+            "trackNo": 3,
+            "discNo": 1,
+            "year": 1999,
+            "artHash": "a0cc42b361c9663bdeff024d17c92b17f3e98f4e"
+          },
+          {
+            "id": 9,
+            "title": "Full Tags",
+            "artist": "Äänitys Band",
+            "album": "Löyly Sessions",
+            "albumArtist": "Various Artists",
+            "genre": "Rock",
+            "duration": 1.0710204081632653,
+            "trackNo": 3,
+            "discNo": 1,
+            "year": 1999,
+            "artHash": "a0cc42b361c9663bdeff024d17c92b17f3e98f4e"
+          },
+          {
+            "id": 34,
+            "title": "Bridge",
+            "artist": "Øresund",
+            "album": null,
+            "albumArtist": null,
+            "genre": null,
+            "duration": 180,
+            "trackNo": null,
+            "discNo": null,
+            "year": null,
+            "artHash": null
+          },
+          {
+            "id": 30,
+            "title": "Love Song",
+            "artist": "élan",
+            "album": "Élan",
+            "albumArtist": null,
+            "genre": null,
+            "duration": 99.9,
+            "trackNo": 1,
+            "discNo": null,
+            "year": null,
+            "artHash": null
+          }
+        ],
+        "total": 37,
+        "limit": 500,
+        "offset": 0
+      }
+    },
+    {
+      "fn": "tracks",
+      "args": {
+        "offset": -5,
+        "limit": 2
+      },
+      "result": {
+        "tracks": [
+          {
+            "id": 1,
+            "title": ".hidden",
+            "artist": null,
+            "album": null,
+            "albumArtist": null,
+            "genre": null,
+            "duration": 1.0710204081632653,
+            "trackNo": null,
+            "discNo": null,
+            "year": null,
+            "artHash": null
+          },
+          {
+            "id": 4,
+            "title": "lower-case keys",
+            "artist": null,
+            "album": null,
+            "albumArtist": "Spaced Key Artist",
+            "genre": null,
+            "duration": 1,
+            "trackNo": null,
+            "discNo": null,
+            "year": null,
+            "artHash": null
+          }
+        ],
+        "total": 37,
+        "limit": 2,
+        "offset": 0
+      }
+    },
+    {
+      "fn": "tracks",
+      "args": {
+        "search": "abba"
+      },
+      "result": {
+        "tracks": [
+          {
+            "id": 26,
+            "title": "Waterloo",
+            "artist": "abba",
+            "album": "Greatest",
+            "albumArtist": null,
+            "genre": null,
+            "duration": 164,
+            "trackNo": 2,
+            "discNo": 1,
+            "year": 1974,
+            "artHash": null
+          },
+          {
+            "id": 28,
+            "title": "Empty Album",
+            "artist": "ABBA",
+            "album": "",
+            "albumArtist": null,
+            "genre": null,
+            "duration": null,
+            "trackNo": null,
+            "discNo": null,
+            "year": null,
+            "artHash": null
+          },
+          {
+            "id": 25,
+            "title": "Dancing Queen",
+            "artist": "ABBA",
+            "album": "Greatest",
+            "albumArtist": "ABBA",
+            "genre": "Pop",
+            "duration": 230.5,
+            "trackNo": 1,
+            "discNo": 1,
+            "year": 1992,
+            "artHash": null
+          },
+          {
+            "id": 27,
+            "title": "Single, With \"Quotes\"",
+            "artist": "ABBA",
+            "album": null,
+            "albumArtist": null,
+            "genre": "Pop, Disco",
+            "duration": 200.25,
+            "trackNo": null,
+            "discNo": null,
+            "year": null,
+            "artHash": null
+          }
+        ],
+        "total": 4,
+        "limit": 100,
+        "offset": 0
+      }
+    },
+    {
+      "fn": "tracks",
+      "args": {
+        "search": "  daft pu  "
+      },
+      "result": {
+        "tracks": [
+          {
+            "id": 32,
+            "title": "Line\nBreak",
+            "artist": "Daft Punk",
+            "album": "Homework",
+            "albumArtist": null,
+            "genre": null,
+            "duration": 60,
+            "trackNo": 1,
+            "discNo": 1,
+            "year": 1997,
+            "artHash": null
+          },
+          {
+            "id": 31,
+            "title": "Love Around the World",
+            "artist": "Daft Punk",
+            "album": "Homework",
+            "albumArtist": null,
+            "genre": "House",
+            "duration": 428.1,
+            "trackNo": 7,
+            "discNo": 1,
+            "year": 1997,
+            "artHash": null
+          }
+        ],
+        "total": 2,
+        "limit": 100,
+        "offset": 0
+      }
+    },
+    {
+      "fn": "tracks",
+      "args": {
+        "search": "aanitys"
+      },
+      "result": {
+        "tracks": [
+          {
+            "id": 2,
+            "title": "Full Tags",
+            "artist": "Äänitys Band",
+            "album": "Löyly Sessions",
+            "albumArtist": "Various Artists",
+            "genre": "Rock",
+            "duration": 1.0710204081632653,
+            "trackNo": 3,
+            "discNo": 1,
+            "year": 1999,
+            "artHash": "a0cc42b361c9663bdeff024d17c92b17f3e98f4e"
+          },
+          {
+            "id": 9,
+            "title": "Full Tags",
+            "artist": "Äänitys Band",
+            "album": "Löyly Sessions",
+            "albumArtist": "Various Artists",
+            "genre": "Rock",
+            "duration": 1.0710204081632653,
+            "trackNo": 3,
+            "discNo": 1,
+            "year": 1999,
+            "artHash": "a0cc42b361c9663bdeff024d17c92b17f3e98f4e"
+          }
+        ],
+        "total": 2,
+        "limit": 100,
+        "offset": 0
+      }
+    },
+    {
+      "fn": "tracks",
+      "args": {
+        "search": "äänilevy"
+      },
+      "result": {
+        "tracks": [
+          {
+            "id": 35,
+            "title": "Irritation",
+            "artist": "Ärsytys",
+            "album": "Äänilevy",
+            "albumArtist": null,
+            "genre": null,
+            "duration": 150,
+            "trackNo": 1,
+            "discNo": null,
+            "year": 2011,
+            "artHash": null
+          }
+        ],
+        "total": 1,
+        "limit": 100,
+        "offset": 0
+      }
+    },
+    {
+      "fn": "tracks",
+      "args": {
+        "search": "!!!"
+      },
+      "result": {
+        "tracks": [],
+        "total": 0,
+        "limit": 100,
+        "offset": 0
+      }
+    },
+    {
+      "fn": "tracks",
+      "args": {
+        "search": "AC/DC"
+      },
+      "result": {
+        "tracks": [],
+        "total": 0,
+        "limit": 100,
+        "offset": 0
+      }
+    },
+    {
+      "fn": "tracks",
+      "args": {
+        "search": "love",
+        "limit": 2,
+        "offset": 1
+      },
+      "result": {
+        "tracks": [
+          {
+            "id": 29,
+            "title": "Love Will Keep Us",
+            "artist": "Eagles",
+            "album": "Greatest",
+            "albumArtist": "Eagles",
+            "genre": "Rock",
+            "duration": 301.0625,
+            "trackNo": 3,
+            "discNo": 2,
+            "year": 1994,
+            "artHash": null
+          },
+          {
+            "id": 31,
+            "title": "Love Around the World",
+            "artist": "Daft Punk",
+            "album": "Homework",
+            "albumArtist": null,
+            "genre": "House",
+            "duration": 428.1,
+            "trackNo": 7,
+            "discNo": 1,
+            "year": 1997,
+            "artHash": null
+          }
+        ],
+        "total": 3,
+        "limit": 2,
+        "offset": 1
+      }
+    },
+    {
+      "fn": "tracks",
+      "args": {
+        "search": "love",
+        "artist": "Eagles"
+      },
+      "result": {
+        "tracks": [
+          {
+            "id": 30,
+            "title": "Love Song",
+            "artist": "élan",
+            "album": "Élan",
+            "albumArtist": null,
+            "genre": null,
+            "duration": 99.9,
+            "trackNo": 1,
+            "discNo": null,
+            "year": null,
+            "artHash": null
+          },
+          {
+            "id": 29,
+            "title": "Love Will Keep Us",
+            "artist": "Eagles",
+            "album": "Greatest",
+            "albumArtist": "Eagles",
+            "genre": "Rock",
+            "duration": 301.0625,
+            "trackNo": 3,
+            "discNo": 2,
+            "year": 1994,
+            "artHash": null
+          },
+          {
+            "id": 31,
+            "title": "Love Around the World",
+            "artist": "Daft Punk",
+            "album": "Homework",
+            "albumArtist": null,
+            "genre": "House",
+            "duration": 428.1,
+            "trackNo": 7,
+            "discNo": 1,
+            "year": 1997,
+            "artHash": null
+          }
+        ],
+        "total": 3,
+        "limit": 100,
+        "offset": 0
+      }
+    },
+    {
+      "fn": "tracks",
+      "args": {
+        "album": "Greatest"
+      },
+      "result": {
+        "tracks": [
+          {
+            "id": 25,
+            "title": "Dancing Queen",
+            "artist": "ABBA",
+            "album": "Greatest",
+            "albumArtist": "ABBA",
+            "genre": "Pop",
+            "duration": 230.5,
+            "trackNo": 1,
+            "discNo": 1,
+            "year": 1992,
+            "artHash": null
+          },
+          {
+            "id": 26,
+            "title": "Waterloo",
+            "artist": "abba",
+            "album": "Greatest",
+            "albumArtist": null,
+            "genre": null,
+            "duration": 164,
+            "trackNo": 2,
+            "discNo": 1,
+            "year": 1974,
+            "artHash": null
+          },
+          {
+            "id": 29,
+            "title": "Love Will Keep Us",
+            "artist": "Eagles",
+            "album": "Greatest",
+            "albumArtist": "Eagles",
+            "genre": "Rock",
+            "duration": 301.0625,
+            "trackNo": 3,
+            "discNo": 2,
+            "year": 1994,
+            "artHash": null
+          }
+        ],
+        "total": 3,
+        "limit": 100,
+        "offset": 0
+      }
+    },
+    {
+      "fn": "tracks",
+      "args": {
+        "album": " greatest ",
+        "albumArtist": "abba"
+      },
+      "result": {
+        "tracks": [
+          {
+            "id": 25,
+            "title": "Dancing Queen",
+            "artist": "ABBA",
+            "album": "Greatest",
+            "albumArtist": "ABBA",
+            "genre": "Pop",
+            "duration": 230.5,
+            "trackNo": 1,
+            "discNo": 1,
+            "year": 1992,
+            "artHash": null
+          },
+          {
+            "id": 26,
+            "title": "Waterloo",
+            "artist": "abba",
+            "album": "Greatest",
+            "albumArtist": null,
+            "genre": null,
+            "duration": 164,
+            "trackNo": 2,
+            "discNo": 1,
+            "year": 1974,
+            "artHash": null
+          }
+        ],
+        "total": 2,
+        "limit": 100,
+        "offset": 0
+      }
+    },
+    {
+      "fn": "tracks",
+      "args": {
+        "album": "Greatest",
+        "albumArtist": "   "
+      },
+      "result": {
+        "tracks": [
+          {
+            "id": 25,
+            "title": "Dancing Queen",
+            "artist": "ABBA",
+            "album": "Greatest",
+            "albumArtist": "ABBA",
+            "genre": "Pop",
+            "duration": 230.5,
+            "trackNo": 1,
+            "discNo": 1,
+            "year": 1992,
+            "artHash": null
+          },
+          {
+            "id": 26,
+            "title": "Waterloo",
+            "artist": "abba",
+            "album": "Greatest",
+            "albumArtist": null,
+            "genre": null,
+            "duration": 164,
+            "trackNo": 2,
+            "discNo": 1,
+            "year": 1974,
+            "artHash": null
+          },
+          {
+            "id": 29,
+            "title": "Love Will Keep Us",
+            "artist": "Eagles",
+            "album": "Greatest",
+            "albumArtist": "Eagles",
+            "genre": "Rock",
+            "duration": 301.0625,
+            "trackNo": 3,
+            "discNo": 2,
+            "year": 1994,
+            "artHash": null
+          }
+        ],
+        "total": 3,
+        "limit": 100,
+        "offset": 0
+      }
+    },
+    {
+      "fn": "tracks",
+      "args": {
+        "artist": "abba"
+      },
+      "result": {
+        "tracks": [
+          {
+            "id": 27,
+            "title": "Single, With \"Quotes\"",
+            "artist": "ABBA",
+            "album": null,
+            "albumArtist": null,
+            "genre": "Pop, Disco",
+            "duration": 200.25,
+            "trackNo": null,
+            "discNo": null,
+            "year": null,
+            "artHash": null
+          },
+          {
+            "id": 28,
+            "title": "Empty Album",
+            "artist": "ABBA",
+            "album": "",
+            "albumArtist": null,
+            "genre": null,
+            "duration": null,
+            "trackNo": null,
+            "discNo": null,
+            "year": null,
+            "artHash": null
+          },
+          {
+            "id": 25,
+            "title": "Dancing Queen",
+            "artist": "ABBA",
+            "album": "Greatest",
+            "albumArtist": "ABBA",
+            "genre": "Pop",
+            "duration": 230.5,
+            "trackNo": 1,
+            "discNo": 1,
+            "year": 1992,
+            "artHash": null
+          },
+          {
+            "id": 26,
+            "title": "Waterloo",
+            "artist": "abba",
+            "album": "Greatest",
+            "albumArtist": null,
+            "genre": null,
+            "duration": 164,
+            "trackNo": 2,
+            "discNo": 1,
+            "year": 1974,
+            "artHash": null
+          }
+        ],
+        "total": 4,
+        "limit": 100,
+        "offset": 0
+      }
+    },
+    {
+      "fn": "tracks",
+      "args": {
+        "artist": "ABBA",
+        "noAlbum": true
+      },
+      "result": {
+        "tracks": [
+          {
+            "id": 28,
+            "title": "Empty Album",
+            "artist": "ABBA",
+            "album": "",
+            "albumArtist": null,
+            "genre": null,
+            "duration": null,
+            "trackNo": null,
+            "discNo": null,
+            "year": null,
+            "artHash": null
+          },
+          {
+            "id": 27,
+            "title": "Single, With \"Quotes\"",
+            "artist": "ABBA",
+            "album": null,
+            "albumArtist": null,
+            "genre": "Pop, Disco",
+            "duration": 200.25,
+            "trackNo": null,
+            "discNo": null,
+            "year": null,
+            "artHash": null
+          }
+        ],
+        "total": 2,
+        "limit": 100,
+        "offset": 0
+      }
+    },
+    {
+      "fn": "tracks",
+      "args": {
+        "artist": "the beatles"
+      },
+      "result": {
+        "tracks": [
+          {
+            "id": 36,
+            "title": "Help!",
+            "artist": "beatles",
+            "album": "Help",
+            "albumArtist": "The Beatles",
+            "genre": null,
+            "duration": 139,
+            "trackNo": 1,
+            "discNo": null,
+            "year": 1965,
+            "artHash": null
+          },
+          {
+            "id": 37,
+            "title": "Yesterday",
+            "artist": "Beatles",
+            "album": "Help",
+            "albumArtist": "The Beatles",
+            "genre": null,
+            "duration": 125,
+            "trackNo": 13,
+            "discNo": null,
+            "year": 1965,
+            "artHash": null
+          }
+        ],
+        "total": 2,
+        "limit": 100,
+        "offset": 0
+      }
+    },
+    {
+      "fn": "tracks",
+      "args": {
+        "artist": "   ",
+        "limit": 3
+      },
+      "result": {
+        "tracks": [
+          {
+            "id": 1,
+            "title": ".hidden",
+            "artist": null,
+            "album": null,
+            "albumArtist": null,
+            "genre": null,
+            "duration": 1.0710204081632653,
+            "trackNo": null,
+            "discNo": null,
+            "year": null,
+            "artHash": null
+          },
+          {
+            "id": 4,
+            "title": "lower-case keys",
+            "artist": null,
+            "album": null,
+            "albumArtist": "Spaced Key Artist",
+            "genre": null,
+            "duration": 1,
+            "trackNo": null,
+            "discNo": null,
+            "year": null,
+            "artHash": null
+          },
+          {
+            "id": 11,
+            "title": "LÃ¶yly",
+            "artist": null,
+            "album": null,
+            "albumArtist": null,
+            "genre": null,
+            "duration": 1.0710204081632653,
+            "trackNo": null,
+            "discNo": null,
+            "year": null,
+            "artHash": null
+          }
+        ],
+        "total": 37,
+        "limit": 3,
+        "offset": 0
+      }
+    },
+    {
+      "fn": "artists",
+      "args": {},
+      "result": {
+        "artists": [
+          {
+            "artist": "1990s",
+            "trackCount": 1,
+            "albumCount": 1
+          },
+          {
+            "artist": "ABBA",
+            "trackCount": 4,
+            "albumCount": 2
+          },
+          {
+            "artist": "AC",
+            "trackCount": 1,
+            "albumCount": 0
+          },
+          {
+            "artist": "ADTS Artist",
+            "trackCount": 1,
+            "albumCount": 0
+          },
+          {
+            "artist": "APE Artist",
+            "trackCount": 1,
+            "albumCount": 1
+          },
+          {
+            "artist": "Artist One",
+            "trackCount": 1,
+            "albumCount": 1
+          },
+          {
+            "artist": "beatles",
+            "trackCount": 2,
+            "albumCount": 1
+          },
+          {
+            "artist": "Daft Punk",
+            "trackCount": 2,
+            "albumCount": 1
+          },
+          {
+            "artist": "Duo One & Duo Two",
+            "trackCount": 1,
+            "albumCount": 0
+          },
+          {
+            "artist": "Eagles",
+            "trackCount": 1,
+            "albumCount": 1
+          },
+          {
+            "artist": "Info Artist",
+            "trackCount": 1,
+            "albumCount": 1
+          },
+          {
+            "artist": "iTunes Artist",
+            "trackCount": 1,
+            "albumCount": 1
+          },
+          {
+            "artist": "Main Artist",
+            "trackCount": 1,
+            "albumCount": 1
+          },
+          {
+            "artist": "Ogg Artist",
+            "trackCount": 1,
+            "albumCount": 1
+          },
+          {
+            "artist": "Old Tagger",
+            "trackCount": 1,
+            "albumCount": 0
+          },
+          {
+            "artist": "Opus Artist",
+            "trackCount": 1,
+            "albumCount": 0
+          },
+          {
+            "artist": "Spaced Artist",
+            "trackCount": 1,
+            "albumCount": 0
+          },
+          {
+            "artist": "V2 Artist",
+            "trackCount": 1,
+            "albumCount": 1
+          },
+          {
+            "artist": "Wave Artist",
+            "trackCount": 1,
+            "albumCount": 0
+          },
+          {
+            "artist": "Ärsytys",
+            "trackCount": 1,
+            "albumCount": 1
+          },
+          {
+            "artist": "Äänitys Band",
+            "trackCount": 2,
+            "albumCount": 1
+          },
+          {
+            "artist": "Øresund",
+            "trackCount": 1,
+            "albumCount": 0
+          },
+          {
+            "artist": "élan",
+            "trackCount": 1,
+            "albumCount": 1
+          }
+        ],
+        "total": 23,
+        "letters": [
+          "A",
+          "B",
+          "D",
+          "E",
+          "I",
+          "M",
+          "O",
+          "S",
+          "V",
+          "W",
+          "#"
+        ]
+      }
+    },
+    {
+      "fn": "artists",
+      "args": {
+        "letter": "a"
+      },
+      "result": {
+        "artists": [
+          {
+            "artist": "ABBA",
+            "trackCount": 4,
+            "albumCount": 2
+          },
+          {
+            "artist": "AC",
+            "trackCount": 1,
+            "albumCount": 0
+          },
+          {
+            "artist": "ADTS Artist",
+            "trackCount": 1,
+            "albumCount": 0
+          },
+          {
+            "artist": "APE Artist",
+            "trackCount": 1,
+            "albumCount": 1
+          },
+          {
+            "artist": "Artist One",
+            "trackCount": 1,
+            "albumCount": 1
+          },
+          {
+            "artist": "Ärsytys",
+            "trackCount": 1,
+            "albumCount": 1
+          },
+          {
+            "artist": "Äänitys Band",
+            "trackCount": 2,
+            "albumCount": 1
+          }
+        ],
+        "total": 7,
+        "letters": [
+          "A",
+          "B",
+          "D",
+          "E",
+          "I",
+          "M",
+          "O",
+          "S",
+          "V",
+          "W",
+          "#"
+        ]
+      }
+    },
+    {
+      "fn": "artists",
+      "args": {
+        "letter": " e "
+      },
+      "result": {
+        "artists": [
+          {
+            "artist": "Eagles",
+            "trackCount": 1,
+            "albumCount": 1
+          },
+          {
+            "artist": "élan",
+            "trackCount": 1,
+            "albumCount": 1
+          }
+        ],
+        "total": 2,
+        "letters": [
+          "A",
+          "B",
+          "D",
+          "E",
+          "I",
+          "M",
+          "O",
+          "S",
+          "V",
+          "W",
+          "#"
+        ]
+      }
+    },
+    {
+      "fn": "artists",
+      "args": {
+        "letter": "#"
+      },
+      "result": {
+        "artists": [
+          {
+            "artist": "1990s",
+            "trackCount": 1,
+            "albumCount": 1
+          },
+          {
+            "artist": "Øresund",
+            "trackCount": 1,
+            "albumCount": 0
+          }
+        ],
+        "total": 2,
+        "letters": [
+          "A",
+          "B",
+          "D",
+          "E",
+          "I",
+          "M",
+          "O",
+          "S",
+          "V",
+          "W",
+          "#"
+        ]
+      }
+    },
+    {
+      "fn": "artists",
+      "args": {
+        "letter": "Q"
+      },
+      "result": {
+        "artists": [],
+        "total": 0,
+        "letters": [
+          "A",
+          "B",
+          "D",
+          "E",
+          "I",
+          "M",
+          "O",
+          "S",
+          "V",
+          "W",
+          "#"
+        ]
+      }
+    },
+    {
+      "fn": "artists",
+      "args": {
+        "search": "ab"
+      },
+      "result": {
+        "artists": [
+          {
+            "artist": "ABBA",
+            "trackCount": 4,
+            "albumCount": 2
+          }
+        ],
+        "total": 1,
+        "letters": [
+          "A",
+          "B",
+          "D",
+          "E",
+          "I",
+          "M",
+          "O",
+          "S",
+          "V",
+          "W",
+          "#"
+        ]
+      }
+    },
+    {
+      "fn": "artists",
+      "args": {
+        "search": "ab",
+        "letter": "a"
+      },
+      "result": {
+        "artists": [
+          {
+            "artist": "ABBA",
+            "trackCount": 4,
+            "albumCount": 2
+          }
+        ],
+        "total": 1,
+        "letters": [
+          "A",
+          "B",
+          "D",
+          "E",
+          "I",
+          "M",
+          "O",
+          "S",
+          "V",
+          "W",
+          "#"
+        ]
+      }
+    },
+    {
+      "fn": "artists",
+      "args": {
+        "limit": 2,
+        "offset": 1
+      },
+      "result": {
+        "artists": [
+          {
+            "artist": "ABBA",
+            "trackCount": 4,
+            "albumCount": 2
+          },
+          {
+            "artist": "AC",
+            "trackCount": 1,
+            "albumCount": 0
+          }
+        ],
+        "total": 23,
+        "letters": [
+          "A",
+          "B",
+          "D",
+          "E",
+          "I",
+          "M",
+          "O",
+          "S",
+          "V",
+          "W",
+          "#"
+        ]
+      }
+    },
+    {
+      "fn": "artists",
+      "args": {
+        "limit": 0
+      },
+      "result": {
+        "artists": [
+          {
+            "artist": "1990s",
+            "trackCount": 1,
+            "albumCount": 1
+          }
+        ],
+        "total": 23,
+        "letters": [
+          "A",
+          "B",
+          "D",
+          "E",
+          "I",
+          "M",
+          "O",
+          "S",
+          "V",
+          "W",
+          "#"
+        ]
+      }
+    },
+    {
+      "fn": "albums",
+      "args": {},
+      "result": {
+        "albums": [
+          {
+            "album": "Élan",
+            "artist": "élan",
+            "trackCount": 1,
+            "artHash": null,
+            "year": null
+          },
+          {
+            "album": "Help",
+            "artist": "The Beatles",
+            "trackCount": 2,
+            "artHash": null,
+            "year": 1965
+          },
+          {
+            "album": "Info Album",
+            "artist": "Info Artist",
+            "trackCount": 1,
+            "artHash": null,
+            "year": 1970
+          },
+          {
+            "album": "Ogg Album",
+            "artist": "Ogg Artist",
+            "trackCount": 1,
+            "artHash": "a0cc42b361c9663bdeff024d17c92b17f3e98f4e",
+            "year": 1985
+          },
+          {
+            "album": "V1 Only Album",
+            "artist": "V2 Artist",
+            "trackCount": 1,
+            "artHash": null,
+            "year": 1988
+          },
+          {
+            "album": "Greatest",
+            "artist": "ABBA",
+            "trackCount": 2,
+            "artHash": null,
+            "year": 1992
+          },
+          {
+            "album": "Greatest",
+            "artist": "Eagles",
+            "trackCount": 1,
+            "artHash": null,
+            "year": 1994
+          },
+          {
+            "album": "Homework",
+            "artist": "Daft Punk",
+            "trackCount": 2,
+            "artHash": null,
+            "year": 1997
+          },
+          {
+            "album": "Löyly Sessions",
+            "artist": "Various Artists",
+            "trackCount": 2,
+            "artHash": "a0cc42b361c9663bdeff024d17c92b17f3e98f4e",
+            "year": 1999
+          },
+          {
+            "album": "Padded Album",
+            "artist": "Artist One",
+            "trackCount": 1,
+            "artHash": "d2e4930b6202f652cb1dd161d1709e799ec0e071",
+            "year": 2001
+          },
+          {
+            "album": "FLAC Album",
+            "artist": "Album Artist",
+            "trackCount": 1,
+            "artHash": "d2e4930b6202f652cb1dd161d1709e799ec0e071",
+            "year": 2003
+          },
+          {
+            "album": "iTunes Album",
+            "artist": "iTunes Album Artist",
+            "trackCount": 1,
+            "artHash": "a0cc42b361c9663bdeff024d17c92b17f3e98f4e",
+            "year": 2004
+          },
+          {
+            "album": "Digits",
+            "artist": "1990s",
+            "trackCount": 1,
+            "artHash": null,
+            "year": 2007
+          },
+          {
+            "album": "ID3 Album",
+            "artist": "APE Artist",
+            "trackCount": 1,
+            "artHash": null,
+            "year": 2010
+          },
+          {
+            "album": "Äänilevy",
+            "artist": "Ärsytys",
+            "trackCount": 1,
+            "artHash": null,
+            "year": 2011
+          }
+        ],
+        "total": 15
+      }
+    },
+    {
+      "fn": "albums",
+      "args": {
+        "artist": "abba"
+      },
+      "result": {
+        "albums": [
+          {
+            "album": "Greatest",
+            "artist": "ABBA",
+            "trackCount": 2,
+            "artHash": null,
+            "year": 1992
+          }
+        ],
+        "total": 1
+      }
+    },
+    {
+      "fn": "albums",
+      "args": {
+        "search": "great"
+      },
+      "result": {
+        "albums": [
+          {
+            "album": "Greatest",
+            "artist": "ABBA",
+            "trackCount": 2,
+            "artHash": null,
+            "year": 1992
+          },
+          {
+            "album": "Greatest",
+            "artist": "Eagles",
+            "trackCount": 1,
+            "artHash": null,
+            "year": 1994
+          }
+        ],
+        "total": 2
+      }
+    },
+    {
+      "fn": "albums",
+      "args": {
+        "search": "beatles"
+      },
+      "result": {
+        "albums": [
+          {
+            "album": "Help",
+            "artist": "The Beatles",
+            "trackCount": 2,
+            "artHash": null,
+            "year": 1965
+          }
+        ],
+        "total": 1
+      }
+    },
+    {
+      "fn": "albums",
+      "args": {
+        "limit": 1,
+        "offset": 1
+      },
+      "result": {
+        "albums": [
+          {
+            "album": "Help",
+            "artist": "The Beatles",
+            "trackCount": 2,
+            "artHash": null,
+            "year": 1965
+          }
+        ],
+        "total": 15
+      }
+    },
+    {
+      "fn": "trackById",
+      "args": {
+        "id": 1
+      },
+      "result": {
+        "id": 1,
+        "title": ".hidden",
+        "artist": null,
+        "album": null,
+        "albumArtist": null,
+        "genre": null,
+        "duration": 1.0710204081632653,
+        "trackNo": null,
+        "discNo": null,
+        "year": null,
+        "artHash": null
+      }
+    },
+    {
+      "fn": "trackById",
+      "args": {
+        "id": 99999
+      },
+      "result": null
+    },
+    {
+      "fn": "trackPath",
+      "args": {
+        "id": 2
+      },
+      "result": "/music/Disc 2/bonus.mp3"
+    },
+    {
+      "fn": "trackPath",
+      "args": {
+        "id": 99999
+      },
+      "result": null
+    },
+    {
+      "fn": "art",
+      "args": {
+        "hash": "a0cc42b361c9663bdeff024d17c92b17f3e98f4e"
+      },
+      "result": {
+        "mime": "image/jpeg",
+        "sha1": "a0cc42b361c9663bdeff024d17c92b17f3e98f4e"
+      }
+    },
+    {
+      "fn": "art",
+      "args": {
+        "hash": "missing"
+      },
+      "result": null
+    },
+    {
+      "fn": "pathsWithCounts",
+      "args": {
+        "paths": [
+          "/music",
+          "/music/",
+          "/music/Disc 2",
+          "/elsewhere"
+        ]
+      },
+      "result": {
+        "paths": [
+          {
+            "path": "/music",
+            "trackCount": 23
+          },
+          {
+            "path": "/music/",
+            "trackCount": 23
+          },
+          {
+            "path": "/music/Disc 2",
+            "trackCount": 1
+          },
+          {
+            "path": "/elsewhere",
+            "trackCount": 0
+          }
+        ],
+        "total": 37
+      }
+    }
+  ],
+  "csv": "﻿id,title,artist,album,albumArtist,genre,year,trackNo,discNo,duration,path,addedAt\r\n1,.hidden,,,,,,,,1.0710204081632653,/music/.hidden.mp3,2026-09-14T08:01:38.394Z\r\n4,lower-case keys,,,Spaced Key Artist,,,,,1,/music/album-artist-space.flac,2026-09-14T08:01:38.400Z\r\n11,LÃ¶yly,,,,,,,,1.0710204081632653,/music/id3v23-latin1-utf8-bytes.mp3,2026-09-14T08:01:38.407Z\r\n15,no-xing-header,,,,,,,,1.0710204081632653,/music/no-xing-header.mp3,2026-09-14T08:01:38.413Z\r\n10,Numbered Genre,,,,Rock,,,,1.0710204081632653,/music/id3v23-genre-number.mp3,2026-09-14T08:01:38.406Z\r\n22,Oga Extension,,,,,,,,1.0013605442176872,/music/vorbis.oga,2026-09-14T08:01:38.418Z\r\n20,untagged,,,,,,,,1.0710204081632653,/music/untagged.mp3,2026-09-14T08:01:38.417Z\r\n38,Nameless,,,,,,,,10,/seed/13.mp3,2026-01-01T00:00:00.000Z\r\n33,Numbers,1990s,Digits,,,2007,,,120,/seed/8.mp3,2026-01-01T00:00:00.000Z\r\n27,\"Single, With \"\"Quotes\"\"\",ABBA,,,\"Pop, Disco\",,,,200.25,/seed/2.mp3,2026-01-01T00:00:00.000Z\r\n28,Empty Album,ABBA,,,,,,,,/seed/3.mp3,2026-01-01T00:00:00.000Z\r\n25,Dancing Queen,ABBA,Greatest,ABBA,Pop,1992,1,1,230.5,/seed/0.mp3,2026-01-01T00:00:00.000Z\r\n26,Waterloo,abba,Greatest,,,1974,2,1,164,/seed/1.mp3,2026-01-01T00:00:00.000Z\r\n12,Highway/Tunnel,AC,,,\"Rock, Techno, Eurodisco\",,,,1.0710204081632653,/music/id3v23-slash-artist.mp3,2026-09-14T08:01:38.408Z\r\n3,ADTS Song,ADTS Artist,,,,,,,1.0681179138321995,/music/adts-with-id3.aac,2026-09-14T08:01:38.399Z\r\n5,APE Title,APE Artist,ID3 Album,,,2010,,,1.0710204081632653,/music/ape-and-id3v2.mp3,2026-09-14T08:01:38.401Z\r\n13,Second Title,Artist One,Padded Album,,\"Rock, Pop\",2001,7,,1.0710204081632653,/music/id3v24-multi.mp3,2026-09-14T08:01:38.409Z\r\n36,Help!,beatles,Help,The Beatles,,1965,1,,139,/seed/11.mp3,2026-01-01T00:00:00.000Z\r\n37,Yesterday,Beatles,Help,The Beatles,,1965,13,,125,/seed/12.mp3,2026-01-01T00:00:00.000Z\r\n32,\"Line\nBreak\",Daft Punk,Homework,,,1997,1,1,60,/seed/7.mp3,2026-01-01T00:00:00.000Z\r\n31,Love Around the World,Daft Punk,Homework,,House,1997,7,1,428.1,/seed/6.mp3,2026-01-01T00:00:00.000Z\r\n19,Only Artists Frame,Duo One & Duo Two,,,,,,,1.0710204081632653,/music/txxx-artists.mp3,2026-09-14T08:01:38.416Z\r\n29,Love Will Keep Us,Eagles,Greatest,Eagles,Rock,1994,3,2,301.0625,/seed/4.mp3,2026-01-01T00:00:00.000Z\r\n18,Info Title,Info Artist,Info Album,,Folk,1970,,,1,/music/riff-info.wav,2026-09-14T08:01:38.416Z\r\n14,iTunes Song,iTunes Artist,iTunes Album,iTunes Album Artist,Electronic,2004,5,1,1.0464399092970522,/music/itunes.m4a,2026-09-14T08:01:38.412Z\r\n21,Take Two,Main Artist,FLAC Album,Album Artist,\"Jazz, Fusion\",2003,4,2,1,/music/vorbis-comments.flac,2026-09-14T08:01:38.418Z\r\n23,Ogg Song,Ogg Artist,Ogg Album,,,1985,2,,1.0013605442176872,/music/vorbis.ogg,2026-09-14T08:01:38.419Z\r\n7,Only V1,Old Tagger,,,Blues,1975,2,,1.0710204081632653,/music/id3v1-only.mp3,2026-09-14T08:01:38.403Z\r\n17,Opus Song,Opus Artist,,,Ambient,,,,1,/music/opus.opus,2026-09-14T08:01:38.415Z\r\n24,whitespace-title,Spaced Artist,,,,,,,1.0710204081632653,/music/whitespace-title.mp3,2026-09-14T08:01:38.420Z\r\n8,Long Title From ID3v2 That Is Past Thirty Chars,V2 Artist,V1 Only Album,,Pop,1988,9,,1.0710204081632653,/music/id3v2-and-v1.mp3,2026-09-14T08:01:38.404Z\r\n6,Wave Song,Wave Artist,,,,,,,1,/music/id3-chunk.wav,2026-09-14T08:01:38.402Z\r\n35,Irritation,Ärsytys,Äänilevy,,,2011,1,,150,/seed/10.mp3,2026-01-01T00:00:00.000Z\r\n2,Full Tags,Äänitys Band,Löyly Sessions,Various Artists,Rock,1999,3,1,1.0710204081632653,/music/Disc 2/bonus.mp3,2026-09-14T08:01:38.397Z\r\n9,Full Tags,Äänitys Band,Löyly Sessions,Various Artists,Rock,1999,3,1,1.0710204081632653,/music/id3v23-full.mp3,2026-09-14T08:01:38.405Z\r\n34,Bridge,Øresund,,,,,,,180,/seed/9.mp3,2026-01-01T00:00:00.000Z\r\n30,Love Song,élan,Élan,,,,1,,99.9,/seed/5.mp3,2026-01-01T00:00:00.000Z\r\n"
+}
