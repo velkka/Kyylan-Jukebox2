@@ -73,15 +73,18 @@ fn a_song_starts_plays_and_ends() {
     assert_eq!(next_event(&events), PlayerEvent::Ended { load });
     assert!(!player.state().playing);
 
-    // What reached the device: the file, from its first frame.
+    // What reached the device: the whole file, never early. The device plays silence
+    // while the first audio is buffered, so the tone can arrive later than 0.25 s of device
+    // time — by how long that took on this machine — but not sooner.
     let recorded = backend.recorded("speakers");
     let onset = recorded
         .chunks(2)
         .position(|f| f[0].abs() > 0.01)
         .expect("the tone reached the device");
-    // Silence in the buffer before the song's first frame shifts it later, never earlier.
     let at = onset as f64 / 44_100.0;
-    assert!((0.25..0.35).contains(&at), "tone at {at} s of device time");
+    assert!((0.25..1.0).contains(&at), "tone at {at} s of device time");
+    let tone = tone_seconds(&recorded, 44_100, 2);
+    assert!((1.7..1.8).contains(&tone), "{tone} s of the 1.75 s tone");
 }
 
 #[test]
