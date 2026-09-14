@@ -141,13 +141,13 @@ fn every_table_reads_back_through_typed_rows() {
                   ('/music/Going Under.flac', 'Going Under', 'Evanescence', 'Fallen', 'Evanescence', 'Rock', 215, 1, 1, 2003, 'ef49', 1726300000123, '2026-09-14T10:00:00.000Z');
          INSERT INTO art (hash, mime, data) VALUES ('ef49', 'image/jpeg', x'ffd8ffe0');
          INSERT INTO queue (track_id, added_by_ip, added_by_name, added_at, position, status)
-           VALUES (2, '10.40.10.129', 'oh7vm-mbp14', '2026-09-14T10:01:00.000Z', 1, 'playing'),
+           VALUES (2, '192.0.2.21', 'guest-laptop', '2026-09-14T10:01:00.000Z', 1, 'playing'),
                   (1, '__random__', NULL, '2026-09-14T10:02:00.000Z', 0, 'pending');
          INSERT INTO standby (track_id, position, added_at) VALUES (1, 1, '2026-09-14T10:00:00.000Z');
          INSERT INTO play_history (track_id, artist, played_at, title, requested_by_ip, requested_by_name, is_standby, source)
-           VALUES (2, 'Evanescence', '2026-09-14T10:01:00.000Z', 'Going Under', '10.40.10.129', 'oh7vm-mbp14', 0, 'guest');
+           VALUES (2, 'Evanescence', '2026-09-14T10:01:00.000Z', 'Going Under', '192.0.2.21', 'guest-laptop', 0, 'guest');
          INSERT INTO request_log (track_id, title, artist, requested_by_ip, requested_by_name, requested_at)
-           VALUES (2, 'Going Under', 'Evanescence', '10.40.10.129', NULL, '2026-09-14T10:00:59.000Z');
+           VALUES (2, 'Going Under', 'Evanescence', '192.0.2.21', NULL, '2026-09-14T10:00:59.000Z');
          INSERT INTO downvote_log (track_id, title, artist, voter_ip, voter_name, voted_at)
            VALUES (2, 'Going Under', 'Evanescence', '127.0.0.1', 'host', '2026-09-14T10:01:30.000Z');
          INSERT INTO bans (ip, name, banned_at, expires_at) VALUES ('10.0.0.9', NULL, '2026-09-14T10:00:00.000Z', NULL);",

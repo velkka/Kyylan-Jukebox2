@@ -39,7 +39,7 @@ fn bare_track() -> Value {
 }
 
 fn entry(mine: bool) -> Value {
-    json!({ "id": 101, "track": track(616, json!(215)), "addedByName": "oh7vm-mbp14", "mine": mine })
+    json!({ "id": 101, "track": track(616, json!(215)), "addedByName": "guest-laptop", "mine": mine })
 }
 
 #[test]
@@ -65,7 +65,7 @@ fn setup_auth_and_settings() {
     round_trips::<SaveSettingsResponse>(&json!({ "restartRequired": true }));
     round_trips::<ErrorBody>(&json!({ "error": "Admin login required" }));
     round_trips::<HealthResponse>(
-        &json!({ "name": "Kyylan Jukebox", "version": "0.3.0", "addresses": ["10.40.10.129", "100.114.224.66"], "port": 8090 }),
+        &json!({ "name": "Kyylan Jukebox", "version": "0.3.0", "addresses": ["192.0.2.21", "198.51.100.7"], "port": 8090 }),
     );
 }
 
@@ -139,7 +139,7 @@ fn queue_and_standby() {
 fn stats_and_bans() {
     let history = json!([
         { "id": 5, "trackId": 618, "title": "Everybody's Fool", "artist": "Evanescence", "artHash": "ef49",
-          "requestedByName": "oh7vm-mbp14", "source": "guest", "playedAt": "2026-09-12T07:16:18.961Z" },
+          "requestedByName": "guest-laptop", "source": "guest", "playedAt": "2026-09-12T07:16:18.961Z" },
         { "id": 6, "trackId": 961, "title": "Goodbye Baby", "artist": null, "artHash": null,
           "requestedByName": null, "source": "random", "playedAt": "2026-09-12T07:17:00.000Z" }
     ]);
@@ -148,18 +148,18 @@ fn stats_and_bans() {
     // Admin view, then the redacted guest view of the same guest.
     round_trips::<StatsResponse>(&json!({
         "history": history, "topPlayed": top, "topDownvoted": [],
-        "users": [{ "id": "10.40.10.129", "ip": "10.40.10.129", "name": "oh7vm-mbp14", "requests": 4, "downvotes": 1,
+        "users": [{ "id": "192.0.2.21", "ip": "192.0.2.21", "name": "guest-laptop", "requests": 4, "downvotes": 1,
                     "banned": true, "bannedUntil": "2026-09-12T08:00:00.000Z" }],
         "totals": { "plays": 5, "requests": 4, "downvotes": 1 }
     }));
     round_trips::<StatsResponse>(&json!({
         "history": [], "topPlayed": [], "topDownvoted": top,
-        "users": [{ "id": "4b84b15b", "ip": null, "name": "oh7vm-mbp14", "requests": 4, "downvotes": 1,
+        "users": [{ "id": "3fbc6348", "ip": null, "name": "guest-laptop", "requests": 4, "downvotes": 1,
                     "banned": false, "bannedUntil": null }],
         "totals": { "plays": 0, "requests": 4, "downvotes": 1 }
     }));
     round_trips::<BansResponse>(&json!({ "bans": [
-        { "ip": "127.0.0.1", "name": "oh7vm-mbp14", "bannedAt": "2026-09-12T07:28:06.878Z", "expiresAt": "2026-09-12T07:43:06.878Z" },
+        { "ip": "127.0.0.1", "name": "guest-laptop", "bannedAt": "2026-09-12T07:28:06.878Z", "expiresAt": "2026-09-12T07:43:06.878Z" },
         { "ip": "10.0.0.9", "name": null, "bannedAt": "2026-09-12T07:28:06.928Z", "expiresAt": null }
     ]}));
     round_trips::<BanRequest>(&json!({ "ip": "10.0.0.9", "minutes": 15 }));
