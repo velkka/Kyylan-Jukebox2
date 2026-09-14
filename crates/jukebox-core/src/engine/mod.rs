@@ -123,6 +123,19 @@ impl Engine {
         &self.db
     }
 
+    /// For a process about to exit: folds the write-ahead log back into the database file and
+    /// keeps the connection locked from then on, so nothing — a rescan, a late player event —
+    /// writes after it. Everything after this that needs the database waits forever.
+    pub fn close(&self) -> Result<(), rusqlite::Error> {
+        let conn = self
+            .db
+            .lock()
+            .unwrap_or_else(|poisoned| poisoned.into_inner());
+        let result = conn.query_row("PRAGMA wal_checkpoint(TRUNCATE)", [], |_| Ok(()));
+        std::mem::forget(conn);
+        result
+    }
+
     pub fn player(&self) -> &Arc<dyn Player> {
         &self.player
     }

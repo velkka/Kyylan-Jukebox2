@@ -410,7 +410,19 @@ impl Control {
     /// Opens the chosen output, or the default if that isn't there.
     fn try_open_output(&mut self) -> bool {
         self.last_output_attempt = Some(Instant::now());
-        let opened = match self.wanted.as_deref() {
+        // The setting holds a device id, as the admin panel saves it, or a device's name, as
+        // someone editing the file would write it.
+        let wanted = self.wanted.as_deref().map(|wanted| {
+            let devices = self.backend.devices();
+            match devices.iter().any(|d| d.device_id == wanted) {
+                true => wanted.to_string(),
+                false => devices
+                    .into_iter()
+                    .find(|d| d.label == wanted)
+                    .map_or_else(|| wanted.to_string(), |d| d.device_id),
+            }
+        });
+        let opened = match wanted.as_deref() {
             Some(id) => self.backend.open(Some(id), self.shared.clone()).or_else(|err| {
                 tracing::warn!(device = id, %err, "the chosen audio output isn't available; using the default");
                 self.backend.open(None, self.shared.clone())

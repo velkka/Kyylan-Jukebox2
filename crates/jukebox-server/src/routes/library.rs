@@ -196,17 +196,10 @@ pub async fn scan(State(state): AppStateRef, headers: HeaderMap) -> Response {
     if let Err(denied) = require_admin(&state, &headers) {
         return denied;
     }
-    if let Some(ticket) = state.scanner.start() {
-        let status = state.scanner.status();
-        let roots = state.config.get().library_paths;
-        let (scanner, engine) = (state.scanner.clone(), state.engine.clone());
-        std::thread::Builder::new()
-            .name("library scan".into())
-            .spawn(move || scanner.run(ticket, engine.db(), &roots))
-            .expect("starting the scan thread");
-        return ok(&status);
+    match crate::start_scan(&state) {
+        Some(started) => ok(&started),
+        None => ok(&state.scanner.status()),
     }
-    ok(&state.scanner.status())
 }
 
 pub async fn scan_status(State(state): AppStateRef, headers: HeaderMap) -> Response {

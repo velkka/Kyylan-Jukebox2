@@ -126,8 +126,9 @@ pub struct Desktop {
     pub network: Arc<dyn Network>,
     /// Setup isn't done yet: open the console so the host can do it.
     pub first_run: bool,
-    /// Runs when the jukebox is quit from the menu, before the process ends.
-    pub on_quit: Box<dyn FnOnce()>,
+    /// Stops the jukebox cleanly, before the process ends: quit from the menu, or the event
+    /// loop ending with the session. Given why.
+    pub on_quit: Box<dyn FnOnce(&'static str)>,
 }
 
 /// Runs the tray on this thread — the main thread, which macOS requires — until Quit.
@@ -167,18 +168,20 @@ pub fn run(desktop: Desktop) -> ! {
             Event::NewEvents(StartCause::Init) => {
                 links = guest_links(&network.lan_addresses(), port);
                 let built = build_menu(&links);
-                tray = Some(
-                    TrayIconBuilder::new()
-                        .with_icon(icon())
-                        .with_icon_as_template(cfg!(target_os = "macos"))
-                        .with_tooltip(APP_NAME)
-                        .with_menu(Box::new(built.menu.clone()))
-                        // macOS menu-bar icons open their menu on a click; on Windows a
-                        // click opens the console and the menu is on the right button.
-                        .with_menu_on_left_click(cfg!(target_os = "macos"))
-                        .build()
-                        .expect("creating the tray icon"),
-                );
+                let built_tray = TrayIconBuilder::new()
+                    .with_icon(icon())
+                    .with_icon_as_template(cfg!(target_os = "macos"))
+                    .with_tooltip(APP_NAME)
+                    .with_menu(Box::new(built.menu.clone()))
+                    // macOS menu-bar icons open their menu on a click; on Windows a click
+                    // opens the console and the menu is on the right button.
+                    .with_menu_on_left_click(cfg!(target_os = "macos"))
+                    .build();
+                // The jukebox is the server; guests can still reach it without the icon.
+                match built_tray {
+                    Ok(built_tray) => tray = Some(built_tray),
+                    Err(err) => tracing::warn!(%err, "couldn't create the tray icon"),
+                }
                 menu = Some(built);
                 if first_run {
                     open_console(port);
@@ -207,7 +210,7 @@ pub fn run(desktop: Desktop) -> ! {
                 } else if event.id == menu.quit {
                     tray.take();
                     if let Some(quit) = on_quit.take() {
-                        quit();
+                        quit("quit from the tray");
                     }
                     *control_flow = ControlFlow::Exit;
                 } else if let Some((_, link)) = menu.links.iter().find(|(id, _)| *id == event.id) {
@@ -215,6 +218,13 @@ pub fn run(desktop: Desktop) -> ! {
                         Ok(()) => {}
                         Err(err) => tracing::warn!(%err, "couldn't copy the guest link"),
                     }
+                }
+            }
+            // The loop ending some other way: macOS logging out quits the app this way.
+            Event::LoopDestroyed => {
+                tray.take();
+                if let Some(quit) = on_quit.take() {
+                    quit("the desktop session is ending");
                 }
             }
             _ => {}

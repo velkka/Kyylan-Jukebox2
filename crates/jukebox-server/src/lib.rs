@@ -24,6 +24,7 @@ use jukebox_core::db;
 use jukebox_core::engine::Engine;
 use jukebox_core::library::Scanner;
 use jukebox_core::player::{Player, PlayerEvent};
+use jukebox_core::types::ScanStatus;
 use rusqlite::{Connection, OpenFlags};
 use tokio::net::TcpListener;
 
@@ -148,6 +149,23 @@ impl App {
         self.state.engine.maybe_start()
     }
 
+    /// Rescans the library folders in the background, unless a scan is already running.
+    /// Returns the new scan's status as it starts, or `None` if one was already running.
+    pub fn start_scan(&self) -> Option<ScanStatus> {
+        start_scan(&self.state)
+    }
+
+    /// Stops what a clean exit must: live connections close, playback stops, and the
+    /// database is checkpointed and kept locked until the process ends. Serving should
+    /// already have been told to stop — see [`serve_until`].
+    pub fn close(&self) {
+        self.state.hub.close_all();
+        self.state.player.pause();
+        if let Err(err) = self.state.engine.close() {
+            tracing::warn!(%err, "checkpointing the database failed");
+        }
+    }
+
     pub fn router(&self) -> Router {
         routes::router(self.state.clone())
     }
@@ -165,13 +183,49 @@ impl App {
     }
 }
 
+pub(crate) fn start_scan(state: &Arc<AppState>) -> Option<ScanStatus> {
+    let ticket = state.scanner.start()?;
+    let started = state.scanner.status();
+    let roots = state.config.get().library_paths;
+    let (scanner, engine) = (state.scanner.clone(), state.engine.clone());
+    std::thread::Builder::new()
+        .name("library scan".into())
+        .spawn(move || {
+            let status = scanner.run(ticket, engine.db(), &roots);
+            // A failure is logged by the scanner.
+            if status.error.is_none() {
+                tracing::info!(
+                    tracks = status.total,
+                    added = status.added,
+                    updated = status.updated,
+                    removed = status.removed,
+                    "library scan done"
+                );
+            }
+        })
+        .expect("starting the scan thread");
+    Some(started)
+}
+
 /// Serves the app on a bound listener until the task is dropped.
 pub async fn serve(app: &App, listener: TcpListener) -> std::io::Result<()> {
+    serve_until(app, listener, std::future::pending()).await
+}
+
+/// Serves the app until `stop` completes, then stops accepting connections and returns
+/// once the open ones have finished. Live updates only finish when [`App::close`] closes
+/// them.
+pub async fn serve_until(
+    app: &App,
+    listener: TcpListener,
+    stop: impl std::future::Future<Output = ()> + Send + 'static,
+) -> std::io::Result<()> {
     axum::serve(
         listener,
         app.router()
             .into_make_service_with_connect_info::<SocketAddr>(),
     )
+    .with_graceful_shutdown(stop)
     .await
 }
 

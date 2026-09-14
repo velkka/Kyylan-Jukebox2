@@ -11,11 +11,20 @@ publish.workspace = true
 jukebox-audio = { path = "../jukebox-audio" }
 jukebox-core = { path = "../jukebox-core" }
 jukebox-server = { path = "../jukebox-server" }
-rusqlite = "0.40.2"
-tokio = { version = "1.53.1", features = ["macros", "net", "rt-multi-thread", "signal"] }
-tracing = "0.1"
-tracing-subscriber = { version = "0.3", features = ["fmt"] }
+clap = { version = "4.6.6", features = ["derive"] }
+dirs = "7.0.0"
 fd-lock = "4.0.4"
+rusqlite = { version = "0.40.2", features = ["backup"] }
+tokio = { version = "1.53.1", features = ["macros", "net", "rt-multi-thread", "signal", "sync", "time"] }
+tracing = "0.1"
+tracing-appender = "0.2.5"
+tracing-subscriber = { version = "0.3", features = ["fmt", "ansi"] }
+
+[target.'cfg(unix)'.dependencies]
+libc = "0.2"
+
+[target.'cfg(windows)'.dependencies]
+windows-sys = { version = "0.61.2", features = ["Win32_Foundation", "Win32_System_Console", "Win32_System_LibraryLoader", "Win32_UI_WindowsAndMessaging"] }
 
 # The tray, the browser, dialogs and the clipboard: Windows and macOS only. The Linux build
 # runs as a system service with no desktop, and links none of it.
@@ -29,4 +38,8 @@ tao = "0.37.0"
 tray-icon = "0.25.0"
 
 [dev-dependencies]
+serde_json = "1.0.151"
 tempfile = "3.27.0"
+
+[target.'cfg(windows)'.dev-dependencies]
+windows-sys = { version = "0.61.2", features = ["Win32_Foundation", "Win32_UI_WindowsAndMessaging"] }

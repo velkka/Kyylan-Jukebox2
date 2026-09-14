@@ -5,11 +5,11 @@
 //! for everyone: sent at once when a song starts, stops or changes, and otherwise at most
 //! about once a second.
 
-use std::sync::atomic::{AtomicU64, Ordering};
+use std::sync::atomic::{AtomicBool, AtomicU64, Ordering};
 use std::sync::{Arc, Mutex, OnceLock, Weak};
 use std::time::{Duration, Instant};
 
-use axum::extract::ws::{Message, WebSocket};
+use axum::extract::ws::{close_code, CloseFrame, Message, WebSocket};
 use jukebox_core::engine::Engine;
 use jukebox_core::types::{PlaybackState, ProgressPayload, RealtimeMessage};
 use tokio::sync::mpsc;
@@ -38,6 +38,9 @@ pub struct Hub {
     /// have missed one.
     broadcasts: AtomicU64,
     throttle: Mutex<Throttle>,
+    /// Set once the server is stopping: every connection is closed, and new ones are
+    /// closed as soon as they open.
+    closed: AtomicBool,
 }
 
 /// One client's subscription. Dropping it unsubscribes.
@@ -85,14 +88,22 @@ impl Hub {
         if let Some(message) = self.queue_message(ip) {
             let _ = tx.send(message);
         }
-        self.subscribers
-            .lock()
-            .expect("hub lock poisoned")
-            .push(Subscriber {
+        {
+            let mut subscribers = self.subscribers.lock().expect("hub lock poisoned");
+            // Checked under the lock `close_all` takes, so no client joins after it.
+            if self.closed.load(Ordering::SeqCst) {
+                return Subscription {
+                    hub: Arc::clone(self),
+                    id,
+                    messages: rx,
+                };
+            }
+            subscribers.push(Subscriber {
                 id,
                 ip: ip.to_string(),
                 tx: tx.clone(),
             });
+        }
         // The queue can't be built while holding the subscriber list — the engine may be
         // sending progress through it — so a broadcast can slip between building this
         // client's first view and adding the client. If one did, send a fresh view.
@@ -106,6 +117,14 @@ impl Hub {
             id,
             messages: rx,
         }
+    }
+
+    /// Closes every live connection, and every one opened from now on: the server is
+    /// stopping.
+    pub fn close_all(&self) {
+        let mut subscribers = self.subscribers.lock().expect("hub lock poisoned");
+        self.closed.store(true, Ordering::SeqCst);
+        subscribers.clear();
     }
 
     /// Sends every client its own view of the queue.
@@ -162,7 +181,14 @@ pub async fn serve_socket(hub: Arc<Hub>, ip: String, mut socket: WebSocket) {
     loop {
         tokio::select! {
             outgoing = subscription.messages.recv() => {
-                let Some(text) = outgoing else { break };
+                let Some(text) = outgoing else {
+                    // The hub closed: the server is going away.
+                    let _ = socket.send(Message::Close(Some(CloseFrame {
+                        code: close_code::AWAY,
+                        reason: "".into(),
+                    }))).await;
+                    break;
+                };
                 if socket.send(Message::Text(text.into())).await.is_err() {
                     break;
                 }

@@ -197,6 +197,31 @@ fn an_unplugged_device_hands_over_to_the_default() {
 }
 
 #[test]
+fn the_output_can_be_chosen_by_name_and_an_unknown_one_plays_on_the_default() {
+    for (setting, plays_on) in [
+        ("HDMI", "hdmi"),
+        ("hdmi", "hdmi"),
+        ("Living room", "speakers"),
+    ] {
+        let backend = VirtualBackend::recording(SPEED);
+        backend.add_device("speakers", "Speakers", 44_100, 2);
+        backend.add_device("hdmi", "HDMI", 48_000, 2);
+        let resolver = Arc::new(|id: i64| TRACKS.get(id as usize).map(|name| fixture(name)));
+        let player = AudioPlayer::new(backend.clone(), resolver, Some(setting.into()));
+        let (tx, events) = channel();
+        player.on_event(Arc::new(move |event| {
+            let _ = tx.send(event);
+        }));
+        let load = player.load(0, true);
+        assert_eq!(next_event(&events), PlayerEvent::Started { load });
+        assert_eq!(next_event(&events), PlayerEvent::Ended { load });
+        let rate = if plays_on == "hdmi" { 48_000 } else { 44_100 };
+        let tone = tone_seconds(&backend.recorded(plays_on), rate, 2);
+        assert!(tone > 1.5, "{setting:?} played {tone} s on {plays_on}");
+    }
+}
+
+#[test]
 fn without_a_device_it_waits_for_one() {
     let backend = VirtualBackend::new(SPEED);
     let (player, events) = player(&backend);
