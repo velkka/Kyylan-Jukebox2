@@ -1,0 +1,6591 @@
+{
+  "responses": [
+    {
+      "id": "login",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8",
+        "set-cookie": [
+          "kj_session=<token>; Max-Age=43200; Path=/; Expires=<date>; HttpOnly; SameSite=Lax"
+        ]
+      },
+      "body": {
+        "json": {
+          "isAdmin": true,
+          "isLocal": true
+        }
+      }
+    },
+    {
+      "id": "scan",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": {
+        "json": {
+          "scanning": true,
+          "processed": 0,
+          "added": 0,
+          "updated": 0,
+          "removed": 0,
+          "total": 0,
+          "startedAt": "<time>",
+          "finishedAt": null,
+          "error": null
+        }
+      }
+    },
+    {
+      "id": "queue-empty",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": {
+        "json": {
+          "nowPlaying": {
+            "entry": null,
+            "position": 0,
+            "duration": 0,
+            "playing": false,
+            "isStandby": false,
+            "downvotes": 0,
+            "downvoteThreshold": 2,
+            "downvotedByMe": false
+          },
+          "queue": [],
+          "perUserLimit": 0,
+          "myQueueCount": 0
+        }
+      }
+    },
+    {
+      "id": "a-adds-1",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": {
+        "json": {
+          "nowPlaying": {
+            "entry": {
+              "id": 1,
+              "track": {
+                "id": 1,
+                "title": "Second Title",
+                "artist": "Artist One",
+                "album": "Padded Album",
+                "albumArtist": null,
+                "genre": "Rock, Pop",
+                "duration": 1.1,
+                "trackNo": 7,
+                "discNo": null,
+                "year": 2001,
+                "artHash": "d2e4930b6202f652cb1dd161d1709e799ec0e071"
+              },
+              "addedByName": "device-21",
+              "mine": true
+            },
+            "position": 0,
+            "duration": 0,
+            "playing": true,
+            "isStandby": false,
+            "downvotes": 0,
+            "downvoteThreshold": 2,
+            "downvotedByMe": false
+          },
+          "queue": [],
+          "perUserLimit": 0,
+          "myQueueCount": 0
+        }
+      }
+    },
+    {
+      "id": "b-adds-2",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": {
+        "json": {
+          "nowPlaying": {
+            "entry": {
+              "id": 1,
+              "track": {
+                "id": 1,
+                "title": "Second Title",
+                "artist": "Artist One",
+                "album": "Padded Album",
+                "albumArtist": null,
+                "genre": "Rock, Pop",
+                "duration": 1.1,
+                "trackNo": 7,
+                "discNo": null,
+                "year": 2001,
+                "artHash": "d2e4930b6202f652cb1dd161d1709e799ec0e071"
+              },
+              "addedByName": "device-21",
+              "mine": false
+            },
+            "position": 0,
+            "duration": 0,
+            "playing": true,
+            "isStandby": false,
+            "downvotes": 0,
+            "downvoteThreshold": 2,
+            "downvotedByMe": false
+          },
+          "queue": [
+            {
+              "id": 2,
+              "track": {
+                "id": 2,
+                "title": "Opus Song",
+                "artist": "Opus Artist",
+                "album": null,
+                "albumArtist": null,
+                "genre": "Ambient",
+                "duration": 1,
+                "trackNo": null,
+                "discNo": null,
+                "year": null,
+                "artHash": null
+              },
+              "addedByName": "device-22",
+              "mine": true
+            }
+          ],
+          "perUserLimit": 0,
+          "myQueueCount": 1
+        }
+      }
+    },
+    {
+      "id": "c-adds-3",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": {
+        "json": {
+          "nowPlaying": {
+            "entry": {
+              "id": 1,
+              "track": {
+                "id": 1,
+                "title": "Second Title",
+                "artist": "Artist One",
+                "album": "Padded Album",
+                "albumArtist": null,
+                "genre": "Rock, Pop",
+                "duration": 1.1,
+                "trackNo": 7,
+                "discNo": null,
+                "year": 2001,
+                "artHash": "d2e4930b6202f652cb1dd161d1709e799ec0e071"
+              },
+              "addedByName": "device-21",
+              "mine": false
+            },
+            "position": 0,
+            "duration": 0,
+            "playing": true,
+            "isStandby": false,
+            "downvotes": 0,
+            "downvoteThreshold": 2,
+            "downvotedByMe": false
+          },
+          "queue": [
+            {
+              "id": 2,
+              "track": {
+                "id": 2,
+                "title": "Opus Song",
+                "artist": "Opus Artist",
+                "album": null,
+                "albumArtist": null,
+                "genre": "Ambient",
+                "duration": 1,
+                "trackNo": null,
+                "discNo": null,
+                "year": null,
+                "artHash": null
+              },
+              "addedByName": "device-22",
+              "mine": false
+            },
+            {
+              "id": 3,
+              "track": {
+                "id": 3,
+                "title": "Info Title",
+                "artist": "Info Artist",
+                "album": "Info Album",
+                "albumArtist": null,
+                "genre": "Folk",
+                "duration": 1,
+                "trackNo": null,
+                "discNo": null,
+                "year": 1970,
+                "artHash": null
+              },
+              "addedByName": "device-23",
+              "mine": true
+            }
+          ],
+          "perUserLimit": 0,
+          "myQueueCount": 1
+        }
+      }
+    },
+    {
+      "id": "a-adds-4",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": {
+        "json": {
+          "nowPlaying": {
+            "entry": {
+              "id": 1,
+              "track": {
+                "id": 1,
+                "title": "Second Title",
+                "artist": "Artist One",
+                "album": "Padded Album",
+                "albumArtist": null,
+                "genre": "Rock, Pop",
+                "duration": 1.1,
+                "trackNo": 7,
+                "discNo": null,
+                "year": 2001,
+                "artHash": "d2e4930b6202f652cb1dd161d1709e799ec0e071"
+              },
+              "addedByName": "device-21",
+              "mine": true
+            },
+            "position": 0,
+            "duration": 0,
+            "playing": true,
+            "isStandby": false,
+            "downvotes": 0,
+            "downvoteThreshold": 2,
+            "downvotedByMe": false
+          },
+          "queue": [
+            {
+              "id": 2,
+              "track": {
+                "id": 2,
+                "title": "Opus Song",
+                "artist": "Opus Artist",
+                "album": null,
+                "albumArtist": null,
+                "genre": "Ambient",
+                "duration": 1,
+                "trackNo": null,
+                "discNo": null,
+                "year": null,
+                "artHash": null
+              },
+              "addedByName": "device-22",
+              "mine": false
+            },
+            {
+              "id": 3,
+              "track": {
+                "id": 3,
+                "title": "Info Title",
+                "artist": "Info Artist",
+                "album": "Info Album",
+                "albumArtist": null,
+                "genre": "Folk",
+                "duration": 1,
+                "trackNo": null,
+                "discNo": null,
+                "year": 1970,
+                "artHash": null
+              },
+              "addedByName": "device-23",
+              "mine": false
+            },
+            {
+              "id": 4,
+              "track": {
+                "id": 4,
+                "title": "untagged",
+                "artist": null,
+                "album": null,
+                "albumArtist": null,
+                "genre": null,
+                "duration": 1.1,
+                "trackNo": null,
+                "discNo": null,
+                "year": null,
+                "artHash": null
+              },
+              "addedByName": "device-21",
+              "mine": true
+            }
+          ],
+          "perUserLimit": 0,
+          "myQueueCount": 1
+        }
+      }
+    },
+    {
+      "id": "queue-a",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": {
+        "json": {
+          "nowPlaying": {
+            "entry": {
+              "id": 1,
+              "track": {
+                "id": 1,
+                "title": "Second Title",
+                "artist": "Artist One",
+                "album": "Padded Album",
+                "albumArtist": null,
+                "genre": "Rock, Pop",
+                "duration": 1.1,
+                "trackNo": 7,
+                "discNo": null,
+                "year": 2001,
+                "artHash": "d2e4930b6202f652cb1dd161d1709e799ec0e071"
+              },
+              "addedByName": "device-21",
+              "mine": true
+            },
+            "position": 0,
+            "duration": 0,
+            "playing": true,
+            "isStandby": false,
+            "downvotes": 0,
+            "downvoteThreshold": 2,
+            "downvotedByMe": false
+          },
+          "queue": [
+            {
+              "id": 2,
+              "track": {
+                "id": 2,
+                "title": "Opus Song",
+                "artist": "Opus Artist",
+                "album": null,
+                "albumArtist": null,
+                "genre": "Ambient",
+                "duration": 1,
+                "trackNo": null,
+                "discNo": null,
+                "year": null,
+                "artHash": null
+              },
+              "addedByName": "device-22",
+              "mine": false
+            },
+            {
+              "id": 3,
+              "track": {
+                "id": 3,
+                "title": "Info Title",
+                "artist": "Info Artist",
+                "album": "Info Album",
+                "albumArtist": null,
+                "genre": "Folk",
+                "duration": 1,
+                "trackNo": null,
+                "discNo": null,
+                "year": 1970,
+                "artHash": null
+              },
+              "addedByName": "device-23",
+              "mine": false
+            },
+            {
+              "id": 4,
+              "track": {
+                "id": 4,
+                "title": "untagged",
+                "artist": null,
+                "album": null,
+                "albumArtist": null,
+                "genre": null,
+                "duration": 1.1,
+                "trackNo": null,
+                "discNo": null,
+                "year": null,
+                "artHash": null
+              },
+              "addedByName": "device-21",
+              "mine": true
+            }
+          ],
+          "perUserLimit": 0,
+          "myQueueCount": 1
+        }
+      }
+    },
+    {
+      "id": "b-downvotes",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": {
+        "json": {
+          "nowPlaying": {
+            "entry": {
+              "id": 1,
+              "track": {
+                "id": 1,
+                "title": "Second Title",
+                "artist": "Artist One",
+                "album": "Padded Album",
+                "albumArtist": null,
+                "genre": "Rock, Pop",
+                "duration": 1.1,
+                "trackNo": 7,
+                "discNo": null,
+                "year": 2001,
+                "artHash": "d2e4930b6202f652cb1dd161d1709e799ec0e071"
+              },
+              "addedByName": "device-21",
+              "mine": false
+            },
+            "position": 0,
+            "duration": 0,
+            "playing": true,
+            "isStandby": false,
+            "downvotes": 1,
+            "downvoteThreshold": 2,
+            "downvotedByMe": true
+          },
+          "queue": [
+            {
+              "id": 2,
+              "track": {
+                "id": 2,
+                "title": "Opus Song",
+                "artist": "Opus Artist",
+                "album": null,
+                "albumArtist": null,
+                "genre": "Ambient",
+                "duration": 1,
+                "trackNo": null,
+                "discNo": null,
+                "year": null,
+                "artHash": null
+              },
+              "addedByName": "device-22",
+              "mine": true
+            },
+            {
+              "id": 3,
+              "track": {
+                "id": 3,
+                "title": "Info Title",
+                "artist": "Info Artist",
+                "album": "Info Album",
+                "albumArtist": null,
+                "genre": "Folk",
+                "duration": 1,
+                "trackNo": null,
+                "discNo": null,
+                "year": 1970,
+                "artHash": null
+              },
+              "addedByName": "device-23",
+              "mine": false
+            },
+            {
+              "id": 4,
+              "track": {
+                "id": 4,
+                "title": "untagged",
+                "artist": null,
+                "album": null,
+                "albumArtist": null,
+                "genre": null,
+                "duration": 1.1,
+                "trackNo": null,
+                "discNo": null,
+                "year": null,
+                "artHash": null
+              },
+              "addedByName": "device-21",
+              "mine": false
+            }
+          ],
+          "perUserLimit": 0,
+          "myQueueCount": 1
+        }
+      }
+    },
+    {
+      "id": "b-downvotes-again",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": {
+        "json": {
+          "nowPlaying": {
+            "entry": {
+              "id": 1,
+              "track": {
+                "id": 1,
+                "title": "Second Title",
+                "artist": "Artist One",
+                "album": "Padded Album",
+                "albumArtist": null,
+                "genre": "Rock, Pop",
+                "duration": 1.1,
+                "trackNo": 7,
+                "discNo": null,
+                "year": 2001,
+                "artHash": "d2e4930b6202f652cb1dd161d1709e799ec0e071"
+              },
+              "addedByName": "device-21",
+              "mine": false
+            },
+            "position": 0,
+            "duration": 0,
+            "playing": true,
+            "isStandby": false,
+            "downvotes": 1,
+            "downvoteThreshold": 2,
+            "downvotedByMe": true
+          },
+          "queue": [
+            {
+              "id": 2,
+              "track": {
+                "id": 2,
+                "title": "Opus Song",
+                "artist": "Opus Artist",
+                "album": null,
+                "albumArtist": null,
+                "genre": "Ambient",
+                "duration": 1,
+                "trackNo": null,
+                "discNo": null,
+                "year": null,
+                "artHash": null
+              },
+              "addedByName": "device-22",
+              "mine": true
+            },
+            {
+              "id": 3,
+              "track": {
+                "id": 3,
+                "title": "Info Title",
+                "artist": "Info Artist",
+                "album": "Info Album",
+                "albumArtist": null,
+                "genre": "Folk",
+                "duration": 1,
+                "trackNo": null,
+                "discNo": null,
+                "year": 1970,
+                "artHash": null
+              },
+              "addedByName": "device-23",
+              "mine": false
+            },
+            {
+              "id": 4,
+              "track": {
+                "id": 4,
+                "title": "untagged",
+                "artist": null,
+                "album": null,
+                "albumArtist": null,
+                "genre": null,
+                "duration": 1.1,
+                "trackNo": null,
+                "discNo": null,
+                "year": null,
+                "artHash": null
+              },
+              "addedByName": "device-21",
+              "mine": false
+            }
+          ],
+          "perUserLimit": 0,
+          "myQueueCount": 1
+        }
+      }
+    },
+    {
+      "id": "ban-c",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": {
+        "json": {
+          "bans": [
+            {
+              "ip": "192.0.2.23",
+              "name": "device-23",
+              "bannedAt": "<time>",
+              "expiresAt": null
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "banned-c-still-votes",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": {
+        "json": {
+          "nowPlaying": {
+            "entry": {
+              "id": 2,
+              "track": {
+                "id": 2,
+                "title": "Opus Song",
+                "artist": "Opus Artist",
+                "album": null,
+                "albumArtist": null,
+                "genre": "Ambient",
+                "duration": 1,
+                "trackNo": null,
+                "discNo": null,
+                "year": null,
+                "artHash": null
+              },
+              "addedByName": "device-22",
+              "mine": false
+            },
+            "position": 0,
+            "duration": 0,
+            "playing": true,
+            "isStandby": false,
+            "downvotes": 0,
+            "downvoteThreshold": 2,
+            "downvotedByMe": false
+          },
+          "queue": [
+            {
+              "id": 3,
+              "track": {
+                "id": 3,
+                "title": "Info Title",
+                "artist": "Info Artist",
+                "album": "Info Album",
+                "albumArtist": null,
+                "genre": "Folk",
+                "duration": 1,
+                "trackNo": null,
+                "discNo": null,
+                "year": 1970,
+                "artHash": null
+              },
+              "addedByName": "device-23",
+              "mine": true
+            },
+            {
+              "id": 4,
+              "track": {
+                "id": 4,
+                "title": "untagged",
+                "artist": null,
+                "album": null,
+                "albumArtist": null,
+                "genre": null,
+                "duration": 1.1,
+                "trackNo": null,
+                "discNo": null,
+                "year": null,
+                "artHash": null
+              },
+              "addedByName": "device-21",
+              "mine": false
+            }
+          ],
+          "perUserLimit": 0,
+          "myQueueCount": 1
+        }
+      }
+    },
+    {
+      "id": "queue-c-keeps-its-song",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": {
+        "json": {
+          "nowPlaying": {
+            "entry": {
+              "id": 2,
+              "track": {
+                "id": 2,
+                "title": "Opus Song",
+                "artist": "Opus Artist",
+                "album": null,
+                "albumArtist": null,
+                "genre": "Ambient",
+                "duration": 1,
+                "trackNo": null,
+                "discNo": null,
+                "year": null,
+                "artHash": null
+              },
+              "addedByName": "device-22",
+              "mine": false
+            },
+            "position": 0,
+            "duration": 0,
+            "playing": true,
+            "isStandby": false,
+            "downvotes": 0,
+            "downvoteThreshold": 2,
+            "downvotedByMe": false
+          },
+          "queue": [
+            {
+              "id": 3,
+              "track": {
+                "id": 3,
+                "title": "Info Title",
+                "artist": "Info Artist",
+                "album": "Info Album",
+                "albumArtist": null,
+                "genre": "Folk",
+                "duration": 1,
+                "trackNo": null,
+                "discNo": null,
+                "year": 1970,
+                "artHash": null
+              },
+              "addedByName": "device-23",
+              "mine": true
+            },
+            {
+              "id": 4,
+              "track": {
+                "id": 4,
+                "title": "untagged",
+                "artist": null,
+                "album": null,
+                "albumArtist": null,
+                "genre": null,
+                "duration": 1.1,
+                "trackNo": null,
+                "discNo": null,
+                "year": null,
+                "artHash": null
+              },
+              "addedByName": "device-21",
+              "mine": false
+            }
+          ],
+          "perUserLimit": 0,
+          "myQueueCount": 1
+        }
+      }
+    },
+    {
+      "id": "banned-c-adds",
+      "status": 403,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": {
+        "json": {
+          "error": "You have been blocked from adding songs."
+        }
+      }
+    },
+    {
+      "id": "unban-c",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": {
+        "json": {
+          "bans": []
+        }
+      }
+    },
+    {
+      "id": "admin-removes-playing",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": {
+        "json": {
+          "nowPlaying": {
+            "entry": {
+              "id": 3,
+              "track": {
+                "id": 3,
+                "title": "Info Title",
+                "artist": "Info Artist",
+                "album": "Info Album",
+                "albumArtist": null,
+                "genre": "Folk",
+                "duration": 1,
+                "trackNo": null,
+                "discNo": null,
+                "year": 1970,
+                "artHash": null
+              },
+              "addedByName": "device-23",
+              "mine": false
+            },
+            "position": 0,
+            "duration": 0,
+            "playing": true,
+            "isStandby": false,
+            "downvotes": 0,
+            "downvoteThreshold": 2,
+            "downvotedByMe": false
+          },
+          "queue": [
+            {
+              "id": 4,
+              "track": {
+                "id": 4,
+                "title": "untagged",
+                "artist": null,
+                "album": null,
+                "albumArtist": null,
+                "genre": null,
+                "duration": 1.1,
+                "trackNo": null,
+                "discNo": null,
+                "year": null,
+                "artHash": null
+              },
+              "addedByName": "device-21",
+              "mine": false
+            }
+          ],
+          "perUserLimit": 0,
+          "myQueueCount": 0
+        }
+      }
+    },
+    {
+      "id": "queue-last-guest-song",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": {
+        "json": {
+          "nowPlaying": {
+            "entry": {
+              "id": 4,
+              "track": {
+                "id": 4,
+                "title": "untagged",
+                "artist": null,
+                "album": null,
+                "albumArtist": null,
+                "genre": null,
+                "duration": 1.1,
+                "trackNo": null,
+                "discNo": null,
+                "year": null,
+                "artHash": null
+              },
+              "addedByName": "device-21",
+              "mine": false
+            },
+            "position": 0,
+            "duration": 0,
+            "playing": true,
+            "isStandby": false,
+            "downvotes": 0,
+            "downvoteThreshold": 2,
+            "downvotedByMe": false
+          },
+          "queue": [],
+          "perUserLimit": 0,
+          "myQueueCount": 0
+        }
+      }
+    },
+    {
+      "id": "random-on",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": {
+        "json": {
+          "enabled": false,
+          "shuffle": false,
+          "random": true,
+          "entries": []
+        }
+      }
+    },
+    {
+      "id": "queue-random-fill",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": {
+        "json": {
+          "nowPlaying": {
+            "entry": {
+              "id": 5,
+              "track": {
+                "id": 5,
+                "title": "Ogg Song",
+                "artist": "Ogg Artist",
+                "album": "Ogg Album",
+                "albumArtist": null,
+                "genre": null,
+                "duration": 1,
+                "trackNo": 2,
+                "discNo": null,
+                "year": 1985,
+                "artHash": "a0cc42b361c9663bdeff024d17c92b17f3e98f4e"
+              },
+              "addedByName": null,
+              "mine": false
+            },
+            "position": 0,
+            "duration": 0,
+            "playing": true,
+            "isStandby": false,
+            "downvotes": 0,
+            "downvoteThreshold": 2,
+            "downvotedByMe": false
+          },
+          "queue": [],
+          "perUserLimit": 0,
+          "myQueueCount": 0
+        }
+      }
+    },
+    {
+      "id": "a-downvotes-random-fill",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": {
+        "json": {
+          "nowPlaying": {
+            "entry": {
+              "id": 5,
+              "track": {
+                "id": 5,
+                "title": "Ogg Song",
+                "artist": "Ogg Artist",
+                "album": "Ogg Album",
+                "albumArtist": null,
+                "genre": null,
+                "duration": 1,
+                "trackNo": 2,
+                "discNo": null,
+                "year": 1985,
+                "artHash": "a0cc42b361c9663bdeff024d17c92b17f3e98f4e"
+              },
+              "addedByName": null,
+              "mine": false
+            },
+            "position": 0,
+            "duration": 0,
+            "playing": true,
+            "isStandby": false,
+            "downvotes": 1,
+            "downvoteThreshold": 2,
+            "downvotedByMe": true
+          },
+          "queue": [],
+          "perUserLimit": 0,
+          "myQueueCount": 0
+        }
+      }
+    },
+    {
+      "id": "stats-with-random-fill",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": {
+        "json": {
+          "history": [
+            {
+              "id": 5,
+              "trackId": 5,
+              "title": "Ogg Song",
+              "artist": "Ogg Artist",
+              "artHash": "a0cc42b361c9663bdeff024d17c92b17f3e98f4e",
+              "requestedByName": null,
+              "source": "random",
+              "playedAt": "<time>"
+            },
+            {
+              "id": 4,
+              "trackId": 4,
+              "title": "untagged",
+              "artist": null,
+              "artHash": null,
+              "requestedByName": "device-21",
+              "source": "guest",
+              "playedAt": "<time>"
+            },
+            {
+              "id": 3,
+              "trackId": 3,
+              "title": "Info Title",
+              "artist": "Info Artist",
+              "artHash": null,
+              "requestedByName": "device-23",
+              "source": "guest",
+              "playedAt": "<time>"
+            },
+            {
+              "id": 2,
+              "trackId": 2,
+              "title": "Opus Song",
+              "artist": "Opus Artist",
+              "artHash": null,
+              "requestedByName": "device-22",
+              "source": "guest",
+              "playedAt": "<time>"
+            },
+            {
+              "id": 1,
+              "trackId": 1,
+              "title": "Second Title",
+              "artist": "Artist One",
+              "artHash": "d2e4930b6202f652cb1dd161d1709e799ec0e071",
+              "requestedByName": "device-21",
+              "source": "guest",
+              "playedAt": "<time>"
+            }
+          ],
+          "topPlayed": [
+            {
+              "trackId": 3,
+              "title": "Info Title",
+              "artist": "Info Artist",
+              "count": 1
+            },
+            {
+              "trackId": 5,
+              "title": "Ogg Song",
+              "artist": "Ogg Artist",
+              "count": 1
+            },
+            {
+              "trackId": 2,
+              "title": "Opus Song",
+              "artist": "Opus Artist",
+              "count": 1
+            },
+            {
+              "trackId": 1,
+              "title": "Second Title",
+              "artist": "Artist One",
+              "count": 1
+            },
+            {
+              "trackId": 4,
+              "title": "untagged",
+              "artist": null,
+              "count": 1
+            }
+          ],
+          "topDownvoted": [
+            {
+              "trackId": 1,
+              "title": "Second Title",
+              "artist": "Artist One",
+              "count": 2
+            },
+            {
+              "trackId": 5,
+              "title": "Ogg Song",
+              "artist": "Ogg Artist",
+              "count": 1
+            }
+          ],
+          "users": [
+            {
+              "id": "192.0.2.21",
+              "ip": "192.0.2.21",
+              "name": "device-21",
+              "requests": 2,
+              "downvotes": 1,
+              "banned": false,
+              "bannedUntil": null
+            },
+            {
+              "id": "192.0.2.22",
+              "ip": "192.0.2.22",
+              "name": "device-22",
+              "requests": 1,
+              "downvotes": 1,
+              "banned": false,
+              "bannedUntil": null
+            },
+            {
+              "id": "192.0.2.23",
+              "ip": "192.0.2.23",
+              "name": "device-23",
+              "requests": 1,
+              "downvotes": 1,
+              "banned": false,
+              "bannedUntil": null
+            }
+          ],
+          "totals": {
+            "plays": 5,
+            "requests": 4,
+            "downvotes": 3
+          }
+        }
+      }
+    },
+    {
+      "id": "b-takes-over-random-fill",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": {
+        "json": {
+          "nowPlaying": {
+            "entry": {
+              "id": 6,
+              "track": {
+                "id": 1,
+                "title": "Second Title",
+                "artist": "Artist One",
+                "album": "Padded Album",
+                "albumArtist": null,
+                "genre": "Rock, Pop",
+                "duration": 1.1,
+                "trackNo": 7,
+                "discNo": null,
+                "year": 2001,
+                "artHash": "d2e4930b6202f652cb1dd161d1709e799ec0e071"
+              },
+              "addedByName": "device-22",
+              "mine": true
+            },
+            "position": 0,
+            "duration": 0,
+            "playing": true,
+            "isStandby": false,
+            "downvotes": 0,
+            "downvoteThreshold": 2,
+            "downvotedByMe": false
+          },
+          "queue": [],
+          "perUserLimit": 0,
+          "myQueueCount": 0
+        }
+      }
+    },
+    {
+      "id": "standby-add-2",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": {
+        "json": {
+          "enabled": false,
+          "shuffle": false,
+          "random": true,
+          "entries": [
+            {
+              "id": 1,
+              "track": {
+                "id": 2,
+                "title": "Opus Song",
+                "artist": "Opus Artist",
+                "album": null,
+                "albumArtist": null,
+                "genre": "Ambient",
+                "duration": 1,
+                "trackNo": null,
+                "discNo": null,
+                "year": null,
+                "artHash": null
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "standby-add-3",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": {
+        "json": {
+          "enabled": false,
+          "shuffle": false,
+          "random": true,
+          "entries": [
+            {
+              "id": 1,
+              "track": {
+                "id": 2,
+                "title": "Opus Song",
+                "artist": "Opus Artist",
+                "album": null,
+                "albumArtist": null,
+                "genre": "Ambient",
+                "duration": 1,
+                "trackNo": null,
+                "discNo": null,
+                "year": null,
+                "artHash": null
+              }
+            },
+            {
+              "id": 2,
+              "track": {
+                "id": 3,
+                "title": "Info Title",
+                "artist": "Info Artist",
+                "album": "Info Album",
+                "albumArtist": null,
+                "genre": "Folk",
+                "duration": 1,
+                "trackNo": null,
+                "discNo": null,
+                "year": 1970,
+                "artHash": null
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "standby-on",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": {
+        "json": {
+          "enabled": true,
+          "shuffle": false,
+          "random": true,
+          "entries": [
+            {
+              "id": 1,
+              "track": {
+                "id": 2,
+                "title": "Opus Song",
+                "artist": "Opus Artist",
+                "album": null,
+                "albumArtist": null,
+                "genre": "Ambient",
+                "duration": 1,
+                "trackNo": null,
+                "discNo": null,
+                "year": null,
+                "artHash": null
+              }
+            },
+            {
+              "id": 2,
+              "track": {
+                "id": 3,
+                "title": "Info Title",
+                "artist": "Info Artist",
+                "album": "Info Album",
+                "albumArtist": null,
+                "genre": "Folk",
+                "duration": 1,
+                "trackNo": null,
+                "discNo": null,
+                "year": 1970,
+                "artHash": null
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "queue-standby-first",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": {
+        "json": {
+          "nowPlaying": {
+            "entry": {
+              "id": 7,
+              "track": {
+                "id": 2,
+                "title": "Opus Song",
+                "artist": "Opus Artist",
+                "album": null,
+                "albumArtist": null,
+                "genre": "Ambient",
+                "duration": 1,
+                "trackNo": null,
+                "discNo": null,
+                "year": null,
+                "artHash": null
+              },
+              "addedByName": null,
+              "mine": false
+            },
+            "position": 0,
+            "duration": 0,
+            "playing": true,
+            "isStandby": true,
+            "downvotes": 0,
+            "downvoteThreshold": 2,
+            "downvotedByMe": false
+          },
+          "queue": [],
+          "perUserLimit": 0,
+          "myQueueCount": 0
+        }
+      }
+    },
+    {
+      "id": "a-downvotes-standby",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": {
+        "json": {
+          "nowPlaying": {
+            "entry": {
+              "id": 7,
+              "track": {
+                "id": 2,
+                "title": "Opus Song",
+                "artist": "Opus Artist",
+                "album": null,
+                "albumArtist": null,
+                "genre": "Ambient",
+                "duration": 1,
+                "trackNo": null,
+                "discNo": null,
+                "year": null,
+                "artHash": null
+              },
+              "addedByName": null,
+              "mine": false
+            },
+            "position": 0,
+            "duration": 0,
+            "playing": true,
+            "isStandby": true,
+            "downvotes": 0,
+            "downvoteThreshold": 2,
+            "downvotedByMe": false
+          },
+          "queue": [],
+          "perUserLimit": 0,
+          "myQueueCount": 0
+        }
+      }
+    },
+    {
+      "id": "queue-standby-second",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": {
+        "json": {
+          "nowPlaying": {
+            "entry": {
+              "id": 8,
+              "track": {
+                "id": 3,
+                "title": "Info Title",
+                "artist": "Info Artist",
+                "album": "Info Album",
+                "albumArtist": null,
+                "genre": "Folk",
+                "duration": 1,
+                "trackNo": null,
+                "discNo": null,
+                "year": 1970,
+                "artHash": null
+              },
+              "addedByName": null,
+              "mine": false
+            },
+            "position": 0,
+            "duration": 0,
+            "playing": true,
+            "isStandby": true,
+            "downvotes": 0,
+            "downvoteThreshold": 2,
+            "downvotedByMe": false
+          },
+          "queue": [],
+          "perUserLimit": 0,
+          "myQueueCount": 0
+        }
+      }
+    },
+    {
+      "id": "queue-standby-wraps",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": {
+        "json": {
+          "nowPlaying": {
+            "entry": {
+              "id": 9,
+              "track": {
+                "id": 2,
+                "title": "Opus Song",
+                "artist": "Opus Artist",
+                "album": null,
+                "albumArtist": null,
+                "genre": "Ambient",
+                "duration": 1,
+                "trackNo": null,
+                "discNo": null,
+                "year": null,
+                "artHash": null
+              },
+              "addedByName": null,
+              "mine": false
+            },
+            "position": 0,
+            "duration": 0,
+            "playing": true,
+            "isStandby": true,
+            "downvotes": 0,
+            "downvoteThreshold": 2,
+            "downvotedByMe": false
+          },
+          "queue": [],
+          "perUserLimit": 0,
+          "myQueueCount": 0
+        }
+      }
+    },
+    {
+      "id": "standby-remove-3",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": {
+        "json": {
+          "enabled": true,
+          "shuffle": false,
+          "random": true,
+          "entries": [
+            {
+              "id": 1,
+              "track": {
+                "id": 2,
+                "title": "Opus Song",
+                "artist": "Opus Artist",
+                "album": null,
+                "albumArtist": null,
+                "genre": "Ambient",
+                "duration": 1,
+                "trackNo": null,
+                "discNo": null,
+                "year": null,
+                "artHash": null
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "shuffle-on",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": {
+        "json": {
+          "enabled": true,
+          "shuffle": true,
+          "random": true,
+          "entries": [
+            {
+              "id": 1,
+              "track": {
+                "id": 2,
+                "title": "Opus Song",
+                "artist": "Opus Artist",
+                "album": null,
+                "albumArtist": null,
+                "genre": "Ambient",
+                "duration": 1,
+                "trackNo": null,
+                "discNo": null,
+                "year": null,
+                "artHash": null
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "queue-shuffled",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": {
+        "json": {
+          "nowPlaying": {
+            "entry": {
+              "id": 10,
+              "track": {
+                "id": 2,
+                "title": "Opus Song",
+                "artist": "Opus Artist",
+                "album": null,
+                "albumArtist": null,
+                "genre": "Ambient",
+                "duration": 1,
+                "trackNo": null,
+                "discNo": null,
+                "year": null,
+                "artHash": null
+              },
+              "addedByName": null,
+              "mine": false
+            },
+            "position": 0,
+            "duration": 0,
+            "playing": true,
+            "isStandby": true,
+            "downvotes": 0,
+            "downvoteThreshold": 2,
+            "downvotedByMe": false
+          },
+          "queue": [],
+          "perUserLimit": 0,
+          "myQueueCount": 0
+        }
+      }
+    },
+    {
+      "id": "hide-limit-and-votes",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": {
+        "json": {
+          "restartRequired": false
+        }
+      }
+    },
+    {
+      "id": "a-adds-5-over-filler",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": {
+        "json": {
+          "nowPlaying": {
+            "entry": {
+              "id": 11,
+              "track": {
+                "id": 5,
+                "title": "Ogg Song",
+                "artist": "Ogg Artist",
+                "album": "Ogg Album",
+                "albumArtist": null,
+                "genre": null,
+                "duration": 1,
+                "trackNo": 2,
+                "discNo": null,
+                "year": 1985,
+                "artHash": "a0cc42b361c9663bdeff024d17c92b17f3e98f4e"
+              },
+              "addedByName": "device-21",
+              "mine": true
+            },
+            "position": 0,
+            "duration": 0,
+            "playing": true,
+            "isStandby": false,
+            "downvotes": 0,
+            "downvoteThreshold": -2,
+            "downvotedByMe": false
+          },
+          "queue": [],
+          "perUserLimit": -1,
+          "myQueueCount": 0
+        }
+      }
+    },
+    {
+      "id": "a-adds-3",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": {
+        "json": {
+          "nowPlaying": {
+            "entry": {
+              "id": 11,
+              "track": {
+                "id": 5,
+                "title": "Ogg Song",
+                "artist": "Ogg Artist",
+                "album": "Ogg Album",
+                "albumArtist": null,
+                "genre": null,
+                "duration": 1,
+                "trackNo": 2,
+                "discNo": null,
+                "year": 1985,
+                "artHash": "a0cc42b361c9663bdeff024d17c92b17f3e98f4e"
+              },
+              "addedByName": "device-21",
+              "mine": true
+            },
+            "position": 0,
+            "duration": 0,
+            "playing": true,
+            "isStandby": false,
+            "downvotes": 0,
+            "downvoteThreshold": -2,
+            "downvotedByMe": false
+          },
+          "queue": [
+            {
+              "id": 12,
+              "track": {
+                "id": 3,
+                "title": "Info Title",
+                "artist": "Info Artist",
+                "album": "Info Album",
+                "albumArtist": null,
+                "genre": "Folk",
+                "duration": 1,
+                "trackNo": null,
+                "discNo": null,
+                "year": 1970,
+                "artHash": null
+              },
+              "addedByName": "device-21",
+              "mine": true
+            }
+          ],
+          "perUserLimit": -1,
+          "myQueueCount": 1
+        }
+      }
+    },
+    {
+      "id": "a-over-hidden-limit",
+      "status": 409,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": {
+        "json": {
+          "error": "You can have at most 1 song in the queue."
+        }
+      }
+    },
+    {
+      "id": "queue-a-hidden-limit",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": {
+        "json": {
+          "nowPlaying": {
+            "entry": {
+              "id": 11,
+              "track": {
+                "id": 5,
+                "title": "Ogg Song",
+                "artist": "Ogg Artist",
+                "album": "Ogg Album",
+                "albumArtist": null,
+                "genre": null,
+                "duration": 1,
+                "trackNo": 2,
+                "discNo": null,
+                "year": 1985,
+                "artHash": "a0cc42b361c9663bdeff024d17c92b17f3e98f4e"
+              },
+              "addedByName": "device-21",
+              "mine": true
+            },
+            "position": 0,
+            "duration": 0,
+            "playing": true,
+            "isStandby": false,
+            "downvotes": 0,
+            "downvoteThreshold": -2,
+            "downvotedByMe": false
+          },
+          "queue": [
+            {
+              "id": 12,
+              "track": {
+                "id": 3,
+                "title": "Info Title",
+                "artist": "Info Artist",
+                "album": "Info Album",
+                "albumArtist": null,
+                "genre": "Folk",
+                "duration": 1,
+                "trackNo": null,
+                "discNo": null,
+                "year": 1970,
+                "artHash": null
+              },
+              "addedByName": "device-21",
+              "mine": true
+            }
+          ],
+          "perUserLimit": -1,
+          "myQueueCount": 1
+        }
+      }
+    },
+    {
+      "id": "b-downvotes-hidden",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": {
+        "json": {
+          "nowPlaying": {
+            "entry": {
+              "id": 11,
+              "track": {
+                "id": 5,
+                "title": "Ogg Song",
+                "artist": "Ogg Artist",
+                "album": "Ogg Album",
+                "albumArtist": null,
+                "genre": null,
+                "duration": 1,
+                "trackNo": 2,
+                "discNo": null,
+                "year": 1985,
+                "artHash": "a0cc42b361c9663bdeff024d17c92b17f3e98f4e"
+              },
+              "addedByName": "device-21",
+              "mine": false
+            },
+            "position": 0,
+            "duration": 0,
+            "playing": true,
+            "isStandby": false,
+            "downvotes": 0,
+            "downvoteThreshold": -2,
+            "downvotedByMe": true
+          },
+          "queue": [
+            {
+              "id": 12,
+              "track": {
+                "id": 3,
+                "title": "Info Title",
+                "artist": "Info Artist",
+                "album": "Info Album",
+                "albumArtist": null,
+                "genre": "Folk",
+                "duration": 1,
+                "trackNo": null,
+                "discNo": null,
+                "year": 1970,
+                "artHash": null
+              },
+              "addedByName": "device-21",
+              "mine": false
+            }
+          ],
+          "perUserLimit": -1,
+          "myQueueCount": 0
+        }
+      }
+    },
+    {
+      "id": "c-downvote-skips-hidden",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": {
+        "json": {
+          "nowPlaying": {
+            "entry": {
+              "id": 12,
+              "track": {
+                "id": 3,
+                "title": "Info Title",
+                "artist": "Info Artist",
+                "album": "Info Album",
+                "albumArtist": null,
+                "genre": "Folk",
+                "duration": 1,
+                "trackNo": null,
+                "discNo": null,
+                "year": 1970,
+                "artHash": null
+              },
+              "addedByName": "device-21",
+              "mine": false
+            },
+            "position": 0,
+            "duration": 0,
+            "playing": true,
+            "isStandby": false,
+            "downvotes": 0,
+            "downvoteThreshold": -2,
+            "downvotedByMe": false
+          },
+          "queue": [],
+          "perUserLimit": -1,
+          "myQueueCount": 0
+        }
+      }
+    },
+    {
+      "id": "b-adds-4",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": {
+        "json": {
+          "nowPlaying": {
+            "entry": {
+              "id": 12,
+              "track": {
+                "id": 3,
+                "title": "Info Title",
+                "artist": "Info Artist",
+                "album": "Info Album",
+                "albumArtist": null,
+                "genre": "Folk",
+                "duration": 1,
+                "trackNo": null,
+                "discNo": null,
+                "year": 1970,
+                "artHash": null
+              },
+              "addedByName": "device-21",
+              "mine": false
+            },
+            "position": 0,
+            "duration": 0,
+            "playing": true,
+            "isStandby": false,
+            "downvotes": 0,
+            "downvoteThreshold": -2,
+            "downvotedByMe": false
+          },
+          "queue": [
+            {
+              "id": 13,
+              "track": {
+                "id": 4,
+                "title": "untagged",
+                "artist": null,
+                "album": null,
+                "albumArtist": null,
+                "genre": null,
+                "duration": 1.1,
+                "trackNo": null,
+                "discNo": null,
+                "year": null,
+                "artHash": null
+              },
+              "addedByName": "device-22",
+              "mine": true
+            }
+          ],
+          "perUserLimit": -1,
+          "myQueueCount": 1
+        }
+      }
+    },
+    {
+      "id": "rescan",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": {
+        "json": {
+          "scanning": true,
+          "processed": 0,
+          "added": 0,
+          "updated": 0,
+          "removed": 0,
+          "total": 0,
+          "startedAt": "<time>",
+          "finishedAt": null,
+          "error": null
+        }
+      }
+    },
+    {
+      "id": "rescan-status",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": {
+        "json": {
+          "scanning": false,
+          "processed": 4,
+          "added": 0,
+          "updated": 0,
+          "removed": 1,
+          "total": 4,
+          "startedAt": "<time>",
+          "finishedAt": "<time>",
+          "error": null
+        }
+      }
+    },
+    {
+      "id": "queue-after-prune",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": {
+        "json": {
+          "nowPlaying": {
+            "entry": {
+              "id": 12,
+              "track": {
+                "id": 3,
+                "title": "Info Title",
+                "artist": "Info Artist",
+                "album": "Info Album",
+                "albumArtist": null,
+                "genre": "Folk",
+                "duration": 1,
+                "trackNo": null,
+                "discNo": null,
+                "year": 1970,
+                "artHash": null
+              },
+              "addedByName": "device-21",
+              "mine": false
+            },
+            "position": 0,
+            "duration": 0,
+            "playing": true,
+            "isStandby": false,
+            "downvotes": 0,
+            "downvoteThreshold": -2,
+            "downvotedByMe": false
+          },
+          "queue": [],
+          "perUserLimit": -1,
+          "myQueueCount": 0
+        }
+      }
+    },
+    {
+      "id": "stats-after-prune",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": {
+        "json": {
+          "history": [
+            {
+              "id": 12,
+              "trackId": 3,
+              "title": "Info Title",
+              "artist": "Info Artist",
+              "artHash": null,
+              "requestedByName": "device-21",
+              "source": "guest",
+              "playedAt": "<time>"
+            },
+            {
+              "id": 11,
+              "trackId": 5,
+              "title": "Ogg Song",
+              "artist": "Ogg Artist",
+              "artHash": "a0cc42b361c9663bdeff024d17c92b17f3e98f4e",
+              "requestedByName": "device-21",
+              "source": "guest",
+              "playedAt": "<time>"
+            },
+            {
+              "id": 6,
+              "trackId": 1,
+              "title": "Second Title",
+              "artist": "Artist One",
+              "artHash": "d2e4930b6202f652cb1dd161d1709e799ec0e071",
+              "requestedByName": "device-22",
+              "source": "guest",
+              "playedAt": "<time>"
+            },
+            {
+              "id": 5,
+              "trackId": 5,
+              "title": "Ogg Song",
+              "artist": "Ogg Artist",
+              "artHash": "a0cc42b361c9663bdeff024d17c92b17f3e98f4e",
+              "requestedByName": null,
+              "source": "random",
+              "playedAt": "<time>"
+            },
+            {
+              "id": 4,
+              "trackId": 4,
+              "title": "untagged",
+              "artist": null,
+              "artHash": null,
+              "requestedByName": "device-21",
+              "source": "guest",
+              "playedAt": "<time>"
+            },
+            {
+              "id": 3,
+              "trackId": 3,
+              "title": "Info Title",
+              "artist": "Info Artist",
+              "artHash": null,
+              "requestedByName": "device-23",
+              "source": "guest",
+              "playedAt": "<time>"
+            },
+            {
+              "id": 2,
+              "trackId": 2,
+              "title": "Opus Song",
+              "artist": "Opus Artist",
+              "artHash": null,
+              "requestedByName": "device-22",
+              "source": "guest",
+              "playedAt": "<time>"
+            },
+            {
+              "id": 1,
+              "trackId": 1,
+              "title": "Second Title",
+              "artist": "Artist One",
+              "artHash": "d2e4930b6202f652cb1dd161d1709e799ec0e071",
+              "requestedByName": "device-21",
+              "source": "guest",
+              "playedAt": "<time>"
+            }
+          ],
+          "topPlayed": [
+            {
+              "trackId": 3,
+              "title": "Info Title",
+              "artist": "Info Artist",
+              "count": 2
+            },
+            {
+              "trackId": 5,
+              "title": "Ogg Song",
+              "artist": "Ogg Artist",
+              "count": 2
+            },
+            {
+              "trackId": 1,
+              "title": "Second Title",
+              "artist": "Artist One",
+              "count": 2
+            },
+            {
+              "trackId": 2,
+              "title": "Opus Song",
+              "artist": "Opus Artist",
+              "count": 1
+            },
+            {
+              "trackId": 4,
+              "title": "untagged",
+              "artist": null,
+              "count": 1
+            }
+          ],
+          "topDownvoted": [
+            {
+              "trackId": 5,
+              "title": "Ogg Song",
+              "artist": "Ogg Artist",
+              "count": 3
+            },
+            {
+              "trackId": 1,
+              "title": "Second Title",
+              "artist": "Artist One",
+              "count": 2
+            }
+          ],
+          "users": [
+            {
+              "id": "192.0.2.21",
+              "ip": "192.0.2.21",
+              "name": "device-21",
+              "requests": 4,
+              "downvotes": 1,
+              "banned": false,
+              "bannedUntil": null
+            },
+            {
+              "id": "192.0.2.22",
+              "ip": "192.0.2.22",
+              "name": "device-22",
+              "requests": 3,
+              "downvotes": 2,
+              "banned": false,
+              "bannedUntil": null
+            },
+            {
+              "id": "192.0.2.23",
+              "ip": "192.0.2.23",
+              "name": "device-23",
+              "requests": 1,
+              "downvotes": 2,
+              "banned": false,
+              "bannedUntil": null
+            }
+          ],
+          "totals": {
+            "plays": 8,
+            "requests": 8,
+            "downvotes": 5
+          }
+        }
+      }
+    },
+    {
+      "id": "votes-shown-again",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": {
+        "json": {
+          "restartRequired": false
+        }
+      }
+    },
+    {
+      "id": "c-adds-1",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": {
+        "json": {
+          "nowPlaying": {
+            "entry": {
+              "id": 12,
+              "track": {
+                "id": 3,
+                "title": "Info Title",
+                "artist": "Info Artist",
+                "album": "Info Album",
+                "albumArtist": null,
+                "genre": "Folk",
+                "duration": 1,
+                "trackNo": null,
+                "discNo": null,
+                "year": 1970,
+                "artHash": null
+              },
+              "addedByName": "device-21",
+              "mine": false
+            },
+            "position": 0,
+            "duration": 0,
+            "playing": true,
+            "isStandby": false,
+            "downvotes": 0,
+            "downvoteThreshold": 3,
+            "downvotedByMe": false
+          },
+          "queue": [
+            {
+              "id": 14,
+              "track": {
+                "id": 1,
+                "title": "Second Title",
+                "artist": "Artist One",
+                "album": "Padded Album",
+                "albumArtist": null,
+                "genre": "Rock, Pop",
+                "duration": 1.1,
+                "trackNo": 7,
+                "discNo": null,
+                "year": 2001,
+                "artHash": "d2e4930b6202f652cb1dd161d1709e799ec0e071"
+              },
+              "addedByName": "device-23",
+              "mine": true
+            }
+          ],
+          "perUserLimit": -1,
+          "myQueueCount": 1
+        }
+      }
+    },
+    {
+      "id": "b-adds-2-again",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": {
+        "json": {
+          "nowPlaying": {
+            "entry": {
+              "id": 12,
+              "track": {
+                "id": 3,
+                "title": "Info Title",
+                "artist": "Info Artist",
+                "album": "Info Album",
+                "albumArtist": null,
+                "genre": "Folk",
+                "duration": 1,
+                "trackNo": null,
+                "discNo": null,
+                "year": 1970,
+                "artHash": null
+              },
+              "addedByName": "device-21",
+              "mine": false
+            },
+            "position": 0,
+            "duration": 0,
+            "playing": true,
+            "isStandby": false,
+            "downvotes": 0,
+            "downvoteThreshold": 3,
+            "downvotedByMe": false
+          },
+          "queue": [
+            {
+              "id": 14,
+              "track": {
+                "id": 1,
+                "title": "Second Title",
+                "artist": "Artist One",
+                "album": "Padded Album",
+                "albumArtist": null,
+                "genre": "Rock, Pop",
+                "duration": 1.1,
+                "trackNo": 7,
+                "discNo": null,
+                "year": 2001,
+                "artHash": "d2e4930b6202f652cb1dd161d1709e799ec0e071"
+              },
+              "addedByName": "device-23",
+              "mine": false
+            },
+            {
+              "id": 15,
+              "track": {
+                "id": 2,
+                "title": "Opus Song",
+                "artist": "Opus Artist",
+                "album": null,
+                "albumArtist": null,
+                "genre": "Ambient",
+                "duration": 1,
+                "trackNo": null,
+                "discNo": null,
+                "year": null,
+                "artHash": null
+              },
+              "addedByName": "device-22",
+              "mine": true
+            }
+          ],
+          "perUserLimit": -1,
+          "myQueueCount": 1
+        }
+      }
+    },
+    {
+      "id": "a-downvotes-before-restart",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": {
+        "json": {
+          "nowPlaying": {
+            "entry": {
+              "id": 12,
+              "track": {
+                "id": 3,
+                "title": "Info Title",
+                "artist": "Info Artist",
+                "album": "Info Album",
+                "albumArtist": null,
+                "genre": "Folk",
+                "duration": 1,
+                "trackNo": null,
+                "discNo": null,
+                "year": 1970,
+                "artHash": null
+              },
+              "addedByName": "device-21",
+              "mine": true
+            },
+            "position": 0,
+            "duration": 0,
+            "playing": true,
+            "isStandby": false,
+            "downvotes": 1,
+            "downvoteThreshold": 3,
+            "downvotedByMe": true
+          },
+          "queue": [
+            {
+              "id": 14,
+              "track": {
+                "id": 1,
+                "title": "Second Title",
+                "artist": "Artist One",
+                "album": "Padded Album",
+                "albumArtist": null,
+                "genre": "Rock, Pop",
+                "duration": 1.1,
+                "trackNo": 7,
+                "discNo": null,
+                "year": 2001,
+                "artHash": "d2e4930b6202f652cb1dd161d1709e799ec0e071"
+              },
+              "addedByName": "device-23",
+              "mine": false
+            },
+            {
+              "id": 15,
+              "track": {
+                "id": 2,
+                "title": "Opus Song",
+                "artist": "Opus Artist",
+                "album": null,
+                "albumArtist": null,
+                "genre": "Ambient",
+                "duration": 1,
+                "trackNo": null,
+                "discNo": null,
+                "year": null,
+                "artHash": null
+              },
+              "addedByName": "device-22",
+              "mine": false
+            }
+          ],
+          "perUserLimit": -1,
+          "myQueueCount": 0
+        }
+      }
+    },
+    {
+      "id": "queue-after-restart",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": {
+        "json": {
+          "nowPlaying": {
+            "entry": null,
+            "position": 0,
+            "duration": 0,
+            "playing": false,
+            "isStandby": false,
+            "downvotes": 0,
+            "downvoteThreshold": 3,
+            "downvotedByMe": false
+          },
+          "queue": [
+            {
+              "id": 12,
+              "track": {
+                "id": 3,
+                "title": "Info Title",
+                "artist": "Info Artist",
+                "album": "Info Album",
+                "albumArtist": null,
+                "genre": "Folk",
+                "duration": 1,
+                "trackNo": null,
+                "discNo": null,
+                "year": 1970,
+                "artHash": null
+              },
+              "addedByName": "device-21",
+              "mine": true
+            },
+            {
+              "id": 14,
+              "track": {
+                "id": 1,
+                "title": "Second Title",
+                "artist": "Artist One",
+                "album": "Padded Album",
+                "albumArtist": null,
+                "genre": "Rock, Pop",
+                "duration": 1.1,
+                "trackNo": 7,
+                "discNo": null,
+                "year": 2001,
+                "artHash": "d2e4930b6202f652cb1dd161d1709e799ec0e071"
+              },
+              "addedByName": "device-23",
+              "mine": false
+            },
+            {
+              "id": 15,
+              "track": {
+                "id": 2,
+                "title": "Opus Song",
+                "artist": "Opus Artist",
+                "album": null,
+                "albumArtist": null,
+                "genre": "Ambient",
+                "duration": 1,
+                "trackNo": null,
+                "discNo": null,
+                "year": null,
+                "artHash": null
+              },
+              "addedByName": "device-22",
+              "mine": false
+            }
+          ],
+          "perUserLimit": -1,
+          "myQueueCount": 1
+        }
+      }
+    },
+    {
+      "id": "session-gone-after-restart",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": {
+        "json": {
+          "isAdmin": false,
+          "isLocal": true
+        }
+      }
+    },
+    {
+      "id": "queue-resumed",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": {
+        "json": {
+          "nowPlaying": {
+            "entry": {
+              "id": 12,
+              "track": {
+                "id": 3,
+                "title": "Info Title",
+                "artist": "Info Artist",
+                "album": "Info Album",
+                "albumArtist": null,
+                "genre": "Folk",
+                "duration": 1,
+                "trackNo": null,
+                "discNo": null,
+                "year": 1970,
+                "artHash": null
+              },
+              "addedByName": "device-21",
+              "mine": true
+            },
+            "position": 0,
+            "duration": 0,
+            "playing": true,
+            "isStandby": false,
+            "downvotes": 0,
+            "downvoteThreshold": 3,
+            "downvotedByMe": false
+          },
+          "queue": [
+            {
+              "id": 14,
+              "track": {
+                "id": 1,
+                "title": "Second Title",
+                "artist": "Artist One",
+                "album": "Padded Album",
+                "albumArtist": null,
+                "genre": "Rock, Pop",
+                "duration": 1.1,
+                "trackNo": 7,
+                "discNo": null,
+                "year": 2001,
+                "artHash": "d2e4930b6202f652cb1dd161d1709e799ec0e071"
+              },
+              "addedByName": "device-23",
+              "mine": false
+            },
+            {
+              "id": 15,
+              "track": {
+                "id": 2,
+                "title": "Opus Song",
+                "artist": "Opus Artist",
+                "album": null,
+                "albumArtist": null,
+                "genre": "Ambient",
+                "duration": 1,
+                "trackNo": null,
+                "discNo": null,
+                "year": null,
+                "artHash": null
+              },
+              "addedByName": "device-22",
+              "mine": false
+            }
+          ],
+          "perUserLimit": -1,
+          "myQueueCount": 0
+        }
+      }
+    },
+    {
+      "id": "login-again",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8",
+        "set-cookie": [
+          "kj_session=<token>; Max-Age=43200; Path=/; Expires=<date>; HttpOnly; SameSite=Lax"
+        ]
+      },
+      "body": {
+        "json": {
+          "isAdmin": true,
+          "isLocal": true
+        }
+      }
+    },
+    {
+      "id": "standby-kept",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": {
+        "json": {
+          "enabled": true,
+          "shuffle": true,
+          "random": true,
+          "entries": [
+            {
+              "id": 1,
+              "track": {
+                "id": 2,
+                "title": "Opus Song",
+                "artist": "Opus Artist",
+                "album": null,
+                "albumArtist": null,
+                "genre": "Ambient",
+                "duration": 1,
+                "trackNo": null,
+                "discNo": null,
+                "year": null,
+                "artHash": null
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "clear",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": {
+        "json": {
+          "nowPlaying": {
+            "entry": {
+              "id": 12,
+              "track": {
+                "id": 3,
+                "title": "Info Title",
+                "artist": "Info Artist",
+                "album": "Info Album",
+                "albumArtist": null,
+                "genre": "Folk",
+                "duration": 1,
+                "trackNo": null,
+                "discNo": null,
+                "year": 1970,
+                "artHash": null
+              },
+              "addedByName": "device-21",
+              "mine": false
+            },
+            "position": 0,
+            "duration": 0,
+            "playing": true,
+            "isStandby": false,
+            "downvotes": 0,
+            "downvoteThreshold": 3,
+            "downvotedByMe": false
+          },
+          "queue": [],
+          "perUserLimit": -1,
+          "myQueueCount": 0
+        }
+      }
+    },
+    {
+      "id": "queue-filler-before-restart",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": {
+        "json": {
+          "nowPlaying": {
+            "entry": {
+              "id": 16,
+              "track": {
+                "id": 2,
+                "title": "Opus Song",
+                "artist": "Opus Artist",
+                "album": null,
+                "albumArtist": null,
+                "genre": "Ambient",
+                "duration": 1,
+                "trackNo": null,
+                "discNo": null,
+                "year": null,
+                "artHash": null
+              },
+              "addedByName": null,
+              "mine": false
+            },
+            "position": 0,
+            "duration": 0,
+            "playing": true,
+            "isStandby": true,
+            "downvotes": 0,
+            "downvoteThreshold": 3,
+            "downvotedByMe": false
+          },
+          "queue": [],
+          "perUserLimit": -1,
+          "myQueueCount": 0
+        }
+      }
+    },
+    {
+      "id": "queue-filler-cleared",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": {
+        "json": {
+          "nowPlaying": {
+            "entry": null,
+            "position": 0,
+            "duration": 0,
+            "playing": false,
+            "isStandby": false,
+            "downvotes": 0,
+            "downvoteThreshold": 3,
+            "downvotedByMe": false
+          },
+          "queue": [],
+          "perUserLimit": -1,
+          "myQueueCount": 0
+        }
+      }
+    },
+    {
+      "id": "queue-filler-resumed",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": {
+        "json": {
+          "nowPlaying": {
+            "entry": {
+              "id": 17,
+              "track": {
+                "id": 2,
+                "title": "Opus Song",
+                "artist": "Opus Artist",
+                "album": null,
+                "albumArtist": null,
+                "genre": "Ambient",
+                "duration": 1,
+                "trackNo": null,
+                "discNo": null,
+                "year": null,
+                "artHash": null
+              },
+              "addedByName": null,
+              "mine": false
+            },
+            "position": 0,
+            "duration": 0,
+            "playing": true,
+            "isStandby": true,
+            "downvotes": 0,
+            "downvoteThreshold": 3,
+            "downvotedByMe": false
+          },
+          "queue": [],
+          "perUserLimit": -1,
+          "myQueueCount": 0
+        }
+      }
+    },
+    {
+      "id": "login-third",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8",
+        "set-cookie": [
+          "kj_session=<token>; Max-Age=43200; Path=/; Expires=<date>; HttpOnly; SameSite=Lax"
+        ]
+      },
+      "body": {
+        "json": {
+          "isAdmin": true,
+          "isLocal": true
+        }
+      }
+    },
+    {
+      "id": "stats-final",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": {
+        "json": {
+          "history": [
+            {
+              "id": 13,
+              "trackId": 3,
+              "title": "Info Title",
+              "artist": "Info Artist",
+              "artHash": null,
+              "requestedByName": "device-21",
+              "source": "guest",
+              "playedAt": "<time>"
+            },
+            {
+              "id": 12,
+              "trackId": 3,
+              "title": "Info Title",
+              "artist": "Info Artist",
+              "artHash": null,
+              "requestedByName": "device-21",
+              "source": "guest",
+              "playedAt": "<time>"
+            },
+            {
+              "id": 11,
+              "trackId": 5,
+              "title": "Ogg Song",
+              "artist": "Ogg Artist",
+              "artHash": "a0cc42b361c9663bdeff024d17c92b17f3e98f4e",
+              "requestedByName": "device-21",
+              "source": "guest",
+              "playedAt": "<time>"
+            },
+            {
+              "id": 6,
+              "trackId": 1,
+              "title": "Second Title",
+              "artist": "Artist One",
+              "artHash": "d2e4930b6202f652cb1dd161d1709e799ec0e071",
+              "requestedByName": "device-22",
+              "source": "guest",
+              "playedAt": "<time>"
+            },
+            {
+              "id": 5,
+              "trackId": 5,
+              "title": "Ogg Song",
+              "artist": "Ogg Artist",
+              "artHash": "a0cc42b361c9663bdeff024d17c92b17f3e98f4e",
+              "requestedByName": null,
+              "source": "random",
+              "playedAt": "<time>"
+            },
+            {
+              "id": 4,
+              "trackId": 4,
+              "title": "untagged",
+              "artist": null,
+              "artHash": null,
+              "requestedByName": "device-21",
+              "source": "guest",
+              "playedAt": "<time>"
+            },
+            {
+              "id": 3,
+              "trackId": 3,
+              "title": "Info Title",
+              "artist": "Info Artist",
+              "artHash": null,
+              "requestedByName": "device-23",
+              "source": "guest",
+              "playedAt": "<time>"
+            },
+            {
+              "id": 2,
+              "trackId": 2,
+              "title": "Opus Song",
+              "artist": "Opus Artist",
+              "artHash": null,
+              "requestedByName": "device-22",
+              "source": "guest",
+              "playedAt": "<time>"
+            },
+            {
+              "id": 1,
+              "trackId": 1,
+              "title": "Second Title",
+              "artist": "Artist One",
+              "artHash": "d2e4930b6202f652cb1dd161d1709e799ec0e071",
+              "requestedByName": "device-21",
+              "source": "guest",
+              "playedAt": "<time>"
+            }
+          ],
+          "topPlayed": [
+            {
+              "trackId": 3,
+              "title": "Info Title",
+              "artist": "Info Artist",
+              "count": 3
+            },
+            {
+              "trackId": 5,
+              "title": "Ogg Song",
+              "artist": "Ogg Artist",
+              "count": 2
+            },
+            {
+              "trackId": 1,
+              "title": "Second Title",
+              "artist": "Artist One",
+              "count": 2
+            },
+            {
+              "trackId": 2,
+              "title": "Opus Song",
+              "artist": "Opus Artist",
+              "count": 1
+            },
+            {
+              "trackId": 4,
+              "title": "untagged",
+              "artist": null,
+              "count": 1
+            }
+          ],
+          "topDownvoted": [
+            {
+              "trackId": 5,
+              "title": "Ogg Song",
+              "artist": "Ogg Artist",
+              "count": 3
+            },
+            {
+              "trackId": 1,
+              "title": "Second Title",
+              "artist": "Artist One",
+              "count": 2
+            },
+            {
+              "trackId": 3,
+              "title": "Info Title",
+              "artist": "Info Artist",
+              "count": 1
+            }
+          ],
+          "users": [
+            {
+              "id": "192.0.2.21",
+              "ip": "192.0.2.21",
+              "name": "device-21",
+              "requests": 4,
+              "downvotes": 2,
+              "banned": false,
+              "bannedUntil": null
+            },
+            {
+              "id": "192.0.2.22",
+              "ip": "192.0.2.22",
+              "name": "device-22",
+              "requests": 4,
+              "downvotes": 2,
+              "banned": false,
+              "bannedUntil": null
+            },
+            {
+              "id": "192.0.2.23",
+              "ip": "192.0.2.23",
+              "name": "device-23",
+              "requests": 2,
+              "downvotes": 2,
+              "banned": false,
+              "bannedUntil": null
+            }
+          ],
+          "totals": {
+            "plays": 9,
+            "requests": 10,
+            "downvotes": 6
+          }
+        }
+      }
+    },
+    {
+      "id": "stats-final-guest",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": {
+        "json": {
+          "history": [
+            {
+              "id": 13,
+              "trackId": 3,
+              "title": "Info Title",
+              "artist": "Info Artist",
+              "artHash": null,
+              "requestedByName": "device-21",
+              "source": "guest",
+              "playedAt": "<time>"
+            },
+            {
+              "id": 12,
+              "trackId": 3,
+              "title": "Info Title",
+              "artist": "Info Artist",
+              "artHash": null,
+              "requestedByName": "device-21",
+              "source": "guest",
+              "playedAt": "<time>"
+            },
+            {
+              "id": 11,
+              "trackId": 5,
+              "title": "Ogg Song",
+              "artist": "Ogg Artist",
+              "artHash": "a0cc42b361c9663bdeff024d17c92b17f3e98f4e",
+              "requestedByName": "device-21",
+              "source": "guest",
+              "playedAt": "<time>"
+            },
+            {
+              "id": 6,
+              "trackId": 1,
+              "title": "Second Title",
+              "artist": "Artist One",
+              "artHash": "d2e4930b6202f652cb1dd161d1709e799ec0e071",
+              "requestedByName": "device-22",
+              "source": "guest",
+              "playedAt": "<time>"
+            },
+            {
+              "id": 5,
+              "trackId": 5,
+              "title": "Ogg Song",
+              "artist": "Ogg Artist",
+              "artHash": "a0cc42b361c9663bdeff024d17c92b17f3e98f4e",
+              "requestedByName": null,
+              "source": "random",
+              "playedAt": "<time>"
+            },
+            {
+              "id": 4,
+              "trackId": 4,
+              "title": "untagged",
+              "artist": null,
+              "artHash": null,
+              "requestedByName": "device-21",
+              "source": "guest",
+              "playedAt": "<time>"
+            },
+            {
+              "id": 3,
+              "trackId": 3,
+              "title": "Info Title",
+              "artist": "Info Artist",
+              "artHash": null,
+              "requestedByName": "device-23",
+              "source": "guest",
+              "playedAt": "<time>"
+            },
+            {
+              "id": 2,
+              "trackId": 2,
+              "title": "Opus Song",
+              "artist": "Opus Artist",
+              "artHash": null,
+              "requestedByName": "device-22",
+              "source": "guest",
+              "playedAt": "<time>"
+            },
+            {
+              "id": 1,
+              "trackId": 1,
+              "title": "Second Title",
+              "artist": "Artist One",
+              "artHash": "d2e4930b6202f652cb1dd161d1709e799ec0e071",
+              "requestedByName": "device-21",
+              "source": "guest",
+              "playedAt": "<time>"
+            }
+          ],
+          "topPlayed": [
+            {
+              "trackId": 3,
+              "title": "Info Title",
+              "artist": "Info Artist",
+              "count": 3
+            },
+            {
+              "trackId": 5,
+              "title": "Ogg Song",
+              "artist": "Ogg Artist",
+              "count": 2
+            },
+            {
+              "trackId": 1,
+              "title": "Second Title",
+              "artist": "Artist One",
+              "count": 2
+            },
+            {
+              "trackId": 2,
+              "title": "Opus Song",
+              "artist": "Opus Artist",
+              "count": 1
+            },
+            {
+              "trackId": 4,
+              "title": "untagged",
+              "artist": null,
+              "count": 1
+            }
+          ],
+          "topDownvoted": [
+            {
+              "trackId": 5,
+              "title": "Ogg Song",
+              "artist": "Ogg Artist",
+              "count": 3
+            },
+            {
+              "trackId": 1,
+              "title": "Second Title",
+              "artist": "Artist One",
+              "count": 2
+            },
+            {
+              "trackId": 3,
+              "title": "Info Title",
+              "artist": "Info Artist",
+              "count": 1
+            }
+          ],
+          "users": [
+            {
+              "id": "3fbc6348",
+              "ip": null,
+              "name": "device-21",
+              "requests": 4,
+              "downvotes": 2,
+              "banned": false,
+              "bannedUntil": null
+            },
+            {
+              "id": "380a59a1",
+              "ip": null,
+              "name": "device-22",
+              "requests": 4,
+              "downvotes": 2,
+              "banned": false,
+              "bannedUntil": null
+            },
+            {
+              "id": "87851df9",
+              "ip": null,
+              "name": "device-23",
+              "requests": 2,
+              "downvotes": 2,
+              "banned": false,
+              "bannedUntil": null
+            }
+          ],
+          "totals": {
+            "plays": 9,
+            "requests": 10,
+            "downvotes": 6
+          }
+        }
+      }
+    },
+    {
+      "id": "fillers-off",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": {
+        "json": {
+          "enabled": false,
+          "shuffle": true,
+          "random": false,
+          "entries": [
+            {
+              "id": 1,
+              "track": {
+                "id": 2,
+                "title": "Opus Song",
+                "artist": "Opus Artist",
+                "album": null,
+                "albumArtist": null,
+                "genre": "Ambient",
+                "duration": 1,
+                "trackNo": null,
+                "discNo": null,
+                "year": null,
+                "artHash": null
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "queue-idle",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": {
+        "json": {
+          "nowPlaying": {
+            "entry": null,
+            "position": 0,
+            "duration": 0,
+            "playing": false,
+            "isStandby": false,
+            "downvotes": 0,
+            "downvoteThreshold": 3,
+            "downvotedByMe": false
+          },
+          "queue": [],
+          "perUserLimit": -1,
+          "myQueueCount": 0
+        }
+      }
+    }
+  ],
+  "websocket": {
+    "host": [
+      {
+        "type": "queue",
+        "payload": {
+          "nowPlaying": {
+            "entry": null,
+            "position": 0,
+            "duration": 0,
+            "playing": false,
+            "isStandby": false,
+            "downvotes": 0,
+            "downvoteThreshold": 2,
+            "downvotedByMe": false
+          },
+          "queue": [],
+          "perUserLimit": 0,
+          "myQueueCount": 0
+        }
+      },
+      {
+        "type": "progress",
+        "payload": {
+          "position": 0,
+          "duration": 0,
+          "playing": false,
+          "trackId": null
+        }
+      },
+      {
+        "type": "queue",
+        "payload": {
+          "nowPlaying": {
+            "entry": null,
+            "position": 0,
+            "duration": 0,
+            "playing": false,
+            "isStandby": false,
+            "downvotes": 0,
+            "downvoteThreshold": 2,
+            "downvotedByMe": false
+          },
+          "queue": [],
+          "perUserLimit": 0,
+          "myQueueCount": 0
+        }
+      },
+      {
+        "type": "progress",
+        "payload": {
+          "position": 0,
+          "duration": 0,
+          "playing": true,
+          "trackId": 1
+        }
+      },
+      {
+        "type": "queue",
+        "payload": {
+          "nowPlaying": {
+            "entry": {
+              "id": 1,
+              "track": {
+                "id": 1,
+                "title": "Second Title",
+                "artist": "Artist One",
+                "album": "Padded Album",
+                "albumArtist": null,
+                "genre": "Rock, Pop",
+                "duration": 1.1,
+                "trackNo": 7,
+                "discNo": null,
+                "year": 2001,
+                "artHash": "d2e4930b6202f652cb1dd161d1709e799ec0e071"
+              },
+              "addedByName": "device-21",
+              "mine": false
+            },
+            "position": 0,
+            "duration": 0,
+            "playing": true,
+            "isStandby": false,
+            "downvotes": 0,
+            "downvoteThreshold": 2,
+            "downvotedByMe": false
+          },
+          "queue": [],
+          "perUserLimit": 0,
+          "myQueueCount": 0
+        }
+      },
+      {
+        "type": "queue",
+        "payload": {
+          "nowPlaying": {
+            "entry": {
+              "id": 1,
+              "track": {
+                "id": 1,
+                "title": "Second Title",
+                "artist": "Artist One",
+                "album": "Padded Album",
+                "albumArtist": null,
+                "genre": "Rock, Pop",
+                "duration": 1.1,
+                "trackNo": 7,
+                "discNo": null,
+                "year": 2001,
+                "artHash": "d2e4930b6202f652cb1dd161d1709e799ec0e071"
+              },
+              "addedByName": "device-21",
+              "mine": false
+            },
+            "position": 0,
+            "duration": 0,
+            "playing": true,
+            "isStandby": false,
+            "downvotes": 0,
+            "downvoteThreshold": 2,
+            "downvotedByMe": false
+          },
+          "queue": [
+            {
+              "id": 2,
+              "track": {
+                "id": 2,
+                "title": "Opus Song",
+                "artist": "Opus Artist",
+                "album": null,
+                "albumArtist": null,
+                "genre": "Ambient",
+                "duration": 1,
+                "trackNo": null,
+                "discNo": null,
+                "year": null,
+                "artHash": null
+              },
+              "addedByName": "device-22",
+              "mine": false
+            }
+          ],
+          "perUserLimit": 0,
+          "myQueueCount": 0
+        }
+      },
+      {
+        "type": "queue",
+        "payload": {
+          "nowPlaying": {
+            "entry": {
+              "id": 1,
+              "track": {
+                "id": 1,
+                "title": "Second Title",
+                "artist": "Artist One",
+                "album": "Padded Album",
+                "albumArtist": null,
+                "genre": "Rock, Pop",
+                "duration": 1.1,
+                "trackNo": 7,
+                "discNo": null,
+                "year": 2001,
+                "artHash": "d2e4930b6202f652cb1dd161d1709e799ec0e071"
+              },
+              "addedByName": "device-21",
+              "mine": false
+            },
+            "position": 0,
+            "duration": 0,
+            "playing": true,
+            "isStandby": false,
+            "downvotes": 0,
+            "downvoteThreshold": 2,
+            "downvotedByMe": false
+          },
+          "queue": [
+            {
+              "id": 2,
+              "track": {
+                "id": 2,
+                "title": "Opus Song",
+                "artist": "Opus Artist",
+                "album": null,
+                "albumArtist": null,
+                "genre": "Ambient",
+                "duration": 1,
+                "trackNo": null,
+                "discNo": null,
+                "year": null,
+                "artHash": null
+              },
+              "addedByName": "device-22",
+              "mine": false
+            },
+            {
+              "id": 3,
+              "track": {
+                "id": 3,
+                "title": "Info Title",
+                "artist": "Info Artist",
+                "album": "Info Album",
+                "albumArtist": null,
+                "genre": "Folk",
+                "duration": 1,
+                "trackNo": null,
+                "discNo": null,
+                "year": 1970,
+                "artHash": null
+              },
+              "addedByName": "device-23",
+              "mine": false
+            }
+          ],
+          "perUserLimit": 0,
+          "myQueueCount": 0
+        }
+      },
+      {
+        "type": "queue",
+        "payload": {
+          "nowPlaying": {
+            "entry": {
+              "id": 1,
+              "track": {
+                "id": 1,
+                "title": "Second Title",
+                "artist": "Artist One",
+                "album": "Padded Album",
+                "albumArtist": null,
+                "genre": "Rock, Pop",
+                "duration": 1.1,
+                "trackNo": 7,
+                "discNo": null,
+                "year": 2001,
+                "artHash": "d2e4930b6202f652cb1dd161d1709e799ec0e071"
+              },
+              "addedByName": "device-21",
+              "mine": false
+            },
+            "position": 0,
+            "duration": 0,
+            "playing": true,
+            "isStandby": false,
+            "downvotes": 0,
+            "downvoteThreshold": 2,
+            "downvotedByMe": false
+          },
+          "queue": [
+            {
+              "id": 2,
+              "track": {
+                "id": 2,
+                "title": "Opus Song",
+                "artist": "Opus Artist",
+                "album": null,
+                "albumArtist": null,
+                "genre": "Ambient",
+                "duration": 1,
+                "trackNo": null,
+                "discNo": null,
+                "year": null,
+                "artHash": null
+              },
+              "addedByName": "device-22",
+              "mine": false
+            },
+            {
+              "id": 3,
+              "track": {
+                "id": 3,
+                "title": "Info Title",
+                "artist": "Info Artist",
+                "album": "Info Album",
+                "albumArtist": null,
+                "genre": "Folk",
+                "duration": 1,
+                "trackNo": null,
+                "discNo": null,
+                "year": 1970,
+                "artHash": null
+              },
+              "addedByName": "device-23",
+              "mine": false
+            },
+            {
+              "id": 4,
+              "track": {
+                "id": 4,
+                "title": "untagged",
+                "artist": null,
+                "album": null,
+                "albumArtist": null,
+                "genre": null,
+                "duration": 1.1,
+                "trackNo": null,
+                "discNo": null,
+                "year": null,
+                "artHash": null
+              },
+              "addedByName": "device-21",
+              "mine": false
+            }
+          ],
+          "perUserLimit": 0,
+          "myQueueCount": 0
+        }
+      },
+      {
+        "type": "queue",
+        "payload": {
+          "nowPlaying": {
+            "entry": {
+              "id": 1,
+              "track": {
+                "id": 1,
+                "title": "Second Title",
+                "artist": "Artist One",
+                "album": "Padded Album",
+                "albumArtist": null,
+                "genre": "Rock, Pop",
+                "duration": 1.1,
+                "trackNo": 7,
+                "discNo": null,
+                "year": 2001,
+                "artHash": "d2e4930b6202f652cb1dd161d1709e799ec0e071"
+              },
+              "addedByName": "device-21",
+              "mine": false
+            },
+            "position": 0,
+            "duration": 0,
+            "playing": true,
+            "isStandby": false,
+            "downvotes": 1,
+            "downvoteThreshold": 2,
+            "downvotedByMe": false
+          },
+          "queue": [
+            {
+              "id": 2,
+              "track": {
+                "id": 2,
+                "title": "Opus Song",
+                "artist": "Opus Artist",
+                "album": null,
+                "albumArtist": null,
+                "genre": "Ambient",
+                "duration": 1,
+                "trackNo": null,
+                "discNo": null,
+                "year": null,
+                "artHash": null
+              },
+              "addedByName": "device-22",
+              "mine": false
+            },
+            {
+              "id": 3,
+              "track": {
+                "id": 3,
+                "title": "Info Title",
+                "artist": "Info Artist",
+                "album": "Info Album",
+                "albumArtist": null,
+                "genre": "Folk",
+                "duration": 1,
+                "trackNo": null,
+                "discNo": null,
+                "year": 1970,
+                "artHash": null
+              },
+              "addedByName": "device-23",
+              "mine": false
+            },
+            {
+              "id": 4,
+              "track": {
+                "id": 4,
+                "title": "untagged",
+                "artist": null,
+                "album": null,
+                "albumArtist": null,
+                "genre": null,
+                "duration": 1.1,
+                "trackNo": null,
+                "discNo": null,
+                "year": null,
+                "artHash": null
+              },
+              "addedByName": "device-21",
+              "mine": false
+            }
+          ],
+          "perUserLimit": 0,
+          "myQueueCount": 0
+        }
+      },
+      {
+        "type": "progress",
+        "payload": {
+          "position": 0,
+          "duration": 0,
+          "playing": true,
+          "trackId": 2
+        }
+      },
+      {
+        "type": "queue",
+        "payload": {
+          "nowPlaying": {
+            "entry": {
+              "id": 2,
+              "track": {
+                "id": 2,
+                "title": "Opus Song",
+                "artist": "Opus Artist",
+                "album": null,
+                "albumArtist": null,
+                "genre": "Ambient",
+                "duration": 1,
+                "trackNo": null,
+                "discNo": null,
+                "year": null,
+                "artHash": null
+              },
+              "addedByName": "device-22",
+              "mine": false
+            },
+            "position": 0,
+            "duration": 0,
+            "playing": true,
+            "isStandby": false,
+            "downvotes": 0,
+            "downvoteThreshold": 2,
+            "downvotedByMe": false
+          },
+          "queue": [
+            {
+              "id": 3,
+              "track": {
+                "id": 3,
+                "title": "Info Title",
+                "artist": "Info Artist",
+                "album": "Info Album",
+                "albumArtist": null,
+                "genre": "Folk",
+                "duration": 1,
+                "trackNo": null,
+                "discNo": null,
+                "year": 1970,
+                "artHash": null
+              },
+              "addedByName": "device-23",
+              "mine": false
+            },
+            {
+              "id": 4,
+              "track": {
+                "id": 4,
+                "title": "untagged",
+                "artist": null,
+                "album": null,
+                "albumArtist": null,
+                "genre": null,
+                "duration": 1.1,
+                "trackNo": null,
+                "discNo": null,
+                "year": null,
+                "artHash": null
+              },
+              "addedByName": "device-21",
+              "mine": false
+            }
+          ],
+          "perUserLimit": 0,
+          "myQueueCount": 0
+        }
+      },
+      {
+        "type": "progress",
+        "payload": {
+          "position": 0,
+          "duration": 0,
+          "playing": true,
+          "trackId": 3
+        }
+      },
+      {
+        "type": "queue",
+        "payload": {
+          "nowPlaying": {
+            "entry": {
+              "id": 3,
+              "track": {
+                "id": 3,
+                "title": "Info Title",
+                "artist": "Info Artist",
+                "album": "Info Album",
+                "albumArtist": null,
+                "genre": "Folk",
+                "duration": 1,
+                "trackNo": null,
+                "discNo": null,
+                "year": 1970,
+                "artHash": null
+              },
+              "addedByName": "device-23",
+              "mine": false
+            },
+            "position": 0,
+            "duration": 0,
+            "playing": true,
+            "isStandby": false,
+            "downvotes": 0,
+            "downvoteThreshold": 2,
+            "downvotedByMe": false
+          },
+          "queue": [
+            {
+              "id": 4,
+              "track": {
+                "id": 4,
+                "title": "untagged",
+                "artist": null,
+                "album": null,
+                "albumArtist": null,
+                "genre": null,
+                "duration": 1.1,
+                "trackNo": null,
+                "discNo": null,
+                "year": null,
+                "artHash": null
+              },
+              "addedByName": "device-21",
+              "mine": false
+            }
+          ],
+          "perUserLimit": 0,
+          "myQueueCount": 0
+        }
+      },
+      {
+        "type": "progress",
+        "payload": {
+          "position": 0,
+          "duration": 0,
+          "playing": true,
+          "trackId": 4
+        }
+      },
+      {
+        "type": "queue",
+        "payload": {
+          "nowPlaying": {
+            "entry": {
+              "id": 4,
+              "track": {
+                "id": 4,
+                "title": "untagged",
+                "artist": null,
+                "album": null,
+                "albumArtist": null,
+                "genre": null,
+                "duration": 1.1,
+                "trackNo": null,
+                "discNo": null,
+                "year": null,
+                "artHash": null
+              },
+              "addedByName": "device-21",
+              "mine": false
+            },
+            "position": 0,
+            "duration": 0,
+            "playing": true,
+            "isStandby": false,
+            "downvotes": 0,
+            "downvoteThreshold": 2,
+            "downvotedByMe": false
+          },
+          "queue": [],
+          "perUserLimit": 0,
+          "myQueueCount": 0
+        }
+      },
+      {
+        "type": "progress",
+        "payload": {
+          "position": 0,
+          "duration": 0,
+          "playing": true,
+          "trackId": 5
+        }
+      },
+      {
+        "type": "queue",
+        "payload": {
+          "nowPlaying": {
+            "entry": {
+              "id": 5,
+              "track": {
+                "id": 5,
+                "title": "Ogg Song",
+                "artist": "Ogg Artist",
+                "album": "Ogg Album",
+                "albumArtist": null,
+                "genre": null,
+                "duration": 1,
+                "trackNo": 2,
+                "discNo": null,
+                "year": 1985,
+                "artHash": "a0cc42b361c9663bdeff024d17c92b17f3e98f4e"
+              },
+              "addedByName": null,
+              "mine": false
+            },
+            "position": 0,
+            "duration": 0,
+            "playing": true,
+            "isStandby": false,
+            "downvotes": 0,
+            "downvoteThreshold": 2,
+            "downvotedByMe": false
+          },
+          "queue": [],
+          "perUserLimit": 0,
+          "myQueueCount": 0
+        }
+      },
+      {
+        "type": "queue",
+        "payload": {
+          "nowPlaying": {
+            "entry": {
+              "id": 5,
+              "track": {
+                "id": 5,
+                "title": "Ogg Song",
+                "artist": "Ogg Artist",
+                "album": "Ogg Album",
+                "albumArtist": null,
+                "genre": null,
+                "duration": 1,
+                "trackNo": 2,
+                "discNo": null,
+                "year": 1985,
+                "artHash": "a0cc42b361c9663bdeff024d17c92b17f3e98f4e"
+              },
+              "addedByName": null,
+              "mine": false
+            },
+            "position": 0,
+            "duration": 0,
+            "playing": true,
+            "isStandby": false,
+            "downvotes": 1,
+            "downvoteThreshold": 2,
+            "downvotedByMe": false
+          },
+          "queue": [],
+          "perUserLimit": 0,
+          "myQueueCount": 0
+        }
+      },
+      {
+        "type": "progress",
+        "payload": {
+          "position": 0,
+          "duration": 0,
+          "playing": true,
+          "trackId": 1
+        }
+      },
+      {
+        "type": "queue",
+        "payload": {
+          "nowPlaying": {
+            "entry": {
+              "id": 6,
+              "track": {
+                "id": 1,
+                "title": "Second Title",
+                "artist": "Artist One",
+                "album": "Padded Album",
+                "albumArtist": null,
+                "genre": "Rock, Pop",
+                "duration": 1.1,
+                "trackNo": 7,
+                "discNo": null,
+                "year": 2001,
+                "artHash": "d2e4930b6202f652cb1dd161d1709e799ec0e071"
+              },
+              "addedByName": "device-22",
+              "mine": false
+            },
+            "position": 0,
+            "duration": 0,
+            "playing": true,
+            "isStandby": false,
+            "downvotes": 0,
+            "downvoteThreshold": 2,
+            "downvotedByMe": false
+          },
+          "queue": [],
+          "perUserLimit": 0,
+          "myQueueCount": 0
+        }
+      },
+      {
+        "type": "progress",
+        "payload": {
+          "position": 0,
+          "duration": 0,
+          "playing": true,
+          "trackId": 2
+        }
+      },
+      {
+        "type": "queue",
+        "payload": {
+          "nowPlaying": {
+            "entry": {
+              "id": 7,
+              "track": {
+                "id": 2,
+                "title": "Opus Song",
+                "artist": "Opus Artist",
+                "album": null,
+                "albumArtist": null,
+                "genre": "Ambient",
+                "duration": 1,
+                "trackNo": null,
+                "discNo": null,
+                "year": null,
+                "artHash": null
+              },
+              "addedByName": null,
+              "mine": false
+            },
+            "position": 0,
+            "duration": 0,
+            "playing": true,
+            "isStandby": true,
+            "downvotes": 0,
+            "downvoteThreshold": 2,
+            "downvotedByMe": false
+          },
+          "queue": [],
+          "perUserLimit": 0,
+          "myQueueCount": 0
+        }
+      },
+      {
+        "type": "progress",
+        "payload": {
+          "position": 0,
+          "duration": 0,
+          "playing": true,
+          "trackId": 3
+        }
+      },
+      {
+        "type": "queue",
+        "payload": {
+          "nowPlaying": {
+            "entry": {
+              "id": 8,
+              "track": {
+                "id": 3,
+                "title": "Info Title",
+                "artist": "Info Artist",
+                "album": "Info Album",
+                "albumArtist": null,
+                "genre": "Folk",
+                "duration": 1,
+                "trackNo": null,
+                "discNo": null,
+                "year": 1970,
+                "artHash": null
+              },
+              "addedByName": null,
+              "mine": false
+            },
+            "position": 0,
+            "duration": 0,
+            "playing": true,
+            "isStandby": true,
+            "downvotes": 0,
+            "downvoteThreshold": 2,
+            "downvotedByMe": false
+          },
+          "queue": [],
+          "perUserLimit": 0,
+          "myQueueCount": 0
+        }
+      },
+      {
+        "type": "progress",
+        "payload": {
+          "position": 0,
+          "duration": 0,
+          "playing": true,
+          "trackId": 2
+        }
+      },
+      {
+        "type": "queue",
+        "payload": {
+          "nowPlaying": {
+            "entry": {
+              "id": 9,
+              "track": {
+                "id": 2,
+                "title": "Opus Song",
+                "artist": "Opus Artist",
+                "album": null,
+                "albumArtist": null,
+                "genre": "Ambient",
+                "duration": 1,
+                "trackNo": null,
+                "discNo": null,
+                "year": null,
+                "artHash": null
+              },
+              "addedByName": null,
+              "mine": false
+            },
+            "position": 0,
+            "duration": 0,
+            "playing": true,
+            "isStandby": true,
+            "downvotes": 0,
+            "downvoteThreshold": 2,
+            "downvotedByMe": false
+          },
+          "queue": [],
+          "perUserLimit": 0,
+          "myQueueCount": 0
+        }
+      },
+      {
+        "type": "queue",
+        "payload": {
+          "nowPlaying": {
+            "entry": {
+              "id": 10,
+              "track": {
+                "id": 2,
+                "title": "Opus Song",
+                "artist": "Opus Artist",
+                "album": null,
+                "albumArtist": null,
+                "genre": "Ambient",
+                "duration": 1,
+                "trackNo": null,
+                "discNo": null,
+                "year": null,
+                "artHash": null
+              },
+              "addedByName": null,
+              "mine": false
+            },
+            "position": 0,
+            "duration": 0,
+            "playing": true,
+            "isStandby": true,
+            "downvotes": 0,
+            "downvoteThreshold": 2,
+            "downvotedByMe": false
+          },
+          "queue": [],
+          "perUserLimit": 0,
+          "myQueueCount": 0
+        }
+      },
+      {
+        "type": "queue",
+        "payload": {
+          "nowPlaying": {
+            "entry": {
+              "id": 10,
+              "track": {
+                "id": 2,
+                "title": "Opus Song",
+                "artist": "Opus Artist",
+                "album": null,
+                "albumArtist": null,
+                "genre": "Ambient",
+                "duration": 1,
+                "trackNo": null,
+                "discNo": null,
+                "year": null,
+                "artHash": null
+              },
+              "addedByName": null,
+              "mine": false
+            },
+            "position": 0,
+            "duration": 0,
+            "playing": true,
+            "isStandby": true,
+            "downvotes": 0,
+            "downvoteThreshold": -2,
+            "downvotedByMe": false
+          },
+          "queue": [],
+          "perUserLimit": -1,
+          "myQueueCount": 0
+        }
+      },
+      {
+        "type": "progress",
+        "payload": {
+          "position": 0,
+          "duration": 0,
+          "playing": true,
+          "trackId": 5
+        }
+      },
+      {
+        "type": "queue",
+        "payload": {
+          "nowPlaying": {
+            "entry": {
+              "id": 11,
+              "track": {
+                "id": 5,
+                "title": "Ogg Song",
+                "artist": "Ogg Artist",
+                "album": "Ogg Album",
+                "albumArtist": null,
+                "genre": null,
+                "duration": 1,
+                "trackNo": 2,
+                "discNo": null,
+                "year": 1985,
+                "artHash": "a0cc42b361c9663bdeff024d17c92b17f3e98f4e"
+              },
+              "addedByName": "device-21",
+              "mine": false
+            },
+            "position": 0,
+            "duration": 0,
+            "playing": true,
+            "isStandby": false,
+            "downvotes": 0,
+            "downvoteThreshold": -2,
+            "downvotedByMe": false
+          },
+          "queue": [],
+          "perUserLimit": -1,
+          "myQueueCount": 0
+        }
+      },
+      {
+        "type": "queue",
+        "payload": {
+          "nowPlaying": {
+            "entry": {
+              "id": 11,
+              "track": {
+                "id": 5,
+                "title": "Ogg Song",
+                "artist": "Ogg Artist",
+                "album": "Ogg Album",
+                "albumArtist": null,
+                "genre": null,
+                "duration": 1,
+                "trackNo": 2,
+                "discNo": null,
+                "year": 1985,
+                "artHash": "a0cc42b361c9663bdeff024d17c92b17f3e98f4e"
+              },
+              "addedByName": "device-21",
+              "mine": false
+            },
+            "position": 0,
+            "duration": 0,
+            "playing": true,
+            "isStandby": false,
+            "downvotes": 0,
+            "downvoteThreshold": -2,
+            "downvotedByMe": false
+          },
+          "queue": [
+            {
+              "id": 12,
+              "track": {
+                "id": 3,
+                "title": "Info Title",
+                "artist": "Info Artist",
+                "album": "Info Album",
+                "albumArtist": null,
+                "genre": "Folk",
+                "duration": 1,
+                "trackNo": null,
+                "discNo": null,
+                "year": 1970,
+                "artHash": null
+              },
+              "addedByName": "device-21",
+              "mine": false
+            }
+          ],
+          "perUserLimit": -1,
+          "myQueueCount": 0
+        }
+      },
+      {
+        "type": "queue",
+        "payload": {
+          "nowPlaying": {
+            "entry": {
+              "id": 11,
+              "track": {
+                "id": 5,
+                "title": "Ogg Song",
+                "artist": "Ogg Artist",
+                "album": "Ogg Album",
+                "albumArtist": null,
+                "genre": null,
+                "duration": 1,
+                "trackNo": 2,
+                "discNo": null,
+                "year": 1985,
+                "artHash": "a0cc42b361c9663bdeff024d17c92b17f3e98f4e"
+              },
+              "addedByName": "device-21",
+              "mine": false
+            },
+            "position": 0,
+            "duration": 0,
+            "playing": true,
+            "isStandby": false,
+            "downvotes": 0,
+            "downvoteThreshold": -2,
+            "downvotedByMe": false
+          },
+          "queue": [
+            {
+              "id": 12,
+              "track": {
+                "id": 3,
+                "title": "Info Title",
+                "artist": "Info Artist",
+                "album": "Info Album",
+                "albumArtist": null,
+                "genre": "Folk",
+                "duration": 1,
+                "trackNo": null,
+                "discNo": null,
+                "year": 1970,
+                "artHash": null
+              },
+              "addedByName": "device-21",
+              "mine": false
+            }
+          ],
+          "perUserLimit": -1,
+          "myQueueCount": 0
+        }
+      },
+      {
+        "type": "progress",
+        "payload": {
+          "position": 0,
+          "duration": 0,
+          "playing": true,
+          "trackId": 3
+        }
+      },
+      {
+        "type": "queue",
+        "payload": {
+          "nowPlaying": {
+            "entry": {
+              "id": 12,
+              "track": {
+                "id": 3,
+                "title": "Info Title",
+                "artist": "Info Artist",
+                "album": "Info Album",
+                "albumArtist": null,
+                "genre": "Folk",
+                "duration": 1,
+                "trackNo": null,
+                "discNo": null,
+                "year": 1970,
+                "artHash": null
+              },
+              "addedByName": "device-21",
+              "mine": false
+            },
+            "position": 0,
+            "duration": 0,
+            "playing": true,
+            "isStandby": false,
+            "downvotes": 0,
+            "downvoteThreshold": -2,
+            "downvotedByMe": false
+          },
+          "queue": [],
+          "perUserLimit": -1,
+          "myQueueCount": 0
+        }
+      },
+      {
+        "type": "queue",
+        "payload": {
+          "nowPlaying": {
+            "entry": {
+              "id": 12,
+              "track": {
+                "id": 3,
+                "title": "Info Title",
+                "artist": "Info Artist",
+                "album": "Info Album",
+                "albumArtist": null,
+                "genre": "Folk",
+                "duration": 1,
+                "trackNo": null,
+                "discNo": null,
+                "year": 1970,
+                "artHash": null
+              },
+              "addedByName": "device-21",
+              "mine": false
+            },
+            "position": 0,
+            "duration": 0,
+            "playing": true,
+            "isStandby": false,
+            "downvotes": 0,
+            "downvoteThreshold": -2,
+            "downvotedByMe": false
+          },
+          "queue": [
+            {
+              "id": 13,
+              "track": {
+                "id": 4,
+                "title": "untagged",
+                "artist": null,
+                "album": null,
+                "albumArtist": null,
+                "genre": null,
+                "duration": 1.1,
+                "trackNo": null,
+                "discNo": null,
+                "year": null,
+                "artHash": null
+              },
+              "addedByName": "device-22",
+              "mine": false
+            }
+          ],
+          "perUserLimit": -1,
+          "myQueueCount": 0
+        }
+      },
+      {
+        "type": "queue",
+        "payload": {
+          "nowPlaying": {
+            "entry": {
+              "id": 12,
+              "track": {
+                "id": 3,
+                "title": "Info Title",
+                "artist": "Info Artist",
+                "album": "Info Album",
+                "albumArtist": null,
+                "genre": "Folk",
+                "duration": 1,
+                "trackNo": null,
+                "discNo": null,
+                "year": 1970,
+                "artHash": null
+              },
+              "addedByName": "device-21",
+              "mine": false
+            },
+            "position": 0,
+            "duration": 0,
+            "playing": true,
+            "isStandby": false,
+            "downvotes": 0,
+            "downvoteThreshold": 3,
+            "downvotedByMe": false
+          },
+          "queue": [],
+          "perUserLimit": -1,
+          "myQueueCount": 0
+        }
+      },
+      {
+        "type": "queue",
+        "payload": {
+          "nowPlaying": {
+            "entry": {
+              "id": 12,
+              "track": {
+                "id": 3,
+                "title": "Info Title",
+                "artist": "Info Artist",
+                "album": "Info Album",
+                "albumArtist": null,
+                "genre": "Folk",
+                "duration": 1,
+                "trackNo": null,
+                "discNo": null,
+                "year": 1970,
+                "artHash": null
+              },
+              "addedByName": "device-21",
+              "mine": false
+            },
+            "position": 0,
+            "duration": 0,
+            "playing": true,
+            "isStandby": false,
+            "downvotes": 0,
+            "downvoteThreshold": 3,
+            "downvotedByMe": false
+          },
+          "queue": [
+            {
+              "id": 14,
+              "track": {
+                "id": 1,
+                "title": "Second Title",
+                "artist": "Artist One",
+                "album": "Padded Album",
+                "albumArtist": null,
+                "genre": "Rock, Pop",
+                "duration": 1.1,
+                "trackNo": 7,
+                "discNo": null,
+                "year": 2001,
+                "artHash": "d2e4930b6202f652cb1dd161d1709e799ec0e071"
+              },
+              "addedByName": "device-23",
+              "mine": false
+            }
+          ],
+          "perUserLimit": -1,
+          "myQueueCount": 0
+        }
+      },
+      {
+        "type": "queue",
+        "payload": {
+          "nowPlaying": {
+            "entry": {
+              "id": 12,
+              "track": {
+                "id": 3,
+                "title": "Info Title",
+                "artist": "Info Artist",
+                "album": "Info Album",
+                "albumArtist": null,
+                "genre": "Folk",
+                "duration": 1,
+                "trackNo": null,
+                "discNo": null,
+                "year": 1970,
+                "artHash": null
+              },
+              "addedByName": "device-21",
+              "mine": false
+            },
+            "position": 0,
+            "duration": 0,
+            "playing": true,
+            "isStandby": false,
+            "downvotes": 0,
+            "downvoteThreshold": 3,
+            "downvotedByMe": false
+          },
+          "queue": [
+            {
+              "id": 14,
+              "track": {
+                "id": 1,
+                "title": "Second Title",
+                "artist": "Artist One",
+                "album": "Padded Album",
+                "albumArtist": null,
+                "genre": "Rock, Pop",
+                "duration": 1.1,
+                "trackNo": 7,
+                "discNo": null,
+                "year": 2001,
+                "artHash": "d2e4930b6202f652cb1dd161d1709e799ec0e071"
+              },
+              "addedByName": "device-23",
+              "mine": false
+            },
+            {
+              "id": 15,
+              "track": {
+                "id": 2,
+                "title": "Opus Song",
+                "artist": "Opus Artist",
+                "album": null,
+                "albumArtist": null,
+                "genre": "Ambient",
+                "duration": 1,
+                "trackNo": null,
+                "discNo": null,
+                "year": null,
+                "artHash": null
+              },
+              "addedByName": "device-22",
+              "mine": false
+            }
+          ],
+          "perUserLimit": -1,
+          "myQueueCount": 0
+        }
+      },
+      {
+        "type": "queue",
+        "payload": {
+          "nowPlaying": {
+            "entry": {
+              "id": 12,
+              "track": {
+                "id": 3,
+                "title": "Info Title",
+                "artist": "Info Artist",
+                "album": "Info Album",
+                "albumArtist": null,
+                "genre": "Folk",
+                "duration": 1,
+                "trackNo": null,
+                "discNo": null,
+                "year": 1970,
+                "artHash": null
+              },
+              "addedByName": "device-21",
+              "mine": false
+            },
+            "position": 0,
+            "duration": 0,
+            "playing": true,
+            "isStandby": false,
+            "downvotes": 1,
+            "downvoteThreshold": 3,
+            "downvotedByMe": false
+          },
+          "queue": [
+            {
+              "id": 14,
+              "track": {
+                "id": 1,
+                "title": "Second Title",
+                "artist": "Artist One",
+                "album": "Padded Album",
+                "albumArtist": null,
+                "genre": "Rock, Pop",
+                "duration": 1.1,
+                "trackNo": 7,
+                "discNo": null,
+                "year": 2001,
+                "artHash": "d2e4930b6202f652cb1dd161d1709e799ec0e071"
+              },
+              "addedByName": "device-23",
+              "mine": false
+            },
+            {
+              "id": 15,
+              "track": {
+                "id": 2,
+                "title": "Opus Song",
+                "artist": "Opus Artist",
+                "album": null,
+                "albumArtist": null,
+                "genre": "Ambient",
+                "duration": 1,
+                "trackNo": null,
+                "discNo": null,
+                "year": null,
+                "artHash": null
+              },
+              "addedByName": "device-22",
+              "mine": false
+            }
+          ],
+          "perUserLimit": -1,
+          "myQueueCount": 0
+        }
+      },
+      {
+        "type": "queue",
+        "payload": {
+          "nowPlaying": {
+            "entry": null,
+            "position": 0,
+            "duration": 0,
+            "playing": false,
+            "isStandby": false,
+            "downvotes": 0,
+            "downvoteThreshold": 3,
+            "downvotedByMe": false
+          },
+          "queue": [
+            {
+              "id": 12,
+              "track": {
+                "id": 3,
+                "title": "Info Title",
+                "artist": "Info Artist",
+                "album": "Info Album",
+                "albumArtist": null,
+                "genre": "Folk",
+                "duration": 1,
+                "trackNo": null,
+                "discNo": null,
+                "year": 1970,
+                "artHash": null
+              },
+              "addedByName": "device-21",
+              "mine": false
+            },
+            {
+              "id": 14,
+              "track": {
+                "id": 1,
+                "title": "Second Title",
+                "artist": "Artist One",
+                "album": "Padded Album",
+                "albumArtist": null,
+                "genre": "Rock, Pop",
+                "duration": 1.1,
+                "trackNo": 7,
+                "discNo": null,
+                "year": 2001,
+                "artHash": "d2e4930b6202f652cb1dd161d1709e799ec0e071"
+              },
+              "addedByName": "device-23",
+              "mine": false
+            },
+            {
+              "id": 15,
+              "track": {
+                "id": 2,
+                "title": "Opus Song",
+                "artist": "Opus Artist",
+                "album": null,
+                "albumArtist": null,
+                "genre": "Ambient",
+                "duration": 1,
+                "trackNo": null,
+                "discNo": null,
+                "year": null,
+                "artHash": null
+              },
+              "addedByName": "device-22",
+              "mine": false
+            }
+          ],
+          "perUserLimit": -1,
+          "myQueueCount": 0
+        }
+      },
+      {
+        "type": "progress",
+        "payload": {
+          "position": 0,
+          "duration": 0,
+          "playing": true,
+          "trackId": 3
+        }
+      },
+      {
+        "type": "queue",
+        "payload": {
+          "nowPlaying": {
+            "entry": {
+              "id": 12,
+              "track": {
+                "id": 3,
+                "title": "Info Title",
+                "artist": "Info Artist",
+                "album": "Info Album",
+                "albumArtist": null,
+                "genre": "Folk",
+                "duration": 1,
+                "trackNo": null,
+                "discNo": null,
+                "year": 1970,
+                "artHash": null
+              },
+              "addedByName": "device-21",
+              "mine": false
+            },
+            "position": 0,
+            "duration": 0,
+            "playing": true,
+            "isStandby": false,
+            "downvotes": 0,
+            "downvoteThreshold": 3,
+            "downvotedByMe": false
+          },
+          "queue": [
+            {
+              "id": 14,
+              "track": {
+                "id": 1,
+                "title": "Second Title",
+                "artist": "Artist One",
+                "album": "Padded Album",
+                "albumArtist": null,
+                "genre": "Rock, Pop",
+                "duration": 1.1,
+                "trackNo": 7,
+                "discNo": null,
+                "year": 2001,
+                "artHash": "d2e4930b6202f652cb1dd161d1709e799ec0e071"
+              },
+              "addedByName": "device-23",
+              "mine": false
+            },
+            {
+              "id": 15,
+              "track": {
+                "id": 2,
+                "title": "Opus Song",
+                "artist": "Opus Artist",
+                "album": null,
+                "albumArtist": null,
+                "genre": "Ambient",
+                "duration": 1,
+                "trackNo": null,
+                "discNo": null,
+                "year": null,
+                "artHash": null
+              },
+              "addedByName": "device-22",
+              "mine": false
+            }
+          ],
+          "perUserLimit": -1,
+          "myQueueCount": 0
+        }
+      },
+      {
+        "type": "queue",
+        "payload": {
+          "nowPlaying": {
+            "entry": {
+              "id": 12,
+              "track": {
+                "id": 3,
+                "title": "Info Title",
+                "artist": "Info Artist",
+                "album": "Info Album",
+                "albumArtist": null,
+                "genre": "Folk",
+                "duration": 1,
+                "trackNo": null,
+                "discNo": null,
+                "year": 1970,
+                "artHash": null
+              },
+              "addedByName": "device-21",
+              "mine": false
+            },
+            "position": 0,
+            "duration": 0,
+            "playing": true,
+            "isStandby": false,
+            "downvotes": 0,
+            "downvoteThreshold": 3,
+            "downvotedByMe": false
+          },
+          "queue": [],
+          "perUserLimit": -1,
+          "myQueueCount": 0
+        }
+      },
+      {
+        "type": "progress",
+        "payload": {
+          "position": 0,
+          "duration": 0,
+          "playing": true,
+          "trackId": 2
+        }
+      },
+      {
+        "type": "queue",
+        "payload": {
+          "nowPlaying": {
+            "entry": {
+              "id": 16,
+              "track": {
+                "id": 2,
+                "title": "Opus Song",
+                "artist": "Opus Artist",
+                "album": null,
+                "albumArtist": null,
+                "genre": "Ambient",
+                "duration": 1,
+                "trackNo": null,
+                "discNo": null,
+                "year": null,
+                "artHash": null
+              },
+              "addedByName": null,
+              "mine": false
+            },
+            "position": 0,
+            "duration": 0,
+            "playing": true,
+            "isStandby": true,
+            "downvotes": 0,
+            "downvoteThreshold": 3,
+            "downvotedByMe": false
+          },
+          "queue": [],
+          "perUserLimit": -1,
+          "myQueueCount": 0
+        }
+      }
+    ],
+    "a": [
+      {
+        "type": "queue",
+        "payload": {
+          "nowPlaying": {
+            "entry": null,
+            "position": 0,
+            "duration": 0,
+            "playing": false,
+            "isStandby": false,
+            "downvotes": 0,
+            "downvoteThreshold": 2,
+            "downvotedByMe": false
+          },
+          "queue": [],
+          "perUserLimit": 0,
+          "myQueueCount": 0
+        }
+      },
+      {
+        "type": "progress",
+        "payload": {
+          "position": 0,
+          "duration": 0,
+          "playing": false,
+          "trackId": null
+        }
+      },
+      {
+        "type": "queue",
+        "payload": {
+          "nowPlaying": {
+            "entry": null,
+            "position": 0,
+            "duration": 0,
+            "playing": false,
+            "isStandby": false,
+            "downvotes": 0,
+            "downvoteThreshold": 2,
+            "downvotedByMe": false
+          },
+          "queue": [],
+          "perUserLimit": 0,
+          "myQueueCount": 0
+        }
+      },
+      {
+        "type": "progress",
+        "payload": {
+          "position": 0,
+          "duration": 0,
+          "playing": true,
+          "trackId": 1
+        }
+      },
+      {
+        "type": "queue",
+        "payload": {
+          "nowPlaying": {
+            "entry": {
+              "id": 1,
+              "track": {
+                "id": 1,
+                "title": "Second Title",
+                "artist": "Artist One",
+                "album": "Padded Album",
+                "albumArtist": null,
+                "genre": "Rock, Pop",
+                "duration": 1.1,
+                "trackNo": 7,
+                "discNo": null,
+                "year": 2001,
+                "artHash": "d2e4930b6202f652cb1dd161d1709e799ec0e071"
+              },
+              "addedByName": "device-21",
+              "mine": true
+            },
+            "position": 0,
+            "duration": 0,
+            "playing": true,
+            "isStandby": false,
+            "downvotes": 0,
+            "downvoteThreshold": 2,
+            "downvotedByMe": false
+          },
+          "queue": [],
+          "perUserLimit": 0,
+          "myQueueCount": 0
+        }
+      },
+      {
+        "type": "queue",
+        "payload": {
+          "nowPlaying": {
+            "entry": {
+              "id": 1,
+              "track": {
+                "id": 1,
+                "title": "Second Title",
+                "artist": "Artist One",
+                "album": "Padded Album",
+                "albumArtist": null,
+                "genre": "Rock, Pop",
+                "duration": 1.1,
+                "trackNo": 7,
+                "discNo": null,
+                "year": 2001,
+                "artHash": "d2e4930b6202f652cb1dd161d1709e799ec0e071"
+              },
+              "addedByName": "device-21",
+              "mine": true
+            },
+            "position": 0,
+            "duration": 0,
+            "playing": true,
+            "isStandby": false,
+            "downvotes": 0,
+            "downvoteThreshold": 2,
+            "downvotedByMe": false
+          },
+          "queue": [
+            {
+              "id": 2,
+              "track": {
+                "id": 2,
+                "title": "Opus Song",
+                "artist": "Opus Artist",
+                "album": null,
+                "albumArtist": null,
+                "genre": "Ambient",
+                "duration": 1,
+                "trackNo": null,
+                "discNo": null,
+                "year": null,
+                "artHash": null
+              },
+              "addedByName": "device-22",
+              "mine": false
+            }
+          ],
+          "perUserLimit": 0,
+          "myQueueCount": 0
+        }
+      },
+      {
+        "type": "queue",
+        "payload": {
+          "nowPlaying": {
+            "entry": {
+              "id": 1,
+              "track": {
+                "id": 1,
+                "title": "Second Title",
+                "artist": "Artist One",
+                "album": "Padded Album",
+                "albumArtist": null,
+                "genre": "Rock, Pop",
+                "duration": 1.1,
+                "trackNo": 7,
+                "discNo": null,
+                "year": 2001,
+                "artHash": "d2e4930b6202f652cb1dd161d1709e799ec0e071"
+              },
+              "addedByName": "device-21",
+              "mine": true
+            },
+            "position": 0,
+            "duration": 0,
+            "playing": true,
+            "isStandby": false,
+            "downvotes": 0,
+            "downvoteThreshold": 2,
+            "downvotedByMe": false
+          },
+          "queue": [
+            {
+              "id": 2,
+              "track": {
+                "id": 2,
+                "title": "Opus Song",
+                "artist": "Opus Artist",
+                "album": null,
+                "albumArtist": null,
+                "genre": "Ambient",
+                "duration": 1,
+                "trackNo": null,
+                "discNo": null,
+                "year": null,
+                "artHash": null
+              },
+              "addedByName": "device-22",
+              "mine": false
+            },
+            {
+              "id": 3,
+              "track": {
+                "id": 3,
+                "title": "Info Title",
+                "artist": "Info Artist",
+                "album": "Info Album",
+                "albumArtist": null,
+                "genre": "Folk",
+                "duration": 1,
+                "trackNo": null,
+                "discNo": null,
+                "year": 1970,
+                "artHash": null
+              },
+              "addedByName": "device-23",
+              "mine": false
+            }
+          ],
+          "perUserLimit": 0,
+          "myQueueCount": 0
+        }
+      },
+      {
+        "type": "queue",
+        "payload": {
+          "nowPlaying": {
+            "entry": {
+              "id": 1,
+              "track": {
+                "id": 1,
+                "title": "Second Title",
+                "artist": "Artist One",
+                "album": "Padded Album",
+                "albumArtist": null,
+                "genre": "Rock, Pop",
+                "duration": 1.1,
+                "trackNo": 7,
+                "discNo": null,
+                "year": 2001,
+                "artHash": "d2e4930b6202f652cb1dd161d1709e799ec0e071"
+              },
+              "addedByName": "device-21",
+              "mine": true
+            },
+            "position": 0,
+            "duration": 0,
+            "playing": true,
+            "isStandby": false,
+            "downvotes": 0,
+            "downvoteThreshold": 2,
+            "downvotedByMe": false
+          },
+          "queue": [
+            {
+              "id": 2,
+              "track": {
+                "id": 2,
+                "title": "Opus Song",
+                "artist": "Opus Artist",
+                "album": null,
+                "albumArtist": null,
+                "genre": "Ambient",
+                "duration": 1,
+                "trackNo": null,
+                "discNo": null,
+                "year": null,
+                "artHash": null
+              },
+              "addedByName": "device-22",
+              "mine": false
+            },
+            {
+              "id": 3,
+              "track": {
+                "id": 3,
+                "title": "Info Title",
+                "artist": "Info Artist",
+                "album": "Info Album",
+                "albumArtist": null,
+                "genre": "Folk",
+                "duration": 1,
+                "trackNo": null,
+                "discNo": null,
+                "year": 1970,
+                "artHash": null
+              },
+              "addedByName": "device-23",
+              "mine": false
+            },
+            {
+              "id": 4,
+              "track": {
+                "id": 4,
+                "title": "untagged",
+                "artist": null,
+                "album": null,
+                "albumArtist": null,
+                "genre": null,
+                "duration": 1.1,
+                "trackNo": null,
+                "discNo": null,
+                "year": null,
+                "artHash": null
+              },
+              "addedByName": "device-21",
+              "mine": true
+            }
+          ],
+          "perUserLimit": 0,
+          "myQueueCount": 1
+        }
+      },
+      {
+        "type": "queue",
+        "payload": {
+          "nowPlaying": {
+            "entry": {
+              "id": 1,
+              "track": {
+                "id": 1,
+                "title": "Second Title",
+                "artist": "Artist One",
+                "album": "Padded Album",
+                "albumArtist": null,
+                "genre": "Rock, Pop",
+                "duration": 1.1,
+                "trackNo": 7,
+                "discNo": null,
+                "year": 2001,
+                "artHash": "d2e4930b6202f652cb1dd161d1709e799ec0e071"
+              },
+              "addedByName": "device-21",
+              "mine": true
+            },
+            "position": 0,
+            "duration": 0,
+            "playing": true,
+            "isStandby": false,
+            "downvotes": 1,
+            "downvoteThreshold": 2,
+            "downvotedByMe": false
+          },
+          "queue": [
+            {
+              "id": 2,
+              "track": {
+                "id": 2,
+                "title": "Opus Song",
+                "artist": "Opus Artist",
+                "album": null,
+                "albumArtist": null,
+                "genre": "Ambient",
+                "duration": 1,
+                "trackNo": null,
+                "discNo": null,
+                "year": null,
+                "artHash": null
+              },
+              "addedByName": "device-22",
+              "mine": false
+            },
+            {
+              "id": 3,
+              "track": {
+                "id": 3,
+                "title": "Info Title",
+                "artist": "Info Artist",
+                "album": "Info Album",
+                "albumArtist": null,
+                "genre": "Folk",
+                "duration": 1,
+                "trackNo": null,
+                "discNo": null,
+                "year": 1970,
+                "artHash": null
+              },
+              "addedByName": "device-23",
+              "mine": false
+            },
+            {
+              "id": 4,
+              "track": {
+                "id": 4,
+                "title": "untagged",
+                "artist": null,
+                "album": null,
+                "albumArtist": null,
+                "genre": null,
+                "duration": 1.1,
+                "trackNo": null,
+                "discNo": null,
+                "year": null,
+                "artHash": null
+              },
+              "addedByName": "device-21",
+              "mine": true
+            }
+          ],
+          "perUserLimit": 0,
+          "myQueueCount": 1
+        }
+      },
+      {
+        "type": "progress",
+        "payload": {
+          "position": 0,
+          "duration": 0,
+          "playing": true,
+          "trackId": 2
+        }
+      },
+      {
+        "type": "queue",
+        "payload": {
+          "nowPlaying": {
+            "entry": {
+              "id": 2,
+              "track": {
+                "id": 2,
+                "title": "Opus Song",
+                "artist": "Opus Artist",
+                "album": null,
+                "albumArtist": null,
+                "genre": "Ambient",
+                "duration": 1,
+                "trackNo": null,
+                "discNo": null,
+                "year": null,
+                "artHash": null
+              },
+              "addedByName": "device-22",
+              "mine": false
+            },
+            "position": 0,
+            "duration": 0,
+            "playing": true,
+            "isStandby": false,
+            "downvotes": 0,
+            "downvoteThreshold": 2,
+            "downvotedByMe": false
+          },
+          "queue": [
+            {
+              "id": 3,
+              "track": {
+                "id": 3,
+                "title": "Info Title",
+                "artist": "Info Artist",
+                "album": "Info Album",
+                "albumArtist": null,
+                "genre": "Folk",
+                "duration": 1,
+                "trackNo": null,
+                "discNo": null,
+                "year": 1970,
+                "artHash": null
+              },
+              "addedByName": "device-23",
+              "mine": false
+            },
+            {
+              "id": 4,
+              "track": {
+                "id": 4,
+                "title": "untagged",
+                "artist": null,
+                "album": null,
+                "albumArtist": null,
+                "genre": null,
+                "duration": 1.1,
+                "trackNo": null,
+                "discNo": null,
+                "year": null,
+                "artHash": null
+              },
+              "addedByName": "device-21",
+              "mine": true
+            }
+          ],
+          "perUserLimit": 0,
+          "myQueueCount": 1
+        }
+      },
+      {
+        "type": "progress",
+        "payload": {
+          "position": 0,
+          "duration": 0,
+          "playing": true,
+          "trackId": 3
+        }
+      },
+      {
+        "type": "queue",
+        "payload": {
+          "nowPlaying": {
+            "entry": {
+              "id": 3,
+              "track": {
+                "id": 3,
+                "title": "Info Title",
+                "artist": "Info Artist",
+                "album": "Info Album",
+                "albumArtist": null,
+                "genre": "Folk",
+                "duration": 1,
+                "trackNo": null,
+                "discNo": null,
+                "year": 1970,
+                "artHash": null
+              },
+              "addedByName": "device-23",
+              "mine": false
+            },
+            "position": 0,
+            "duration": 0,
+            "playing": true,
+            "isStandby": false,
+            "downvotes": 0,
+            "downvoteThreshold": 2,
+            "downvotedByMe": false
+          },
+          "queue": [
+            {
+              "id": 4,
+              "track": {
+                "id": 4,
+                "title": "untagged",
+                "artist": null,
+                "album": null,
+                "albumArtist": null,
+                "genre": null,
+                "duration": 1.1,
+                "trackNo": null,
+                "discNo": null,
+                "year": null,
+                "artHash": null
+              },
+              "addedByName": "device-21",
+              "mine": true
+            }
+          ],
+          "perUserLimit": 0,
+          "myQueueCount": 1
+        }
+      },
+      {
+        "type": "progress",
+        "payload": {
+          "position": 0,
+          "duration": 0,
+          "playing": true,
+          "trackId": 4
+        }
+      },
+      {
+        "type": "queue",
+        "payload": {
+          "nowPlaying": {
+            "entry": {
+              "id": 4,
+              "track": {
+                "id": 4,
+                "title": "untagged",
+                "artist": null,
+                "album": null,
+                "albumArtist": null,
+                "genre": null,
+                "duration": 1.1,
+                "trackNo": null,
+                "discNo": null,
+                "year": null,
+                "artHash": null
+              },
+              "addedByName": "device-21",
+              "mine": true
+            },
+            "position": 0,
+            "duration": 0,
+            "playing": true,
+            "isStandby": false,
+            "downvotes": 0,
+            "downvoteThreshold": 2,
+            "downvotedByMe": false
+          },
+          "queue": [],
+          "perUserLimit": 0,
+          "myQueueCount": 0
+        }
+      },
+      {
+        "type": "progress",
+        "payload": {
+          "position": 0,
+          "duration": 0,
+          "playing": true,
+          "trackId": 5
+        }
+      },
+      {
+        "type": "queue",
+        "payload": {
+          "nowPlaying": {
+            "entry": {
+              "id": 5,
+              "track": {
+                "id": 5,
+                "title": "Ogg Song",
+                "artist": "Ogg Artist",
+                "album": "Ogg Album",
+                "albumArtist": null,
+                "genre": null,
+                "duration": 1,
+                "trackNo": 2,
+                "discNo": null,
+                "year": 1985,
+                "artHash": "a0cc42b361c9663bdeff024d17c92b17f3e98f4e"
+              },
+              "addedByName": null,
+              "mine": false
+            },
+            "position": 0,
+            "duration": 0,
+            "playing": true,
+            "isStandby": false,
+            "downvotes": 0,
+            "downvoteThreshold": 2,
+            "downvotedByMe": false
+          },
+          "queue": [],
+          "perUserLimit": 0,
+          "myQueueCount": 0
+        }
+      },
+      {
+        "type": "queue",
+        "payload": {
+          "nowPlaying": {
+            "entry": {
+              "id": 5,
+              "track": {
+                "id": 5,
+                "title": "Ogg Song",
+                "artist": "Ogg Artist",
+                "album": "Ogg Album",
+                "albumArtist": null,
+                "genre": null,
+                "duration": 1,
+                "trackNo": 2,
+                "discNo": null,
+                "year": 1985,
+                "artHash": "a0cc42b361c9663bdeff024d17c92b17f3e98f4e"
+              },
+              "addedByName": null,
+              "mine": false
+            },
+            "position": 0,
+            "duration": 0,
+            "playing": true,
+            "isStandby": false,
+            "downvotes": 1,
+            "downvoteThreshold": 2,
+            "downvotedByMe": true
+          },
+          "queue": [],
+          "perUserLimit": 0,
+          "myQueueCount": 0
+        }
+      },
+      {
+        "type": "progress",
+        "payload": {
+          "position": 0,
+          "duration": 0,
+          "playing": true,
+          "trackId": 1
+        }
+      },
+      {
+        "type": "queue",
+        "payload": {
+          "nowPlaying": {
+            "entry": {
+              "id": 6,
+              "track": {
+                "id": 1,
+                "title": "Second Title",
+                "artist": "Artist One",
+                "album": "Padded Album",
+                "albumArtist": null,
+                "genre": "Rock, Pop",
+                "duration": 1.1,
+                "trackNo": 7,
+                "discNo": null,
+                "year": 2001,
+                "artHash": "d2e4930b6202f652cb1dd161d1709e799ec0e071"
+              },
+              "addedByName": "device-22",
+              "mine": false
+            },
+            "position": 0,
+            "duration": 0,
+            "playing": true,
+            "isStandby": false,
+            "downvotes": 0,
+            "downvoteThreshold": 2,
+            "downvotedByMe": false
+          },
+          "queue": [],
+          "perUserLimit": 0,
+          "myQueueCount": 0
+        }
+      },
+      {
+        "type": "progress",
+        "payload": {
+          "position": 0,
+          "duration": 0,
+          "playing": true,
+          "trackId": 2
+        }
+      },
+      {
+        "type": "queue",
+        "payload": {
+          "nowPlaying": {
+            "entry": {
+              "id": 7,
+              "track": {
+                "id": 2,
+                "title": "Opus Song",
+                "artist": "Opus Artist",
+                "album": null,
+                "albumArtist": null,
+                "genre": "Ambient",
+                "duration": 1,
+                "trackNo": null,
+                "discNo": null,
+                "year": null,
+                "artHash": null
+              },
+              "addedByName": null,
+              "mine": false
+            },
+            "position": 0,
+            "duration": 0,
+            "playing": true,
+            "isStandby": true,
+            "downvotes": 0,
+            "downvoteThreshold": 2,
+            "downvotedByMe": false
+          },
+          "queue": [],
+          "perUserLimit": 0,
+          "myQueueCount": 0
+        }
+      },
+      {
+        "type": "progress",
+        "payload": {
+          "position": 0,
+          "duration": 0,
+          "playing": true,
+          "trackId": 3
+        }
+      },
+      {
+        "type": "queue",
+        "payload": {
+          "nowPlaying": {
+            "entry": {
+              "id": 8,
+              "track": {
+                "id": 3,
+                "title": "Info Title",
+                "artist": "Info Artist",
+                "album": "Info Album",
+                "albumArtist": null,
+                "genre": "Folk",
+                "duration": 1,
+                "trackNo": null,
+                "discNo": null,
+                "year": 1970,
+                "artHash": null
+              },
+              "addedByName": null,
+              "mine": false
+            },
+            "position": 0,
+            "duration": 0,
+            "playing": true,
+            "isStandby": true,
+            "downvotes": 0,
+            "downvoteThreshold": 2,
+            "downvotedByMe": false
+          },
+          "queue": [],
+          "perUserLimit": 0,
+          "myQueueCount": 0
+        }
+      },
+      {
+        "type": "progress",
+        "payload": {
+          "position": 0,
+          "duration": 0,
+          "playing": true,
+          "trackId": 2
+        }
+      },
+      {
+        "type": "queue",
+        "payload": {
+          "nowPlaying": {
+            "entry": {
+              "id": 9,
+              "track": {
+                "id": 2,
+                "title": "Opus Song",
+                "artist": "Opus Artist",
+                "album": null,
+                "albumArtist": null,
+                "genre": "Ambient",
+                "duration": 1,
+                "trackNo": null,
+                "discNo": null,
+                "year": null,
+                "artHash": null
+              },
+              "addedByName": null,
+              "mine": false
+            },
+            "position": 0,
+            "duration": 0,
+            "playing": true,
+            "isStandby": true,
+            "downvotes": 0,
+            "downvoteThreshold": 2,
+            "downvotedByMe": false
+          },
+          "queue": [],
+          "perUserLimit": 0,
+          "myQueueCount": 0
+        }
+      },
+      {
+        "type": "queue",
+        "payload": {
+          "nowPlaying": {
+            "entry": {
+              "id": 10,
+              "track": {
+                "id": 2,
+                "title": "Opus Song",
+                "artist": "Opus Artist",
+                "album": null,
+                "albumArtist": null,
+                "genre": "Ambient",
+                "duration": 1,
+                "trackNo": null,
+                "discNo": null,
+                "year": null,
+                "artHash": null
+              },
+              "addedByName": null,
+              "mine": false
+            },
+            "position": 0,
+            "duration": 0,
+            "playing": true,
+            "isStandby": true,
+            "downvotes": 0,
+            "downvoteThreshold": 2,
+            "downvotedByMe": false
+          },
+          "queue": [],
+          "perUserLimit": 0,
+          "myQueueCount": 0
+        }
+      },
+      {
+        "type": "queue",
+        "payload": {
+          "nowPlaying": {
+            "entry": {
+              "id": 10,
+              "track": {
+                "id": 2,
+                "title": "Opus Song",
+                "artist": "Opus Artist",
+                "album": null,
+                "albumArtist": null,
+                "genre": "Ambient",
+                "duration": 1,
+                "trackNo": null,
+                "discNo": null,
+                "year": null,
+                "artHash": null
+              },
+              "addedByName": null,
+              "mine": false
+            },
+            "position": 0,
+            "duration": 0,
+            "playing": true,
+            "isStandby": true,
+            "downvotes": 0,
+            "downvoteThreshold": -2,
+            "downvotedByMe": false
+          },
+          "queue": [],
+          "perUserLimit": -1,
+          "myQueueCount": 0
+        }
+      },
+      {
+        "type": "progress",
+        "payload": {
+          "position": 0,
+          "duration": 0,
+          "playing": true,
+          "trackId": 5
+        }
+      },
+      {
+        "type": "queue",
+        "payload": {
+          "nowPlaying": {
+            "entry": {
+              "id": 11,
+              "track": {
+                "id": 5,
+                "title": "Ogg Song",
+                "artist": "Ogg Artist",
+                "album": "Ogg Album",
+                "albumArtist": null,
+                "genre": null,
+                "duration": 1,
+                "trackNo": 2,
+                "discNo": null,
+                "year": 1985,
+                "artHash": "a0cc42b361c9663bdeff024d17c92b17f3e98f4e"
+              },
+              "addedByName": "device-21",
+              "mine": true
+            },
+            "position": 0,
+            "duration": 0,
+            "playing": true,
+            "isStandby": false,
+            "downvotes": 0,
+            "downvoteThreshold": -2,
+            "downvotedByMe": false
+          },
+          "queue": [],
+          "perUserLimit": -1,
+          "myQueueCount": 0
+        }
+      },
+      {
+        "type": "queue",
+        "payload": {
+          "nowPlaying": {
+            "entry": {
+              "id": 11,
+              "track": {
+                "id": 5,
+                "title": "Ogg Song",
+                "artist": "Ogg Artist",
+                "album": "Ogg Album",
+                "albumArtist": null,
+                "genre": null,
+                "duration": 1,
+                "trackNo": 2,
+                "discNo": null,
+                "year": 1985,
+                "artHash": "a0cc42b361c9663bdeff024d17c92b17f3e98f4e"
+              },
+              "addedByName": "device-21",
+              "mine": true
+            },
+            "position": 0,
+            "duration": 0,
+            "playing": true,
+            "isStandby": false,
+            "downvotes": 0,
+            "downvoteThreshold": -2,
+            "downvotedByMe": false
+          },
+          "queue": [
+            {
+              "id": 12,
+              "track": {
+                "id": 3,
+                "title": "Info Title",
+                "artist": "Info Artist",
+                "album": "Info Album",
+                "albumArtist": null,
+                "genre": "Folk",
+                "duration": 1,
+                "trackNo": null,
+                "discNo": null,
+                "year": 1970,
+                "artHash": null
+              },
+              "addedByName": "device-21",
+              "mine": true
+            }
+          ],
+          "perUserLimit": -1,
+          "myQueueCount": 1
+        }
+      },
+      {
+        "type": "queue",
+        "payload": {
+          "nowPlaying": {
+            "entry": {
+              "id": 11,
+              "track": {
+                "id": 5,
+                "title": "Ogg Song",
+                "artist": "Ogg Artist",
+                "album": "Ogg Album",
+                "albumArtist": null,
+                "genre": null,
+                "duration": 1,
+                "trackNo": 2,
+                "discNo": null,
+                "year": 1985,
+                "artHash": "a0cc42b361c9663bdeff024d17c92b17f3e98f4e"
+              },
+              "addedByName": "device-21",
+              "mine": true
+            },
+            "position": 0,
+            "duration": 0,
+            "playing": true,
+            "isStandby": false,
+            "downvotes": 0,
+            "downvoteThreshold": -2,
+            "downvotedByMe": false
+          },
+          "queue": [
+            {
+              "id": 12,
+              "track": {
+                "id": 3,
+                "title": "Info Title",
+                "artist": "Info Artist",
+                "album": "Info Album",
+                "albumArtist": null,
+                "genre": "Folk",
+                "duration": 1,
+                "trackNo": null,
+                "discNo": null,
+                "year": 1970,
+                "artHash": null
+              },
+              "addedByName": "device-21",
+              "mine": true
+            }
+          ],
+          "perUserLimit": -1,
+          "myQueueCount": 1
+        }
+      },
+      {
+        "type": "progress",
+        "payload": {
+          "position": 0,
+          "duration": 0,
+          "playing": true,
+          "trackId": 3
+        }
+      },
+      {
+        "type": "queue",
+        "payload": {
+          "nowPlaying": {
+            "entry": {
+              "id": 12,
+              "track": {
+                "id": 3,
+                "title": "Info Title",
+                "artist": "Info Artist",
+                "album": "Info Album",
+                "albumArtist": null,
+                "genre": "Folk",
+                "duration": 1,
+                "trackNo": null,
+                "discNo": null,
+                "year": 1970,
+                "artHash": null
+              },
+              "addedByName": "device-21",
+              "mine": true
+            },
+            "position": 0,
+            "duration": 0,
+            "playing": true,
+            "isStandby": false,
+            "downvotes": 0,
+            "downvoteThreshold": -2,
+            "downvotedByMe": false
+          },
+          "queue": [],
+          "perUserLimit": -1,
+          "myQueueCount": 0
+        }
+      },
+      {
+        "type": "queue",
+        "payload": {
+          "nowPlaying": {
+            "entry": {
+              "id": 12,
+              "track": {
+                "id": 3,
+                "title": "Info Title",
+                "artist": "Info Artist",
+                "album": "Info Album",
+                "albumArtist": null,
+                "genre": "Folk",
+                "duration": 1,
+                "trackNo": null,
+                "discNo": null,
+                "year": 1970,
+                "artHash": null
+              },
+              "addedByName": "device-21",
+              "mine": true
+            },
+            "position": 0,
+            "duration": 0,
+            "playing": true,
+            "isStandby": false,
+            "downvotes": 0,
+            "downvoteThreshold": -2,
+            "downvotedByMe": false
+          },
+          "queue": [
+            {
+              "id": 13,
+              "track": {
+                "id": 4,
+                "title": "untagged",
+                "artist": null,
+                "album": null,
+                "albumArtist": null,
+                "genre": null,
+                "duration": 1.1,
+                "trackNo": null,
+                "discNo": null,
+                "year": null,
+                "artHash": null
+              },
+              "addedByName": "device-22",
+              "mine": false
+            }
+          ],
+          "perUserLimit": -1,
+          "myQueueCount": 0
+        }
+      },
+      {
+        "type": "queue",
+        "payload": {
+          "nowPlaying": {
+            "entry": {
+              "id": 12,
+              "track": {
+                "id": 3,
+                "title": "Info Title",
+                "artist": "Info Artist",
+                "album": "Info Album",
+                "albumArtist": null,
+                "genre": "Folk",
+                "duration": 1,
+                "trackNo": null,
+                "discNo": null,
+                "year": 1970,
+                "artHash": null
+              },
+              "addedByName": "device-21",
+              "mine": true
+            },
+            "position": 0,
+            "duration": 0,
+            "playing": true,
+            "isStandby": false,
+            "downvotes": 0,
+            "downvoteThreshold": 3,
+            "downvotedByMe": false
+          },
+          "queue": [],
+          "perUserLimit": -1,
+          "myQueueCount": 0
+        }
+      },
+      {
+        "type": "queue",
+        "payload": {
+          "nowPlaying": {
+            "entry": {
+              "id": 12,
+              "track": {
+                "id": 3,
+                "title": "Info Title",
+                "artist": "Info Artist",
+                "album": "Info Album",
+                "albumArtist": null,
+                "genre": "Folk",
+                "duration": 1,
+                "trackNo": null,
+                "discNo": null,
+                "year": 1970,
+                "artHash": null
+              },
+              "addedByName": "device-21",
+              "mine": true
+            },
+            "position": 0,
+            "duration": 0,
+            "playing": true,
+            "isStandby": false,
+            "downvotes": 0,
+            "downvoteThreshold": 3,
+            "downvotedByMe": false
+          },
+          "queue": [
+            {
+              "id": 14,
+              "track": {
+                "id": 1,
+                "title": "Second Title",
+                "artist": "Artist One",
+                "album": "Padded Album",
+                "albumArtist": null,
+                "genre": "Rock, Pop",
+                "duration": 1.1,
+                "trackNo": 7,
+                "discNo": null,
+                "year": 2001,
+                "artHash": "d2e4930b6202f652cb1dd161d1709e799ec0e071"
+              },
+              "addedByName": "device-23",
+              "mine": false
+            }
+          ],
+          "perUserLimit": -1,
+          "myQueueCount": 0
+        }
+      },
+      {
+        "type": "queue",
+        "payload": {
+          "nowPlaying": {
+            "entry": {
+              "id": 12,
+              "track": {
+                "id": 3,
+                "title": "Info Title",
+                "artist": "Info Artist",
+                "album": "Info Album",
+                "albumArtist": null,
+                "genre": "Folk",
+                "duration": 1,
+                "trackNo": null,
+                "discNo": null,
+                "year": 1970,
+                "artHash": null
+              },
+              "addedByName": "device-21",
+              "mine": true
+            },
+            "position": 0,
+            "duration": 0,
+            "playing": true,
+            "isStandby": false,
+            "downvotes": 0,
+            "downvoteThreshold": 3,
+            "downvotedByMe": false
+          },
+          "queue": [
+            {
+              "id": 14,
+              "track": {
+                "id": 1,
+                "title": "Second Title",
+                "artist": "Artist One",
+                "album": "Padded Album",
+                "albumArtist": null,
+                "genre": "Rock, Pop",
+                "duration": 1.1,
+                "trackNo": 7,
+                "discNo": null,
+                "year": 2001,
+                "artHash": "d2e4930b6202f652cb1dd161d1709e799ec0e071"
+              },
+              "addedByName": "device-23",
+              "mine": false
+            },
+            {
+              "id": 15,
+              "track": {
+                "id": 2,
+                "title": "Opus Song",
+                "artist": "Opus Artist",
+                "album": null,
+                "albumArtist": null,
+                "genre": "Ambient",
+                "duration": 1,
+                "trackNo": null,
+                "discNo": null,
+                "year": null,
+                "artHash": null
+              },
+              "addedByName": "device-22",
+              "mine": false
+            }
+          ],
+          "perUserLimit": -1,
+          "myQueueCount": 0
+        }
+      },
+      {
+        "type": "queue",
+        "payload": {
+          "nowPlaying": {
+            "entry": {
+              "id": 12,
+              "track": {
+                "id": 3,
+                "title": "Info Title",
+                "artist": "Info Artist",
+                "album": "Info Album",
+                "albumArtist": null,
+                "genre": "Folk",
+                "duration": 1,
+                "trackNo": null,
+                "discNo": null,
+                "year": 1970,
+                "artHash": null
+              },
+              "addedByName": "device-21",
+              "mine": true
+            },
+            "position": 0,
+            "duration": 0,
+            "playing": true,
+            "isStandby": false,
+            "downvotes": 1,
+            "downvoteThreshold": 3,
+            "downvotedByMe": true
+          },
+          "queue": [
+            {
+              "id": 14,
+              "track": {
+                "id": 1,
+                "title": "Second Title",
+                "artist": "Artist One",
+                "album": "Padded Album",
+                "albumArtist": null,
+                "genre": "Rock, Pop",
+                "duration": 1.1,
+                "trackNo": 7,
+                "discNo": null,
+                "year": 2001,
+                "artHash": "d2e4930b6202f652cb1dd161d1709e799ec0e071"
+              },
+              "addedByName": "device-23",
+              "mine": false
+            },
+            {
+              "id": 15,
+              "track": {
+                "id": 2,
+                "title": "Opus Song",
+                "artist": "Opus Artist",
+                "album": null,
+                "albumArtist": null,
+                "genre": "Ambient",
+                "duration": 1,
+                "trackNo": null,
+                "discNo": null,
+                "year": null,
+                "artHash": null
+              },
+              "addedByName": "device-22",
+              "mine": false
+            }
+          ],
+          "perUserLimit": -1,
+          "myQueueCount": 0
+        }
+      },
+      {
+        "type": "queue",
+        "payload": {
+          "nowPlaying": {
+            "entry": null,
+            "position": 0,
+            "duration": 0,
+            "playing": false,
+            "isStandby": false,
+            "downvotes": 0,
+            "downvoteThreshold": 3,
+            "downvotedByMe": false
+          },
+          "queue": [
+            {
+              "id": 12,
+              "track": {
+                "id": 3,
+                "title": "Info Title",
+                "artist": "Info Artist",
+                "album": "Info Album",
+                "albumArtist": null,
+                "genre": "Folk",
+                "duration": 1,
+                "trackNo": null,
+                "discNo": null,
+                "year": 1970,
+                "artHash": null
+              },
+              "addedByName": "device-21",
+              "mine": true
+            },
+            {
+              "id": 14,
+              "track": {
+                "id": 1,
+                "title": "Second Title",
+                "artist": "Artist One",
+                "album": "Padded Album",
+                "albumArtist": null,
+                "genre": "Rock, Pop",
+                "duration": 1.1,
+                "trackNo": 7,
+                "discNo": null,
+                "year": 2001,
+                "artHash": "d2e4930b6202f652cb1dd161d1709e799ec0e071"
+              },
+              "addedByName": "device-23",
+              "mine": false
+            },
+            {
+              "id": 15,
+              "track": {
+                "id": 2,
+                "title": "Opus Song",
+                "artist": "Opus Artist",
+                "album": null,
+                "albumArtist": null,
+                "genre": "Ambient",
+                "duration": 1,
+                "trackNo": null,
+                "discNo": null,
+                "year": null,
+                "artHash": null
+              },
+              "addedByName": "device-22",
+              "mine": false
+            }
+          ],
+          "perUserLimit": -1,
+          "myQueueCount": 1
+        }
+      },
+      {
+        "type": "progress",
+        "payload": {
+          "position": 0,
+          "duration": 0,
+          "playing": true,
+          "trackId": 3
+        }
+      },
+      {
+        "type": "queue",
+        "payload": {
+          "nowPlaying": {
+            "entry": {
+              "id": 12,
+              "track": {
+                "id": 3,
+                "title": "Info Title",
+                "artist": "Info Artist",
+                "album": "Info Album",
+                "albumArtist": null,
+                "genre": "Folk",
+                "duration": 1,
+                "trackNo": null,
+                "discNo": null,
+                "year": 1970,
+                "artHash": null
+              },
+              "addedByName": "device-21",
+              "mine": true
+            },
+            "position": 0,
+            "duration": 0,
+            "playing": true,
+            "isStandby": false,
+            "downvotes": 0,
+            "downvoteThreshold": 3,
+            "downvotedByMe": false
+          },
+          "queue": [
+            {
+              "id": 14,
+              "track": {
+                "id": 1,
+                "title": "Second Title",
+                "artist": "Artist One",
+                "album": "Padded Album",
+                "albumArtist": null,
+                "genre": "Rock, Pop",
+                "duration": 1.1,
+                "trackNo": 7,
+                "discNo": null,
+                "year": 2001,
+                "artHash": "d2e4930b6202f652cb1dd161d1709e799ec0e071"
+              },
+              "addedByName": "device-23",
+              "mine": false
+            },
+            {
+              "id": 15,
+              "track": {
+                "id": 2,
+                "title": "Opus Song",
+                "artist": "Opus Artist",
+                "album": null,
+                "albumArtist": null,
+                "genre": "Ambient",
+                "duration": 1,
+                "trackNo": null,
+                "discNo": null,
+                "year": null,
+                "artHash": null
+              },
+              "addedByName": "device-22",
+              "mine": false
+            }
+          ],
+          "perUserLimit": -1,
+          "myQueueCount": 0
+        }
+      },
+      {
+        "type": "queue",
+        "payload": {
+          "nowPlaying": {
+            "entry": {
+              "id": 12,
+              "track": {
+                "id": 3,
+                "title": "Info Title",
+                "artist": "Info Artist",
+                "album": "Info Album",
+                "albumArtist": null,
+                "genre": "Folk",
+                "duration": 1,
+                "trackNo": null,
+                "discNo": null,
+                "year": 1970,
+                "artHash": null
+              },
+              "addedByName": "device-21",
+              "mine": true
+            },
+            "position": 0,
+            "duration": 0,
+            "playing": true,
+            "isStandby": false,
+            "downvotes": 0,
+            "downvoteThreshold": 3,
+            "downvotedByMe": false
+          },
+          "queue": [],
+          "perUserLimit": -1,
+          "myQueueCount": 0
+        }
+      },
+      {
+        "type": "progress",
+        "payload": {
+          "position": 0,
+          "duration": 0,
+          "playing": true,
+          "trackId": 2
+        }
+      },
+      {
+        "type": "queue",
+        "payload": {
+          "nowPlaying": {
+            "entry": {
+              "id": 16,
+              "track": {
+                "id": 2,
+                "title": "Opus Song",
+                "artist": "Opus Artist",
+                "album": null,
+                "albumArtist": null,
+                "genre": "Ambient",
+                "duration": 1,
+                "trackNo": null,
+                "discNo": null,
+                "year": null,
+                "artHash": null
+              },
+              "addedByName": null,
+              "mine": false
+            },
+            "position": 0,
+            "duration": 0,
+            "playing": true,
+            "isStandby": true,
+            "downvotes": 0,
+            "downvoteThreshold": 3,
+            "downvotedByMe": false
+          },
+          "queue": [],
+          "perUserLimit": -1,
+          "myQueueCount": 0
+        }
+      },
+      {
+        "type": "queue",
+        "payload": {
+          "nowPlaying": {
+            "entry": null,
+            "position": 0,
+            "duration": 0,
+            "playing": false,
+            "isStandby": false,
+            "downvotes": 0,
+            "downvoteThreshold": 3,
+            "downvotedByMe": false
+          },
+          "queue": [],
+          "perUserLimit": -1,
+          "myQueueCount": 0
+        }
+      },
+      {
+        "type": "progress",
+        "payload": {
+          "position": 0,
+          "duration": 0,
+          "playing": true,
+          "trackId": 2
+        }
+      },
+      {
+        "type": "queue",
+        "payload": {
+          "nowPlaying": {
+            "entry": {
+              "id": 17,
+              "track": {
+                "id": 2,
+                "title": "Opus Song",
+                "artist": "Opus Artist",
+                "album": null,
+                "albumArtist": null,
+                "genre": "Ambient",
+                "duration": 1,
+                "trackNo": null,
+                "discNo": null,
+                "year": null,
+                "artHash": null
+              },
+              "addedByName": null,
+              "mine": false
+            },
+            "position": 0,
+            "duration": 0,
+            "playing": true,
+            "isStandby": true,
+            "downvotes": 0,
+            "downvoteThreshold": 3,
+            "downvotedByMe": false
+          },
+          "queue": [],
+          "perUserLimit": -1,
+          "myQueueCount": 0
+        }
+      },
+      {
+        "type": "progress",
+        "payload": {
+          "position": 0,
+          "duration": 0,
+          "playing": false,
+          "trackId": 2
+        }
+      },
+      {
+        "type": "queue",
+        "payload": {
+          "nowPlaying": {
+            "entry": null,
+            "position": 0,
+            "duration": 0,
+            "playing": false,
+            "isStandby": false,
+            "downvotes": 0,
+            "downvoteThreshold": 3,
+            "downvotedByMe": false
+          },
+          "queue": [],
+          "perUserLimit": -1,
+          "myQueueCount": 0
+        }
+      }
+    ]
+  }
+}

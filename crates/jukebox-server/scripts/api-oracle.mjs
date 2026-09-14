@@ -1,5 +1,7 @@
-// Records how Electron's HTTP API answers tests/fixtures/api-script.json, as the expected
-// responses for the Rust server's parity harness (tests/api_electron.rs).
+// Records how Electron's HTTP API answers a script of requests, as the expected responses for
+// the Rust server's parity harness (tests/api_electron.rs). Two scripts live in
+// tests/fixtures: api-routes.json walks every route, and api-flows.json plays longer queue
+// flows across restarts. Each `<name>.json` is recorded to `<name>-electron.json`.
 //
 // This runs Electron's real server — server.ts, api.ts, auth.ts, realtime.ts, queue.ts and
 // everything they use — bundled with esbuild and started inside Electron's Node, so Express,
@@ -8,17 +10,20 @@
 //
 //   - `electron`: the data directory, the version, and a folder picker that is cancelled.
 //   - net.ts's LAN addresses and hostname lookups, which differ per machine.
-//   - the player window: player.ts runs unchanged, but no window reports playback events.
+//   - the player window: player.ts runs unchanged, but no window reports playback events;
+//     the script says when a song ends and when the player is ready.
 //
-// Each request's client address is set from the script, so four clients can be simulated
-// from one machine. Run from the repository root, after `npm ci`:
+// A `restart` step ends the Electron process and starts a new one on the same data, so
+// nothing held in memory survives, as with a real restart. Each request's client address is
+// set from the script, so several clients can be simulated from one machine. Run from the
+// repository root, after `npm ci`:
 //
-//   node crates/jukebox-server/scripts/api-oracle.mjs
+//   node crates/jukebox-server/scripts/api-oracle.mjs [api-routes api-flows]
 //
 // Port 18094 must be free.
 
 import { spawnSync } from 'node:child_process'
-import { cpSync, mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs'
+import { cpSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
@@ -26,7 +31,7 @@ import { build } from 'esbuild'
 
 const REPO = resolve(fileURLToPath(import.meta.url), '../../../..')
 const TESTS = join(REPO, 'crates/jukebox-server/tests')
-const scratch = mkdtempSync(join(tmpdir(), 'kyylan-api-oracle-'))
+const LIBRARY = join(REPO, 'crates/jukebox-core/tests/fixtures/library')
 
 const netStub = `
 export { normalizeIp } from ${JSON.stringify(join(REPO, 'src/main/net.ts'))}
@@ -46,20 +51,22 @@ module.exports = {
 }
 `
 
+// One Electron process: the steps of one segment of a script.
 const entry = String.raw`
 import http from 'node:http'
 import { createHash } from 'node:crypto'
-import { readFileSync, writeFileSync } from 'node:fs'
+import { readFileSync, rmSync, writeFileSync } from 'node:fs'
+import { join } from 'node:path'
 import { WebSocket, WebSocketServer } from 'ws'
 import { startServer } from './src/main/server'
 import { getDb } from './src/main/db'
-import { initQueue, advance, buildQueueState } from './src/main/queue'
+import { initQueue, advance, buildQueueState, maybeStart } from './src/main/queue'
 import { onStateChange } from './src/main/player'
 import { initRealtime, pushProgress } from './src/main/realtime'
 import { scanStatus } from './src/main/library'
-import { normalize } from ${JSON.stringify(join(TESTS, 'fixtures/api-normalize.mjs'))}
 
 const script = JSON.parse(readFileSync(process.env.ORACLE_SCRIPT, 'utf-8'))
+const steps = JSON.parse(process.env.ORACLE_STEPS)
 const ROOT = process.env.ORACLE_ROOT
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms))
 
@@ -114,12 +121,14 @@ async function main() {
       req.end(body)
     })
 
-  let cookie = null
+  // A session cookie carries over a restart, as a browser's would; the new process doesn't
+  // know it.
+  let cookie = process.env.ORACLE_COOKIE || null
   const sockets = {}
   const messages = {}
   const responses = []
 
-  for (const step of script.steps) {
+  for (const step of steps) {
     switch (step.do) {
       case 'ws-open': {
         const ws = new WebSocket('ws://127.0.0.1:' + server.port + '/ws', {
@@ -139,6 +148,13 @@ async function main() {
         // What player.ts does when the player window reports the song ended.
         advance()
         continue
+      case 'player-ready':
+        // What index.ts does once the player window has loaded.
+        maybeStart()
+        continue
+      case 'delete-file':
+        rmSync(join(ROOT, step.file))
+        continue
       case 'ws-close':
         await sleep(200)
         for (const ws of Object.values(sockets)) ws.close()
@@ -147,16 +163,12 @@ async function main() {
 
     const res = await send(step, cookie)
     const setCookie = res.headers['set-cookie']
-    if (step.id === 'login' && setCookie) cookie = setCookie[0].split(';')[0]
+    if (step.id.startsWith('login') && res.status === 200 && setCookie) cookie = setCookie[0].split(';')[0]
     responses.push({ id: step.id, ...describe(res) })
     await sleep(15)
   }
 
-  writeFileSync(process.env.ORACLE_OUT, JSON.stringify(normalize({
-    electron: process.versions.electron,
-    responses,
-    websocket: messages
-  }, ROOT), null, 2) + '\n')
+  writeFileSync(process.env.ORACLE_PART, JSON.stringify({ responses, websocket: messages, cookie }))
   server.http.close()
   process.exit(0)
 }
@@ -184,14 +196,9 @@ main().catch((err) => {
 })
 `
 
+const { normalize } = await import(join(TESTS, 'fixtures/api-normalize.mjs'))
+const scratch = mkdtempSync(join(tmpdir(), 'kyylan-api-oracle-'))
 try {
-  const data = join(scratch, 'data')
-  const root = join(scratch, 'music')
-  mkdirSync(data)
-  cpSync(join(REPO, 'crates/jukebox-core/tests/fixtures/library'), root, { recursive: true })
-  const script = JSON.parse((await import('node:fs')).readFileSync(join(TESTS, 'fixtures/api-script.json'), 'utf-8'))
-  writeFileSync(join(data, 'config.json'), JSON.stringify({ port: script.port }, null, 2))
-
   writeFileSync(join(scratch, 'electron-stub.cjs'), electronStub)
   writeFileSync(join(scratch, 'net-stub.ts'), netStub)
   const bundle = join(scratch, 'oracle.cjs')
@@ -219,21 +226,62 @@ try {
     logLevel: 'warning'
   })
 
-  const out = join(TESTS, 'fixtures/api-electron.json')
-  const run = spawnSync(join(REPO, 'node_modules/.bin/electron'), [bundle], {
-    stdio: 'inherit',
-    env: {
-      ...process.env,
-      ELECTRON_RUN_AS_NODE: '1',
-      NODE_PATH: join(REPO, 'node_modules'),
-      ORACLE_DATA: data,
-      ORACLE_ROOT: root,
-      ORACLE_SCRIPT: join(TESTS, 'fixtures/api-script.json'),
-      ORACLE_OUT: out
+  const names = process.argv.slice(2).length ? process.argv.slice(2) : ['api-routes', 'api-flows']
+  for (const name of names) {
+    const scriptPath = join(TESTS, 'fixtures', name + '.json')
+    const script = JSON.parse(readFileSync(scriptPath, 'utf-8'))
+    const run = join(scratch, name)
+    const data = join(run, 'data')
+    const root = join(run, 'music')
+    mkdirSync(data, { recursive: true })
+    const setup = script.setup ?? {}
+    if (setup.library) {
+      mkdirSync(root)
+      for (const file of setup.library) cpSync(join(LIBRARY, file), join(root, file))
+    } else {
+      cpSync(LIBRARY, root, { recursive: true })
     }
-  })
-  if (run.status !== 0) process.exit(run.status ?? 1)
-  console.log('wrote ' + out)
+    const config = JSON.parse(JSON.stringify(setup.config ?? {}).split('{root}').join(JSON.stringify(root).slice(1, -1)))
+    writeFileSync(join(data, 'config.json'), JSON.stringify({ port: script.port, ...config }, null, 2))
+
+    // Split at each restart: every segment runs in a process of its own.
+    const segments = [[]]
+    for (const step of script.steps) {
+      if (step.do === 'restart') segments.push([])
+      else segments.at(-1).push(step)
+    }
+    const responses = []
+    const websocket = {}
+    let cookie = ''
+    for (const [i, steps] of segments.entries()) {
+      const part = join(run, `part-${i}.json`)
+      const result = spawnSync(join(REPO, 'node_modules/.bin/electron'), [bundle], {
+        stdio: 'inherit',
+        env: {
+          ...process.env,
+          ELECTRON_RUN_AS_NODE: '1',
+          NODE_PATH: join(REPO, 'node_modules'),
+          ORACLE_DATA: data,
+          ORACLE_ROOT: root,
+          ORACLE_SCRIPT: scriptPath,
+          ORACLE_STEPS: JSON.stringify(steps),
+          ORACLE_COOKIE: cookie,
+          ORACLE_PART: part
+        }
+      })
+      if (result.status !== 0) process.exit(result.status ?? 1)
+      const recorded = JSON.parse(readFileSync(part, 'utf-8'))
+      responses.push(...recorded.responses)
+      for (const [client, list] of Object.entries(recorded.websocket)) {
+        websocket[client] = [...(websocket[client] ?? []), ...list]
+      }
+      cookie = recorded.cookie ?? ''
+    }
+
+    const out = join(TESTS, 'fixtures', name + '-electron.json')
+    writeFileSync(out, JSON.stringify(normalize({ responses, websocket }, root), null, 2) + '\n')
+    console.log('wrote ' + out)
+  }
 } finally {
   rmSync(scratch, { recursive: true, force: true })
 }

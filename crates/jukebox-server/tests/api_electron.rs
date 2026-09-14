@@ -1,11 +1,11 @@
-//! The golden-response parity harness: the Rust server answers every request in
-//! tests/fixtures/api-script.json the way Electron's server did.
+//! The golden-response parity harness: the Rust server answers every request in the scripts
+//! in tests/fixtures the way Electron's server did.
 //!
-//! tests/fixtures/api-electron.json was recorded by scripts/api-oracle.mjs, which runs
-//! Electron's real server against the library fixtures. This test replays the same script —
-//! the same simulated clients, the same fixed network answers, the same silent player — and
-//! compares every status, the headers that matter, every body, and every message each
-//! WebSocket client received.
+//! Each `<name>-electron.json` was recorded by scripts/api-oracle.mjs, which runs Electron's
+//! real server against the library fixtures. These tests replay the same script — the same
+//! simulated clients, fixed network answers, silent player and restarts — and compare every
+//! status, the headers that matter, every body, and every message each WebSocket client
+//! received.
 
 use std::collections::BTreeMap;
 use std::fs;
@@ -241,28 +241,8 @@ fn fill(value: &Value, root: &str, port: u64) -> Value {
     }
 }
 
-#[tokio::test(flavor = "multi_thread", worker_threads = 2)]
-async fn every_response_matches_electron() {
-    let script = fixture("api-script.json");
-    let recorded = fixture("api-electron.json");
-    let port = script["port"].as_u64().unwrap();
-
-    let dir = tempfile::tempdir().unwrap();
-    let data = dir.path().join("data");
-    let music = dir.path().join("music");
-    fs::create_dir(&data).unwrap();
-    copy_dir(
-        &Path::new(env!("CARGO_MANIFEST_DIR")).join("../jukebox-core/tests/fixtures/library"),
-        &music,
-    );
-    let root = music.to_str().unwrap().to_string();
-    fs::write(
-        data.join("config.json"),
-        format!("{{\n  \"port\": {port}\n}}"),
-    )
-    .unwrap();
-
-    let app = App::new(Options {
+fn start(data: &Path, port: u64) -> App {
+    App::new(Options {
         config: Arc::new(ConfigStore::open(data.join("config.json")).unwrap()),
         database: data.join("jukebox.db"),
         player: Arc::new(SilentPlayer::new()),
@@ -271,9 +251,52 @@ async fn every_response_matches_electron() {
         running_port: port as u16,
         version: env!("CARGO_PKG_VERSION").into(),
     })
-    .unwrap();
-    let router = app.router();
+    .unwrap()
+}
 
+async fn blocking(work: impl FnOnce() + Send + 'static) {
+    tokio::task::spawn_blocking(work).await.unwrap();
+}
+
+/// Replays `<name>.json` against the Rust server and compares with `<name>-electron.json`.
+async fn replay(name: &str) {
+    let script = fixture(&format!("{name}.json"));
+    let recorded = fixture(&format!("{name}-electron.json"));
+    let port = script["port"].as_u64().unwrap();
+
+    // The same starting point as the oracle: a data folder with a config, and the library.
+    let dir = tempfile::tempdir().unwrap();
+    let data = dir.path().join("data");
+    let music = dir.path().join("music");
+    fs::create_dir(&data).unwrap();
+    let library =
+        Path::new(env!("CARGO_MANIFEST_DIR")).join("../jukebox-core/tests/fixtures/library");
+    match script["setup"]["library"].as_array() {
+        Some(files) => {
+            fs::create_dir(&music).unwrap();
+            for file in files {
+                let file = file.as_str().unwrap();
+                fs::copy(library.join(file), music.join(file)).unwrap();
+            }
+        }
+        None => copy_dir(&library, &music),
+    }
+    let root = music.to_str().unwrap().to_string();
+    let mut config = Map::new();
+    config.insert("port".into(), json!(port));
+    if let Some(extra) = script["setup"]["config"].as_object() {
+        for (key, value) in extra {
+            config.insert(key.clone(), fill(value, &root, port));
+        }
+    }
+    fs::write(
+        data.join("config.json"),
+        serde_json::to_string_pretty(&config).unwrap(),
+    )
+    .unwrap();
+
+    let mut app = start(&data, port);
+    let mut router = app.router();
     let clients = script["clients"].as_object().unwrap();
     let mut subscriptions: BTreeMap<String, Subscription> = BTreeMap::new();
     let mut received: BTreeMap<String, Vec<Value>> = BTreeMap::new();
@@ -296,18 +319,34 @@ async fn every_response_matches_electron() {
             }
             Some("track-ended") => {
                 let engine = app.engine().clone();
-                tokio::task::spawn_blocking(move || engine.track_ended().unwrap())
-                    .await
-                    .unwrap();
+                blocking(move || engine.track_ended().unwrap()).await;
+                continue;
+            }
+            Some("player-ready") => {
+                let engine = app.engine().clone();
+                blocking(move || engine.maybe_start().unwrap()).await;
+                continue;
+            }
+            Some("delete-file") => {
+                fs::remove_file(music.join(step["file"].as_str().unwrap())).unwrap();
                 continue;
             }
             Some("ws-close") => {
-                for (client, subscription) in &mut subscriptions {
-                    let list = received.entry(client.clone()).or_default();
+                for (client, mut subscription) in std::mem::take(&mut subscriptions) {
+                    let list = received.entry(client).or_default();
                     while let Ok(text) = subscription.messages.try_recv() {
                         list.push(serde_json::from_str(&text).unwrap());
                     }
                 }
+                continue;
+            }
+            Some("restart") => {
+                // Everything in memory goes; the data folder stays. The browser keeps its
+                // cookie.
+                drop(router);
+                drop(app);
+                app = start(&data, port);
+                router = app.router();
                 continue;
             }
             Some(other) => panic!("unknown action {other}"),
@@ -344,7 +383,8 @@ async fn every_response_matches_electron() {
             .insert(ConnectInfo(SocketAddr::new(ip.parse().unwrap(), 50000)));
 
         let response = router.clone().oneshot(request).await.unwrap();
-        if step["id"] == "login" {
+        let is_login = step["id"].as_str().unwrap().starts_with("login");
+        if is_login && response.status() == 200 {
             if let Some(set) = response.headers().get(header::SET_COOKIE) {
                 cookie = Some(set.to_str().unwrap().split(';').next().unwrap().to_string());
             }
@@ -403,8 +443,20 @@ async fn every_response_matches_electron() {
     }
     assert!(
         problems.is_empty(),
-        "{} differences:\n{}",
+        "{name}: {} differences:\n{}",
         problems.len(),
         problems.join("\n")
     );
+}
+
+/// Every route, its validation, and its errors.
+#[tokio::test(flavor = "multi_thread", worker_threads = 2)]
+async fn every_route_matches_electron() {
+    replay("api-routes").await;
+}
+
+/// Longer queue flows: fills, votes, bans, pruning and restarts together.
+#[tokio::test(flavor = "multi_thread", worker_threads = 2)]
+async fn queue_flows_match_electron() {
+    replay("api-flows").await;
 }
