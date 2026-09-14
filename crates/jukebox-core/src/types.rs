@@ -326,6 +326,10 @@ pub struct NowPlaying {
     /// 0 = disabled; negative = same threshold, count hidden.
     pub downvote_threshold: i32,
     pub downvoted_by_me: bool,
+    /// Why playback stopped by itself, when it did: several songs in a row couldn't be
+    /// played. New in the Rust build, and left out while there's nothing to say.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub problem: Option<String>,
 }
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]

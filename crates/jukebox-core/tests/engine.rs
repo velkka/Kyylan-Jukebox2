@@ -262,3 +262,98 @@ fn a_busy_queue_keeps_its_invariants() {
         0
     );
 }
+
+fn history_len(engine: &Engine) -> usize {
+    play_history(engine).len()
+}
+
+#[test]
+fn an_event_about_a_replaced_song_is_ignored() {
+    use jukebox_core::player::PlayerEvent;
+
+    let (_dir, engine) = engine_with_tracks(3, |c| c.per_user_queue_limit = 0);
+    for track in 1..=3 {
+        engine.enqueue(track, "192.0.2.21", None).unwrap();
+    }
+    let first = engine.player().current_load().unwrap();
+    // The first song is skipped just as it ends: its "ended" arrives after the skip.
+    engine.skip().unwrap();
+    engine
+        .handle_player_event(PlayerEvent::Ended { load: first })
+        .unwrap();
+    assert_eq!(
+        playing_track(&engine),
+        Some(2),
+        "the second song keeps playing"
+    );
+    let failed = PlayerEvent::Failed {
+        load: first,
+        reason: "late".into(),
+    };
+    engine.handle_player_event(failed).unwrap();
+    assert_eq!(playing_track(&engine), Some(2));
+    assert_eq!(history_len(&engine), 2, "and nothing is un-logged");
+}
+
+#[test]
+fn a_failed_song_is_skipped_and_not_counted_as_played() {
+    use jukebox_core::engine::MAX_FAILURES_IN_A_ROW;
+    use jukebox_core::player::PlayerEvent;
+
+    let (_dir, engine) = engine_with_tracks(10, |c| c.per_user_queue_limit = 0);
+    for track in 1..=10 {
+        engine.enqueue(track, "192.0.2.21", None).unwrap();
+    }
+    let fail = |engine: &Engine| {
+        let load = engine.player().current_load().unwrap();
+        let failed = PlayerEvent::Failed {
+            load,
+            reason: "the file can't be opened".into(),
+        };
+        engine.handle_player_event(failed).unwrap();
+    };
+
+    // One failure, then a song that starts: the count starts over.
+    fail(&engine);
+    assert_eq!(playing_track(&engine), Some(2));
+    let load = engine.player().current_load().unwrap();
+    engine
+        .handle_player_event(PlayerEvent::Started { load })
+        .unwrap();
+    engine
+        .handle_player_event(PlayerEvent::Ended { load })
+        .unwrap();
+    assert_eq!(
+        play_history(&engine),
+        [3, 2],
+        "the failed song left no play"
+    );
+
+    for _ in 0..MAX_FAILURES_IN_A_ROW - 1 {
+        fail(&engine);
+        assert!(engine
+            .queue_state("x")
+            .unwrap()
+            .now_playing
+            .problem
+            .is_none());
+    }
+    fail(&engine);
+    let state = engine.queue_state("x").unwrap();
+    assert!(state.now_playing.problem.is_some());
+    assert!(state.now_playing.entry.is_none());
+    assert!(!engine.player().state().playing, "paused");
+    assert_eq!(state.queue.len(), 3, "songs 8 to 10 still wait");
+    assert_eq!(play_history(&engine), [2]);
+
+    // A song loaded by hand isn't the queue's to skip.
+    engine.player().load(9, true);
+    fail(&engine);
+    assert!(engine
+        .queue_state("x")
+        .unwrap()
+        .now_playing
+        .problem
+        .is_some());
+    assert_eq!(engine.queue_state("x").unwrap().queue.len(), 3);
+}

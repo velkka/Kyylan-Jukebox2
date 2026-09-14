@@ -29,6 +29,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      # cpal's ALSA backend.
+      - run: sudo apt-get update && sudo apt-get install -y libasound2-dev
       - run: cargo fmt --all -- --check
       - run: cargo clippy --workspace --all-targets --locked -- -D warnings
 
@@ -41,6 +43,8 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
+      - if: runner.os == 'Linux'
+        run: sudo apt-get update && sudo apt-get install -y libasound2-dev
       # Includes reading the data directory Electron v0.2.15 wrote, and checking this
       # platform's default data folder is Electron's.
       # --no-fail-fast: one failing test binary shouldn't hide the results of the others.

@@ -48,7 +48,7 @@ pub(super) fn record_play(
     requested_by_ip: Option<&str>,
     requested_by_name: Option<&str>,
     source: PlaySource,
-) -> rusqlite::Result<()> {
+) -> rusqlite::Result<i64> {
     let track = track_by_id(db, track_id)?;
     let source_name = match source {
         PlaySource::Guest => "guest",
@@ -70,7 +70,7 @@ pub(super) fn record_play(
             iso_now(),
         ),
     )?;
-    Ok(())
+    Ok(db.last_insert_rowid())
 }
 
 /// One guest's downvote of one song; the caller has already deduplicated.

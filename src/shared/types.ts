@@ -251,6 +251,11 @@ export interface NowPlaying {
   downvoteThreshold: number
   /** Whether the requesting client has already downvoted this song. */
   downvotedByMe: boolean
+  /**
+   * Why playback stopped by itself, when it did. Sent by the Rust build after several songs in
+   * a row couldn't be played; never by the Electron build.
+   */
+  problem?: string
 }
 
 export interface StandbyEntry {

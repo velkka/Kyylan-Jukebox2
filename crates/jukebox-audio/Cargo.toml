@@ -1,0 +1,20 @@
+[package]
+name = "jukebox-audio"
+description = "Kyylan Jukebox's audio engine: decoding, resampling and output"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+publish.workspace = true
+
+[dependencies]
+cpal = "0.18.2"
+jukebox-core = { path = "../jukebox-core" }
+opus = "0.4.0"
+rtrb = "0.4.0"
+rubato = "5.0.0"
+symphonia = { version = "0.6.1", features = ["all"] }
+tracing = "0.1"
+
+[dev-dependencies]
+tempfile = "3.27.0"

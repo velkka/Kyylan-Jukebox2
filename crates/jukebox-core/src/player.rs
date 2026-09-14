@@ -5,6 +5,7 @@
 //! player.ts did whenever no player window was reporting back, and what the API parity
 //! harness runs against.
 
+use std::sync::atomic::{AtomicU64, Ordering};
 use std::sync::{Arc, Mutex, RwLock};
 
 use crate::types::{AudioDevice, PlaybackState};
@@ -12,9 +13,31 @@ use crate::types::{AudioDevice, PlaybackState};
 /// Called with the new playback state whenever the player reports a change.
 pub type StateListener = Arc<dyn Fn(&PlaybackState) + Send + Sync>;
 
+/// Names one [`Player::load`], so an event about a song that has since been replaced can be
+/// recognised and ignored.
+pub type LoadId = u64;
+
+/// What happened to a load. Electron's player window reported "ended" and nothing else; a
+/// native engine also knows when audio actually started and when a file couldn't be played.
+#[derive(Debug, Clone, PartialEq)]
+pub enum PlayerEvent {
+    /// The load's audio reached the output.
+    Started { load: LoadId },
+    /// The load played to its end.
+    Ended { load: LoadId },
+    /// The load couldn't be played, or stopped partway. `reason` is a sentence for people.
+    Failed { load: LoadId, reason: String },
+}
+
+/// Called for each [`PlayerEvent`]. Never called from inside a player method, so a listener
+/// may call back into the player.
+pub type EventListener = Arc<dyn Fn(PlayerEvent) + Send + Sync>;
+
 pub trait Player: Send + Sync {
     /// Loads a track, from the start, and plays it if `autoplay`.
-    fn load(&self, track_id: i64, autoplay: bool);
+    fn load(&self, track_id: i64, autoplay: bool) -> LoadId;
+    /// The most recent load, whoever asked for it.
+    fn current_load(&self) -> Option<LoadId>;
     fn play(&self);
     fn pause(&self);
     /// Seconds. Reported through the next state update, not immediately.
@@ -29,12 +52,15 @@ pub trait Player: Send + Sync {
     fn state(&self) -> PlaybackState;
     /// Where state changes go: the realtime progress broadcast.
     fn on_state_change(&self, listener: StateListener);
+    /// Where events go: the queue engine.
+    fn on_event(&self, listener: EventListener);
 }
 
 /// A player that keeps state and makes no sound.
 pub struct SilentPlayer {
     state: Mutex<PlaybackState>,
     listener: RwLock<Option<StateListener>>,
+    loads: AtomicU64,
 }
 
 impl Default for SilentPlayer {
@@ -48,6 +74,7 @@ impl Default for SilentPlayer {
                 volume: 1.0,
             }),
             listener: RwLock::new(None),
+            loads: AtomicU64::new(0),
         }
     }
 }
@@ -76,13 +103,19 @@ impl SilentPlayer {
 }
 
 impl Player for SilentPlayer {
-    fn load(&self, track_id: i64, autoplay: bool) {
+    fn load(&self, track_id: i64, autoplay: bool) -> LoadId {
+        let load = self.loads.fetch_add(1, Ordering::SeqCst) + 1;
         self.change(|s| {
             s.track_id = Some(track_id);
             s.position = 0.0;
             s.duration = 0.0;
             s.playing = autoplay;
         });
+        load
+    }
+
+    fn current_load(&self) -> Option<LoadId> {
+        Some(self.loads.load(Ordering::SeqCst)).filter(|&l| l > 0)
     }
 
     fn play(&self) {
@@ -117,4 +150,7 @@ impl Player for SilentPlayer {
     fn on_state_change(&self, listener: StateListener) {
         *self.listener.write().expect("listener lock poisoned") = Some(listener);
     }
+
+    /// A silent player never has anything to report.
+    fn on_event(&self, _listener: EventListener) {}
 }

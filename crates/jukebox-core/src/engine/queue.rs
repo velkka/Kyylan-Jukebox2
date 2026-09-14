@@ -2,10 +2,11 @@
 
 use rusqlite::{Connection, OptionalExtension, Row};
 
-use super::{bans, standby, stats, Ctx, EngineError, Result};
+use super::{bans, standby, stats, Ctx, EngineError, Playing, Result, MAX_FAILURES_IN_A_ROW};
 use crate::db::iso_now;
 use crate::js;
 use crate::library::query::track_by_id;
+use crate::player::PlayerEvent;
 use crate::types::{NowPlaying, PlaySource, QueueEntry, QueueState, Track};
 
 /// "Added by" for standby playlist songs: never a guest's, never votable.
@@ -123,6 +124,7 @@ pub(super) fn state(ctx: &mut Ctx<'_>, for_ip: &str) -> Result<QueueState> {
         },
         downvote_threshold: raw_threshold,
         downvoted_by_me: votes_active && ctx.rt.downvoters.contains(for_ip),
+        problem: ctx.rt.problem.clone(),
     };
 
     let mut queue = Vec::new();
@@ -139,7 +141,15 @@ pub(super) fn state(ctx: &mut Ctx<'_>, for_ip: &str) -> Result<QueueState> {
     })
 }
 
+/// Moves on to the next song because someone or something asked to: a skip, an add, a song
+/// that ended. That's a fresh start, so earlier playback failures no longer count.
 pub(super) fn advance(ctx: &mut Ctx<'_>) -> Result<()> {
+    ctx.rt.failures = 0;
+    ctx.rt.problem = None;
+    next_song(ctx)
+}
+
+fn next_song(ctx: &mut Ctx<'_>) -> Result<()> {
     // A new song clears the votes.
     ctx.rt.downvoters.clear();
     ctx.rt.downvote_entry = None;
@@ -180,27 +190,97 @@ pub(super) fn advance(ctx: &mut Ctx<'_>) -> Result<()> {
             "UPDATE queue SET status = 'playing' WHERE id = ?",
             [next.id],
         )?;
-        stats::record_play(
+        let history_id = stats::record_play(
             ctx.db,
             next.track_id,
             Some(&next.added_by_ip),
             next.added_by_name.as_deref(),
             PlaySource::Guest,
         )?;
-        ctx.player.load(next.track_id, true);
+        send_to_player(ctx, next.track_id, history_id)?;
     } else if let Some((track_id, ip, source)) = filler {
         ctx.db.execute(
             "INSERT INTO queue (track_id, added_by_ip, added_by_name, added_at, position, status)
        VALUES (?, ?, NULL, ?, 0, 'playing')",
             (track_id, ip, iso_now()),
         )?;
-        stats::record_play(ctx.db, track_id, None, None, source)?;
-        ctx.player.load(track_id, true);
+        let history_id = stats::record_play(ctx.db, track_id, None, None, source)?;
+        send_to_player(ctx, track_id, history_id)?;
     } else {
+        ctx.rt.playing = None;
         ctx.player.pause();
     }
     ctx.broadcast();
     Ok(())
+}
+
+fn send_to_player(ctx: &mut Ctx<'_>, track_id: i64, history_id: i64) -> Result<()> {
+    let title = track_by_id(ctx.db, track_id)?.map_or_else(|| "a song".into(), |t| t.title);
+    let load = ctx.player.load(track_id, true);
+    ctx.rt.playing = Some(Playing {
+        load,
+        history_id,
+        title,
+        started: false,
+    });
+    Ok(())
+}
+
+pub(super) fn player_event(ctx: &mut Ctx<'_>, event: PlayerEvent) -> Result<()> {
+    let load = match &event {
+        PlayerEvent::Started { load }
+        | PlayerEvent::Ended { load }
+        | PlayerEvent::Failed { load, .. } => *load,
+    };
+    // About a song that has since been replaced: nothing to do.
+    if ctx.player.current_load() != Some(load) {
+        return Ok(());
+    }
+    match event {
+        PlayerEvent::Started { .. } => {
+            if let Some(playing) = ctx.rt.playing.as_mut().filter(|p| p.load == load) {
+                playing.started = true;
+            }
+            ctx.rt.failures = 0;
+            if ctx.rt.problem.take().is_some() {
+                ctx.broadcast();
+            }
+            Ok(())
+        }
+        // What player.ts's "ended" did, whoever loaded the song.
+        PlayerEvent::Ended { .. } => advance(ctx),
+        PlayerEvent::Failed { reason, .. } => {
+            // A song the admin loaded by hand isn't the queue's to skip.
+            let Some(playing) = ctx.rt.playing.take().filter(|p| p.load == load) else {
+                tracing::warn!(%reason, "couldn't play a song loaded outside the queue");
+                return Ok(());
+            };
+            tracing::warn!(title = %playing.title, %reason, "couldn't play a song; skipping it");
+            // It never played, so it isn't a play.
+            if !playing.started {
+                ctx.db.execute(
+                    "DELETE FROM play_history WHERE id = ?",
+                    [playing.history_id],
+                )?;
+            }
+            ctx.rt.failures += 1;
+            if ctx.rt.failures < MAX_FAILURES_IN_A_ROW {
+                return next_song(ctx);
+            }
+            ctx.rt.downvoters.clear();
+            ctx.rt.downvote_entry = None;
+            ctx.db
+                .execute("DELETE FROM queue WHERE status = 'playing'", [])?;
+            ctx.player.pause();
+            ctx.rt.problem = Some(format!(
+                "Playback stopped: the last {MAX_FAILURES_IN_A_ROW} songs couldn't be played. \
+                 The last was “{}”: {reason}.",
+                playing.title
+            ));
+            ctx.broadcast();
+            Ok(())
+        }
+    }
 }
 
 pub(super) fn maybe_start(ctx: &mut Ctx<'_>) -> Result<()> {

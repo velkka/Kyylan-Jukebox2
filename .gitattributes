@@ -4,3 +4,4 @@
 crates/jukebox-core/migrations/*.sql text eol=lf
 crates/jukebox-core/tests/fixtures/** -text
 crates/jukebox-server/tests/fixtures/** -text
+crates/jukebox-audio/tests/fixtures/** -text

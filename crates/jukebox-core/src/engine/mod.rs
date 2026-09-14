@@ -21,7 +21,7 @@ use std::sync::{Arc, Mutex, MutexGuard, RwLock};
 use rusqlite::Connection;
 
 use crate::config::ConfigStore;
-use crate::player::Player;
+use crate::player::{LoadId, Player, PlayerEvent};
 use crate::types::{BanEntry, QueueState, StandbyEntry, StatsResponse};
 
 #[derive(Debug, thiserror::Error)]
@@ -57,7 +57,26 @@ struct Runtime {
     standby_cursor: Option<usize>,
     /// The last standby track, so shuffle doesn't repeat it straight away.
     last_standby: Option<i64>,
+    /// The song the engine last sent to the player.
+    playing: Option<Playing>,
+    /// Songs in a row the player couldn't play.
+    failures: u32,
+    /// Why playback stopped by itself, shown to everyone until something plays again.
+    problem: Option<String>,
 }
+
+/// A song handed to the player, and what's known about how it went.
+struct Playing {
+    load: LoadId,
+    /// Its play_history row, written when it was sent: removed again if it never plays.
+    history_id: i64,
+    title: String,
+    started: bool,
+}
+
+/// After this many songs in a row fail, the engine stops rather than trying the rest of the
+/// queue — or the whole library, with random fill on and the music drive unplugged.
+pub const MAX_FAILURES_IN_A_ROW: u32 = 5;
 
 pub struct Engine {
     config: Arc<ConfigStore>,
@@ -156,6 +175,14 @@ impl Engine {
     /// The player finished the current song.
     pub fn track_ended(&self) -> Result<()> {
         self.advance()
+    }
+
+    /// Acts on what the player reports: an ended song advances the queue, a song that
+    /// couldn't be played is skipped — and logged as no play — and a song that started
+    /// clears any earlier failures. Events about a load that has been replaced are ignored,
+    /// so a song ending just as it's skipped doesn't skip the next one too.
+    pub fn handle_player_event(&self, event: PlayerEvent) -> Result<()> {
+        self.run(|ctx| queue::player_event(ctx, event))
     }
 
     /// Admin: skip the current song.

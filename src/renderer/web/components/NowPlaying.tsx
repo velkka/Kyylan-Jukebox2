@@ -88,6 +88,7 @@ export default function NowPlaying(): JSX.Element {
       {entry?.addedByName && (
         <p className="mt-2 text-xs text-white/40">added by {entry.addedByName}</p>
       )}
+      {np?.problem && <p className="mt-2 text-xs text-amber-300/80">{np.problem}</p>}
     </section>
   )
 }

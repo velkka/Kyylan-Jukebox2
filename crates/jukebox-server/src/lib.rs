@@ -23,7 +23,7 @@ use jukebox_core::config::ConfigStore;
 use jukebox_core::db;
 use jukebox_core::engine::Engine;
 use jukebox_core::library::Scanner;
-use jukebox_core::player::Player;
+use jukebox_core::player::{Player, PlayerEvent};
 use rusqlite::{Connection, OpenFlags};
 use tokio::net::TcpListener;
 
@@ -88,6 +88,26 @@ impl App {
                 hub.broadcast_queue();
             }
         }));
+        // Player events reach the engine on a thread of their own, so the player never
+        // waits on the engine's lock — during a rescan, say — to report the next one.
+        let (events, received) = std::sync::mpsc::channel::<PlayerEvent>();
+        options.player.on_event(Arc::new(move |event| {
+            let _ = events.send(event);
+        }));
+        let for_events = Arc::downgrade(&engine);
+        std::thread::Builder::new()
+            .name("player events".into())
+            .spawn(move || {
+                for event in received {
+                    let Some(engine) = for_events.upgrade() else {
+                        break;
+                    };
+                    if let Err(err) = engine.handle_player_event(event) {
+                        tracing::error!(%err, "handling a player event failed");
+                    }
+                }
+            })
+            .expect("starting the player event thread");
 
         Ok(App {
             state: Arc::new(AppState {
