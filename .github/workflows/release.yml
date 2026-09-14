@@ -8,7 +8,7 @@ on:
     tags:
       - 'v*'
     # Packaging changes are proved by installing what they build.
-    branches: [main, rust-port]
+    branches: [main]
     paths:
       - 'packaging/**'
       - 'scripts/gen-icons.cjs'
