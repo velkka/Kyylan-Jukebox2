@@ -7,7 +7,7 @@ use std::sync::Mutex;
 use jukebox_core::config::ConfigStore;
 use jukebox_core::db;
 use jukebox_core::library::folders::{self, FolderError};
-use jukebox_core::library::{Scanner, Walker};
+use jukebox_core::library::Scanner;
 use rusqlite::Connection;
 
 fn database() -> (tempfile::TempDir, Mutex<Connection>) {
@@ -68,6 +68,7 @@ fn a_missing_library_folder_prunes_its_tracks() {
 #[cfg(unix)]
 #[test]
 fn an_unreadable_subfolder_is_skipped() {
+    use jukebox_core::library::Walker;
     use std::os::unix::fs::PermissionsExt;
 
     let dir = tempfile::tempdir().unwrap();
