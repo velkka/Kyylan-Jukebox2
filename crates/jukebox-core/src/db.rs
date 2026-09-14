@@ -9,9 +9,10 @@ use std::path::Path;
 
 use rusqlite::{Connection, OpenFlags};
 
-/// Every migration, oldest first; id = position + 1. Append-only: never edit an entry.
-/// The files are extracted verbatim from db.ts, and a test holds them to it.
-pub const MIGRATIONS: &[&str] = &[
+/// Every migration's SQL as stored in the repo, oldest first; id = position + 1.
+/// Append-only: never edit an entry. The files are extracted verbatim from db.ts, and a
+/// test holds them to it. Read them through [`migrations`], never directly.
+const RAW_MIGRATIONS: &[&str] = &[
     include_str!("../migrations/001_meta.sql"),
     include_str!("../migrations/002_tracks.sql"),
     include_str!("../migrations/003_tracks_fts.sql"),
@@ -24,6 +25,19 @@ pub const MIGRATIONS: &[&str] = &[
     include_str!("../migrations/010_play_source.sql"),
 ];
 
+/// Every migration's SQL, oldest first, with line endings normalized to LF.
+///
+/// JavaScript normalizes CRLF inside template literals, so db.ts's SQL is LF even when Git
+/// checks it out with CRLF on Windows. `include_str!` does no such thing, and the text ends
+/// up verbatim in `sqlite_master` — so without this, a Windows build would create databases
+/// whose schema text differs from Electron's.
+pub fn migrations() -> Vec<String> {
+    RAW_MIGRATIONS
+        .iter()
+        .map(|sql| sql.replace("\r\n", "\n"))
+        .collect()
+}
+
 /// db.ts's bookkeeping table, whitespace included, since the text lands in `sqlite_master`.
 pub const MIGRATIONS_TABLE: &str = "CREATE TABLE IF NOT EXISTS _migrations (
     id         INTEGER PRIMARY KEY,
@@ -31,7 +45,7 @@ pub const MIGRATIONS_TABLE: &str = "CREATE TABLE IF NOT EXISTS _migrations (
   )";
 
 pub fn latest_migration() -> u32 {
-    MIGRATIONS.len() as u32
+    RAW_MIGRATIONS.len() as u32
 }
 
 #[derive(Debug, thiserror::Error)]
@@ -134,10 +148,11 @@ pub fn migrate(conn: &mut Connection) -> Result<MigrationReport, DbError> {
         .collect();
 
     if !pending.is_empty() {
+        let sql = migrations();
         let now = iso_now();
         let tx = conn.transaction()?;
         for &id in &pending {
-            tx.execute_batch(MIGRATIONS[id as usize - 1])?;
+            tx.execute_batch(&sql[id as usize - 1])?;
             tx.execute(
                 "INSERT INTO _migrations (id, applied_at) VALUES (?1, ?2)",
                 (id, &now),

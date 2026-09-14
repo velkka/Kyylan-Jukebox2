@@ -1,0 +1,5 @@
+# The Rust port holds these to exactly what the Electron build produces, so Git must not
+# rewrite their line endings on a Windows checkout: CRLF would change the SQL text SQLite
+# stores in sqlite_master, and the bytes the config tests compare.
+crates/jukebox-core/migrations/*.sql text eol=lf
+crates/jukebox-core/tests/fixtures/** -text

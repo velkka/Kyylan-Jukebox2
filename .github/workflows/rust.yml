@@ -42,4 +42,5 @@ jobs:
       - uses: actions/checkout@v4
       # Includes reading the data directory Electron v0.2.15 wrote, and checking this
       # platform's default data folder is Electron's.
-      - run: cargo test --workspace --locked
+      # --no-fail-fast: one failing test binary shouldn't hide the results of the others.
+      - run: cargo test --workspace --locked --no-fail-fast

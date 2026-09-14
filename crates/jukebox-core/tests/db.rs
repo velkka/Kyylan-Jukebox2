@@ -3,7 +3,7 @@
 
 use std::path::{Path, PathBuf};
 
-use jukebox_core::db::{self, MIGRATIONS, MIGRATIONS_TABLE};
+use jukebox_core::db::{self, MIGRATIONS_TABLE};
 use jukebox_core::rows::{read_every_table, scan, ArtRow, TrackRow};
 use rusqlite::Connection;
 
@@ -57,7 +57,7 @@ fn database_from_an_older_release_catches_up() {
         // What a v0.2.12-era build left behind: migrations 1–9.
         let conn = Connection::open(&path).unwrap();
         conn.execute_batch(MIGRATIONS_TABLE).unwrap();
-        for (i, sql) in MIGRATIONS.iter().enumerate().take(9) {
+        for (i, sql) in db::migrations().iter().enumerate().take(9) {
             conn.execute_batch(sql).unwrap();
             conn.execute(
                 "INSERT INTO _migrations (id, applied_at) VALUES (?1, '2026-09-01T12:00:00.000Z')",
@@ -97,7 +97,7 @@ fn opens_in_wal_mode_with_foreign_keys() {
 #[test]
 fn migrations_are_verbatim_copies_of_db_ts() {
     let db_ts = Path::new(env!("CARGO_MANIFEST_DIR")).join("../../src/main/db.ts");
-    let Ok(source) = std::fs::read_to_string(&db_ts) else {
+    let Ok(source) = std::fs::read_to_string(&db_ts).map(|t| t.replace("\r\n", "\n")) else {
         eprintln!(
             "skipped: {} not present (Electron sources removed)",
             db_ts.display()
@@ -119,8 +119,9 @@ fn migrations_are_verbatim_copies_of_db_ts() {
             rest = &rest[rest.chars().next().unwrap().len_utf8()..];
         }
     }
+    let migrations = db::migrations();
     assert_eq!(
-        sql, MIGRATIONS,
+        sql, migrations,
         "crates/jukebox-core/migrations/ has drifted from src/main/db.ts"
     );
     assert!(
