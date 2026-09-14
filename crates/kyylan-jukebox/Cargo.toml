@@ -52,7 +52,7 @@ windows-sys = { version = "0.61.2", features = ["Win32_Foundation", "Win32_UI_Wi
 # package was, so apt upgrades v0.2.x in place.
 [package.metadata.deb]
 name = "kyylan-jukebox"
-maintainer = "Kyylan <velkka@snoerf.org>"
+maintainer = "Veli-Matti Lammentausta <velkka@snoerf.org>"
 copyright = "2026, Veli-Matti Lammentausta"
 license-file = ["../../LICENSE", "0"]
 section = "sound"

@@ -9,7 +9,7 @@
 <Wix xmlns="http://wixtoolset.org/schemas/v4/wxs"
      xmlns:fw="http://wixtoolset.org/schemas/v4/wxs/firewall">
   <Package Name="Kyylan Jukebox"
-           Manufacturer="Kyylan"
+           Manufacturer="Veli-Matti Lammentausta"
            Version="$(var.Version)"
            UpgradeCode="e659328b-4eaa-4568-ae39-7d8db2e2172e"
            Scope="perMachine">
