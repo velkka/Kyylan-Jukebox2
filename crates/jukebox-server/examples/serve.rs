@@ -11,7 +11,7 @@ use jukebox_core::config::ConfigStore;
 use jukebox_core::paths::DataDir;
 use jukebox_core::player::SilentPlayer;
 use jukebox_server::net::{Network, NoFolderPicker, SystemNetwork};
-use jukebox_server::{serve, App, Options};
+use jukebox_server::{serve, App, Options, SetupAccess};
 
 #[tokio::main]
 async fn main() {
@@ -37,6 +37,7 @@ async fn main() {
         folder_picker: Arc::new(NoFolderPicker),
         running_port: port,
         version: env!("CARGO_PKG_VERSION").into(),
+        setup: SetupAccess::HostOnly,
     })
     .expect("opening the database");
     app.start_playback().expect("starting playback");

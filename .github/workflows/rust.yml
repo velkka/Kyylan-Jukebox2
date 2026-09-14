@@ -45,6 +45,9 @@ jobs:
       - uses: actions/checkout@v4
       - if: runner.os == 'Linux'
         run: sudo apt-get update && sudo apt-get install -y libasound2-dev
+      # The lint job runs on Linux, where the tray and dialogs aren't compiled.
+      - if: runner.os != 'Linux'
+        run: cargo clippy --workspace --all-targets --locked -- -D warnings
       # Includes reading the data directory Electron v0.2.15 wrote, and checking this
       # platform's default data folder is Electron's.
       # --no-fail-fast: one failing test binary shouldn't hide the results of the others.

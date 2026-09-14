@@ -2,8 +2,12 @@
 //!
 //!   kyylan-jukebox [--data-dir <path>]
 //!
-//! For now this is the whole of it. The command line, logging and start-up as a service
-//! come in phase 7, and the tray in phase 6.
+//! On Windows and macOS it lives in the tray. On Linux it has no local presence at all. The
+//! command line, logging and running as a service grow in phase 7.
+
+#[cfg(any(windows, target_os = "macos"))]
+mod desktop;
+mod instance;
 
 use std::path::PathBuf;
 use std::process::ExitCode;
@@ -13,12 +17,20 @@ use jukebox_audio::{AudioPlayer, CpalBackend};
 use jukebox_core::config::ConfigStore;
 use jukebox_core::library::query::track_path;
 use jukebox_core::paths::DataDir;
-use jukebox_server::net::{NoFolderPicker, SystemNetwork};
-use jukebox_server::{serve, App, Options};
+use jukebox_server::net::{FolderPicker, SystemNetwork};
+use jukebox_server::{serve, App, Options, SetupAccess};
 use rusqlite::{Connection, OpenFlags};
 
-#[tokio::main]
-async fn main() -> ExitCode {
+/// Tells the person running the jukebox something went wrong at start-up: a dialog on a
+/// desktop, and the log everywhere.
+fn fatal(message: &str) -> ExitCode {
+    tracing::error!("{message}");
+    #[cfg(any(windows, target_os = "macos"))]
+    desktop::error_dialog(message);
+    ExitCode::FAILURE
+}
+
+fn main() -> ExitCode {
     // Symphonia narrates every file it opens, and logs as errors what the player already
     // reports as a song that couldn't be played.
     use tracing_subscriber::prelude::*;
@@ -35,10 +47,7 @@ async fn main() -> ExitCode {
         (Some("--data-dir"), Some(path)) => DataDir::at(path),
         (None, _) => match DataDir::resolve() {
             Some(dir) => dir,
-            None => {
-                eprintln!("no data directory on this platform; pass --data-dir");
-                return ExitCode::FAILURE;
-            }
+            None => return fatal("No data directory on this platform; pass --data-dir."),
         },
         _ => {
             eprintln!("usage: kyylan-jukebox [--data-dir <path>]");
@@ -46,23 +55,42 @@ async fn main() -> ExitCode {
         }
     };
     if let Err(err) = std::fs::create_dir_all(dir.root()) {
-        eprintln!("can't create {}: {err}", dir.root().display());
-        return ExitCode::FAILURE;
+        return fatal(&format!("Can't create {}: {err}", dir.root().display()));
     }
     let config = match ConfigStore::open(dir.config_path()) {
         Ok(config) => Arc::new(config),
-        Err(err) => {
-            eprintln!("{err}");
-            return ExitCode::FAILURE;
-        }
+        Err(err) => return fatal(&format!("Can't read the settings: {err}")),
     };
     let port = config.get().port;
-    let listener = match tokio::net::TcpListener::bind(("0.0.0.0", port)).await {
-        Ok(listener) => listener,
-        Err(err) => {
-            eprintln!("Port {port} is already in use ({err}). Change the port in the settings and restart.");
-            return ExitCode::FAILURE;
+
+    // A second copy for the same data would only find the port taken: point the person who
+    // started it at the one that's running instead.
+    let _instance = match instance::acquire(dir.root()) {
+        Ok(lock) => lock,
+        Err(instance::AcquireError::Held) => {
+            tracing::info!("Kyylan Jukebox is already running");
+            #[cfg(any(windows, target_os = "macos"))]
+            desktop::open_console(port);
+            return ExitCode::SUCCESS;
         }
+        Err(instance::AcquireError::Io(err)) => {
+            return fatal(&format!("Can't start: {err}"));
+        }
+    };
+
+    let runtime = tokio::runtime::Builder::new_multi_thread()
+        .enable_all()
+        .thread_name("server")
+        .build()
+        .expect("starting the async runtime");
+    let listener = match runtime.block_on(tokio::net::TcpListener::bind(("0.0.0.0", port))) {
+        Ok(listener) => listener,
+        Err(err) if err.kind() == std::io::ErrorKind::AddrInUse => {
+            return fatal(&format!(
+                "Port {port} is already in use. Change the port in the app settings and restart."
+            ));
+        }
+        Err(err) => return fatal(&format!("Failed to start the jukebox server: {err}")),
     };
 
     // The player finds files through a connection of its own, opened once the server has
@@ -90,34 +118,64 @@ async fn main() -> ExitCode {
         config.get().output_device_id,
     ));
 
+    #[cfg(any(windows, target_os = "macos"))]
+    let folder_picker: Arc<dyn FolderPicker> = Arc::new(desktop::DialogFolderPicker);
+    #[cfg(not(any(windows, target_os = "macos")))]
+    let folder_picker: Arc<dyn FolderPicker> = Arc::new(jukebox_server::net::NoFolderPicker);
+
     let network = Arc::new(SystemNetwork::default());
+    let first_run = !config.get().configured;
     let app = match App::new(Options {
         config,
         database,
         player,
         network: network.clone(),
-        folder_picker: Arc::new(NoFolderPicker),
+        folder_picker,
         running_port: port,
         version: env!("CARGO_PKG_VERSION").into(),
+        // With no window of its own, the page is the only way to set up — and the first
+        // guest to open it mustn't be the one who chooses the admin password.
+        setup: SetupAccess::HostOnly,
     }) {
-        Ok(app) => app,
-        Err(err) => {
-            eprintln!("can't open the database: {err}");
-            return ExitCode::FAILURE;
-        }
+        Ok(app) => Arc::new(app),
+        Err(err) => return fatal(&format!("Can't open the database: {err}")),
     };
     if let Err(err) = app.start_playback() {
         tracing::error!(%err, "starting playback failed");
     }
     tracing::info!("serving {} on port {port}", dir.root().display());
-    tokio::select! {
-        result = serve(&app, listener) => {
-            if let Err(err) = result {
-                eprintln!("the server stopped: {err}");
-                return ExitCode::FAILURE;
-            }
-        }
-        _ = tokio::signal::ctrl_c() => tracing::info!("stopping"),
+    let serving = app.clone();
+    let server = runtime.spawn(async move { serve(&serving, listener).await });
+
+    #[cfg(any(windows, target_os = "macos"))]
+    {
+        // The server runs on the runtime's threads until the process ends.
+        drop(server);
+        desktop::run(desktop::Desktop {
+            port,
+            network,
+            first_run,
+            on_quit: Box::new(move || {
+                tracing::info!("quitting");
+                runtime.shutdown_background();
+                drop(app);
+            }),
+        })
     }
-    ExitCode::SUCCESS
+
+    #[cfg(not(any(windows, target_os = "macos")))]
+    {
+        let _ = (network, first_run);
+        runtime.block_on(async {
+            tokio::select! {
+                result = server => match result {
+                    Ok(Err(err)) => return fatal(&format!("The server stopped: {err}")),
+                    Err(err) => return fatal(&format!("The server stopped: {err}")),
+                    Ok(Ok(())) => {}
+                },
+                _ = tokio::signal::ctrl_c() => tracing::info!("stopping"),
+            }
+            ExitCode::SUCCESS
+        })
+    }
 }

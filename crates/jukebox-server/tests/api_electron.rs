@@ -22,7 +22,7 @@ use jukebox_core::config::ConfigStore;
 use jukebox_core::player::SilentPlayer;
 use jukebox_server::net::{Network, NoFolderPicker};
 use jukebox_server::realtime::Subscription;
-use jukebox_server::{App, Options};
+use jukebox_server::{App, Options, SetupAccess};
 use regex::Regex;
 use serde_json::{json, Map, Value};
 use sha1::{Digest, Sha1};
@@ -250,6 +250,7 @@ fn start(data: &Path, port: u64) -> App {
         folder_picker: Arc::new(NoFolderPicker),
         running_port: port as u16,
         version: env!("CARGO_PKG_VERSION").into(),
+        setup: SetupAccess::Anyone,
     })
     .unwrap()
 }

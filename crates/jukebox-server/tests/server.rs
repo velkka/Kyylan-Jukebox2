@@ -9,7 +9,7 @@ use futures_util::StreamExt;
 use jukebox_core::config::ConfigStore;
 use jukebox_core::player::SilentPlayer;
 use jukebox_server::net::{Network, NoFolderPicker};
-use jukebox_server::{serve, App, Options};
+use jukebox_server::{serve, App, Options, SetupAccess};
 use serde_json::Value;
 use tokio::io::{AsyncReadExt, AsyncWriteExt};
 use tokio::net::{TcpListener, TcpStream};
@@ -38,6 +38,7 @@ async fn start() -> (tempfile::TempDir, Arc<App>, u16) {
             folder_picker: Arc::new(NoFolderPicker),
             running_port: port,
             version: "test".into(),
+            setup: SetupAccess::HostOnly,
         })
         .unwrap(),
     );
@@ -134,4 +135,53 @@ async fn websocket_clients_get_the_queue_and_its_changes() {
     assert_eq!(progress["payload"]["playing"], false);
     let queue = next(&mut socket).await;
     assert_eq!(queue["type"], "queue");
+}
+
+/// First-run setup from a guest's browser would let them choose the admin password.
+#[tokio::test]
+async fn setup_can_be_limited_to_the_host() {
+    use axum::body::Body;
+    use axum::extract::ConnectInfo;
+    use axum::http::Request;
+    use http_body_util::BodyExt;
+    use tower::ServiceExt;
+
+    for (access, from, status) in [
+        (SetupAccess::HostOnly, "192.0.2.21", 403),
+        (SetupAccess::HostOnly, "127.0.0.1", 200),
+        (SetupAccess::Disabled, "127.0.0.1", 403),
+        (SetupAccess::Anyone, "192.0.2.21", 200),
+    ] {
+        let dir = tempfile::tempdir().unwrap();
+        let app = App::new(Options {
+            config: Arc::new(ConfigStore::open(dir.path().join("config.json")).unwrap()),
+            database: dir.path().join("jukebox.db"),
+            player: Arc::new(SilentPlayer::new()),
+            network: Arc::new(NoNetwork),
+            folder_picker: Arc::new(NoFolderPicker),
+            running_port: 8080,
+            version: "test".into(),
+            setup: access,
+        })
+        .unwrap();
+        let mut request = Request::post("/api/setup")
+            .header("content-type", "application/json")
+            .body(Body::from(r#"{"adminPassword":"secret"}"#))
+            .unwrap();
+        request
+            .extensions_mut()
+            .insert(ConnectInfo(std::net::SocketAddr::new(
+                from.parse().unwrap(),
+                1,
+            )));
+        let response = app.router().oneshot(request).await.unwrap();
+        let got = response.status().as_u16();
+        let body = response.into_body().collect().await.unwrap().to_bytes();
+        assert_eq!(
+            got,
+            status,
+            "{access:?} from {from}: {}",
+            String::from_utf8_lossy(&body)
+        );
+    }
 }

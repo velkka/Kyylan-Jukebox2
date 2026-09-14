@@ -15,3 +15,18 @@ rusqlite = "0.40.2"
 tokio = { version = "1.53.1", features = ["macros", "net", "rt-multi-thread", "signal"] }
 tracing = "0.1"
 tracing-subscriber = { version = "0.3", features = ["fmt"] }
+fd-lock = "4.0.4"
+
+# The tray, the browser, dialogs and the clipboard: Windows and macOS only. The Linux build
+# runs as a system service with no desktop, and links none of it.
+[target.'cfg(any(windows, target_os = "macos"))'.dependencies]
+arboard = "3.6.1"
+open = "5.4.4"
+png = "0.18.1"
+pollster = "1.0.1"
+rfd = "0.17.2"
+tao = "0.37.0"
+tray-icon = "0.25.0"
+
+[dev-dependencies]
+tempfile = "3.27.0"

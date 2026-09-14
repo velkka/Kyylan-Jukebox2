@@ -10,7 +10,8 @@ use jukebox_core::types::{
 use serde_json::Value;
 
 use super::{blocking, internal, require_admin, respond, AppStateRef, Handled, APP_NAME};
-use crate::http::{error, ok, JsonBody};
+use crate::http::{error, ok, Client, JsonBody};
+use crate::SetupAccess;
 
 pub async fn get(State(state): AppStateRef, headers: HeaderMap) -> Response {
     if let Err(denied) = require_admin(&state, &headers) {
@@ -149,10 +150,26 @@ pub async fn public_config(State(state): AppStateRef) -> Response {
 }
 
 /// First-run setup, allowed only until the app is configured.
-pub async fn setup(State(state): AppStateRef, body: JsonBody) -> Response {
+pub async fn setup(State(state): AppStateRef, client: Client, body: JsonBody) -> Response {
     let config = state.config.get();
     if config.configured {
         return error(StatusCode::FORBIDDEN, "Already configured");
+    }
+    match state.setup {
+        SetupAccess::Anyone => {}
+        SetupAccess::HostOnly if client.is_local() => {}
+        SetupAccess::HostOnly => {
+            return error(
+                StatusCode::FORBIDDEN,
+                "Setup can only be done on the computer the jukebox runs on",
+            )
+        }
+        SetupAccess::Disabled => {
+            return error(
+                StatusCode::FORBIDDEN,
+                "Setup is done in the config file on this jukebox",
+            )
+        }
     }
     let password = match body.get("adminPassword") {
         Some(Value::String(p)) if !js::trim(p).is_empty() => p.clone(),

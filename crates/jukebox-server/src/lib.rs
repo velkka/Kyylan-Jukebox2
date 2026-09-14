@@ -42,6 +42,21 @@ pub struct Options {
     /// The port actually listened on, which setup and settings compare a new port with.
     pub running_port: u16,
     pub version: String,
+    /// Who may complete first-run setup.
+    pub setup: SetupAccess,
+}
+
+/// Who may complete first-run setup — choosing the admin password — while the jukebox isn't
+/// configured yet.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum SetupAccess {
+    /// Any client, as in Electron, where the app's own window usually got there first.
+    Anyone,
+    /// Only a browser on the host itself. With no window of its own, the first guest to open
+    /// the page could otherwise claim admin.
+    HostOnly,
+    /// Nobody: the config file must already hold the admin password.
+    Disabled,
 }
 
 pub(crate) struct AppState {
@@ -56,6 +71,7 @@ pub(crate) struct AppState {
     folder_picker: Arc<dyn FolderPicker>,
     running_port: u16,
     version: String,
+    setup: SetupAccess,
 }
 
 pub struct App {
@@ -122,6 +138,7 @@ impl App {
                 folder_picker: options.folder_picker,
                 running_port: options.running_port,
                 version: options.version,
+                setup: options.setup,
             }),
         })
     }
