@@ -53,6 +53,8 @@ windows-sys = { version = "0.61.2", features = ["Win32_Foundation", "Win32_UI_Wi
 [package.metadata.deb]
 name = "kyylan-jukebox"
 maintainer = "Kyylan <velkka@snoerf.org>"
+copyright = "2026, Veli-Matti Lammentausta"
+license-file = ["../../LICENSE", "0"]
 section = "sound"
 priority = "optional"
 extended-description = """\

@@ -102,3 +102,7 @@ device and the rest of the admin panel's settings. Check a hand-edited file with
 
 > The admin password is stored in plaintext by design (LAN party convenience). Don't
 > reuse a sensitive password.
+
+## License
+
+[MIT](LICENSE)

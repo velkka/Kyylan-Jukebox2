@@ -8,5 +8,5 @@ members = ["crates/*"]
 version = "0.3.0"
 edition = "2021"
 rust-version = "1.85"
-license = "UNLICENSED"
+license = "MIT"
 publish = false
