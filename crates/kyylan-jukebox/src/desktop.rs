@@ -132,6 +132,8 @@ pub struct Desktop {
 
 /// Runs the tray on this thread — the main thread, which macOS requires — until Quit.
 pub fn run(desktop: Desktop) -> ! {
+    // Changed only on macOS, to hide the Dock icon.
+    #[cfg_attr(not(target_os = "macos"), allow(unused_mut))]
     let mut event_loop = EventLoopBuilder::<UserEvent>::with_user_event().build();
     #[cfg(target_os = "macos")]
     {
