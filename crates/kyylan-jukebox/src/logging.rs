@@ -10,6 +10,7 @@ use tracing_subscriber::filter::{LevelFilter, Targets};
 use tracing_subscriber::prelude::*;
 
 /// Daily files, and this many days of them.
+#[cfg(not(target_os = "linux"))]
 const KEEP_DAYS: usize = 14;
 pub const FILE_PREFIX: &str = "kyylan-jukebox";
 
