@@ -2,7 +2,7 @@
   "name": "kyylan-jukebox",
   "version": "0.2.15",
   "description": "LAN party jukebox — host plays local music, guests queue songs from their browsers",
-  "author": "Kyylan",
+  "author": "Veli-Matti Lammentausta",
   "license": "MIT",
   "main": "./out/main/index.js",
   "scripts": {
