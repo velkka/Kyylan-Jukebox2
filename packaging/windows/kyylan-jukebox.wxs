@@ -1,0 +1,86 @@
+<!--
+  The Windows installer: per machine, into Program Files, built by build-msi.ps1 with WiX 5.
+
+  WiX has no element for scheduled tasks, so custom actions run schtasks: the task is created
+  from task.xml on install, started so the jukebox plays without signing out, and deleted on
+  uninstall. The firewall rule lets guests connect without anyone answering a prompt.
+  Uninstalling leaves every user's data in %APPDATA%\kyylan-jukebox.
+-->
+<Wix xmlns="http://wixtoolset.org/schemas/v4/wxs"
+     xmlns:fw="http://wixtoolset.org/schemas/v4/wxs/firewall">
+  <Package Name="Kyylan Jukebox"
+           Manufacturer="Kyylan"
+           Version="$(var.Version)"
+           UpgradeCode="e659328b-4eaa-4568-ae39-7d8db2e2172e"
+           Scope="perMachine">
+    <MajorUpgrade DowngradeErrorMessage="A newer version of Kyylan Jukebox is already installed." />
+    <MediaTemplate EmbedCab="yes" />
+
+    <Icon Id="icon.ico" SourceFile="$(var.IconFile)" />
+    <Property Id="ARPPRODUCTICON" Value="icon.ico" />
+    <!-- A running jukebox holds its program open. Restart Manager asks it to close, which it
+         does cleanly, as when Windows signs out. -->
+    <Property Id="MSIRMSHUTDOWN" Value="1" />
+
+    <StandardDirectory Id="ProgramFiles64Folder">
+      <Directory Id="INSTALLFOLDER" Name="Kyylan Jukebox">
+        <Component Id="Program">
+          <File Id="Program" Name="kyylan-jukebox.exe" Source="$(var.ProgramFile)" KeyPath="yes">
+            <fw:FirewallException Id="Firewall" Name="Kyylan Jukebox" Scope="any" IgnoreFailure="yes" />
+          </File>
+          <File Id="Task" Name="task.xml" Source="$(var.TaskFile)" />
+        </Component>
+      </Directory>
+    </StandardDirectory>
+
+    <!-- v0.2.x: the Electron app's per-user installer, found through its uninstall entry. Its
+         key is the GUID electron-builder derives from the app id, org.kyylan.jukebox. The app
+         data it leaves is what this version reads. -->
+    <Property Id="ELECTRONUNINSTALL">
+      <RegistrySearch Id="ElectronUninstall"
+                      Root="HKCU"
+                      Key="Software\Microsoft\Windows\CurrentVersion\Uninstall\99edff90-a0c5-5959-985d-c626ece3841f"
+                      Name="QuietUninstallString"
+                      Type="raw" />
+    </Property>
+    <SetProperty Id="RemoveElectron" Value="[ELECTRONUNINSTALL]" Before="RemoveElectron" Sequence="execute" />
+    <!-- As the user installing, whose install it is. -->
+    <CustomAction Id="RemoveElectron" BinaryRef="Wix4UtilCA_X64" DllEntry="WixQuietExec64"
+                  Execute="deferred" Impersonate="yes" Return="ignore" />
+
+    <SetProperty Id="CreateTask" Sequence="execute" Before="CreateTask"
+                 Value="&quot;[System64Folder]schtasks.exe&quot; /Create /F /TN &quot;Kyylan Jukebox&quot; /XML &quot;[INSTALLFOLDER]task.xml&quot;" />
+    <CustomAction Id="CreateTask" BinaryRef="Wix4UtilCA_X64" DllEntry="WixQuietExec64"
+                  Execute="deferred" Impersonate="no" Return="check" />
+
+    <SetProperty Id="StartTask" Sequence="execute" Before="StartTask"
+                 Value="&quot;[System64Folder]schtasks.exe&quot; /Run /TN &quot;Kyylan Jukebox&quot;" />
+    <CustomAction Id="StartTask" BinaryRef="Wix4UtilCA_X64" DllEntry="WixQuietExec64"
+                  Execute="deferred" Impersonate="no" Return="ignore" />
+
+    <!-- Anything still running once Restart Manager has had its turn. -->
+    <SetProperty Id="EndTask" Sequence="execute" Before="EndTask"
+                 Value="&quot;[System64Folder]schtasks.exe&quot; /End /TN &quot;Kyylan Jukebox&quot;" />
+    <CustomAction Id="EndTask" BinaryRef="Wix4UtilCA_X64" DllEntry="WixQuietExec64"
+                  Execute="deferred" Impersonate="no" Return="ignore" />
+    <SetProperty Id="StopProgram" Sequence="execute" Before="StopProgram"
+                 Value="&quot;[System64Folder]taskkill.exe&quot; /F /IM kyylan-jukebox.exe" />
+    <CustomAction Id="StopProgram" BinaryRef="Wix4UtilCA_X64" DllEntry="WixQuietExec64"
+                  Execute="deferred" Impersonate="no" Return="ignore" />
+
+    <SetProperty Id="DeleteTask" Sequence="execute" Before="DeleteTask"
+                 Value="&quot;[System64Folder]schtasks.exe&quot; /Delete /F /TN &quot;Kyylan Jukebox&quot;" />
+    <CustomAction Id="DeleteTask" BinaryRef="Wix4UtilCA_X64" DllEntry="WixQuietExec64"
+                  Execute="deferred" Impersonate="no" Return="ignore" />
+
+    <InstallExecuteSequence>
+      <Custom Action="RemoveElectron" Before="InstallFiles" Condition="ELECTRONUNINSTALL AND NOT REMOVE" />
+      <Custom Action="EndTask" Before="RemoveFiles" Condition='REMOVE~="ALL"' />
+      <Custom Action="StopProgram" After="EndTask" Condition='REMOVE~="ALL"' />
+      <!-- An upgrade removes the old version first, and keeps the task. -->
+      <Custom Action="DeleteTask" After="StopProgram" Condition='REMOVE~="ALL" AND NOT UPGRADINGPRODUCTCODE' />
+      <Custom Action="CreateTask" After="InstallFiles" Condition="NOT REMOVE" />
+      <Custom Action="StartTask" Before="InstallFinalize" Condition="NOT REMOVE" />
+    </InstallExecuteSequence>
+  </Package>
+</Wix>

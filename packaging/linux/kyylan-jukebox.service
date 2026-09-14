@@ -1,0 +1,31 @@
+[Unit]
+Description=Kyylan Jukebox
+Documentation=https://github.com/velkka/Kyylan-Jukebox2
+Wants=network-online.target
+After=network-online.target sound.target
+
+[Service]
+Type=simple
+User=kyylan-jukebox
+Group=kyylan-jukebox
+# The sound card, through ALSA. Nobody needs to be logged in.
+SupplementaryGroups=audio
+StateDirectory=kyylan-jukebox
+StateDirectoryMode=0750
+Environment=KYYLAN_DATA_DIR=/var/lib/kyylan-jukebox
+ExecStart=/usr/lib/kyylan-jukebox/kyylan-jukebox
+Restart=on-failure
+RestartSec=5
+# 78 is a config.json it won't start with: starting again doesn't fix the file.
+RestartPreventExitStatus=78
+# It checkpoints the database and exits well within this.
+TimeoutStopSec=20
+
+ProtectSystem=strict
+# Music may live under /home, readable when its owner allows it; nothing there is written.
+ProtectHome=read-only
+PrivateTmp=true
+NoNewPrivileges=true
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<installer-gui-script minSpecVersion="2">
+    <title>Kyylan Jukebox</title>
+    <!-- Both architectures listed, or Apple Silicon Macs ask to install Rosetta first. -->
+    <options customize="never" require-scripts="false" hostArchitectures="arm64,x86_64"/>
+    <domains enable_anywhere="false" enable_currentUserHome="false" enable_localSystem="true"/>
+    <volume-check>
+        <allowed-os-versions>
+            <os-version min="11.0"/>
+        </allowed-os-versions>
+    </volume-check>
+    <choices-outline>
+        <line choice="default">
+            <line choice="org.kyylan.jukebox"/>
+        </line>
+    </choices-outline>
+    <choice id="default"/>
+    <choice id="org.kyylan.jukebox" visible="false">
+        <pkg-ref id="org.kyylan.jukebox"/>
+    </choice>
+    <pkg-ref id="org.kyylan.jukebox" version="@VERSION@" onConclusion="none">kyylan-jukebox.pkg</pkg-ref>
+</installer-gui-script>

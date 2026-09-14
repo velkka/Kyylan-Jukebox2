@@ -1,0 +1,18 @@
+#!/bin/sh
+# After the app and the agent are in place: the command on PATH, and the jukebox started for
+# whoever is at the Mac, so it plays without logging out. With nobody logged in, it starts at
+# the next log in.
+
+APP="/Applications/Kyylan Jukebox.app"
+LABEL=org.kyylan.jukebox
+AGENT="/Library/LaunchAgents/$LABEL.plist"
+
+mkdir -p /usr/local/bin
+ln -sfn "$APP/Contents/MacOS/kyylan-jukebox" /usr/local/bin/kyylan-jukebox
+
+console=$(stat -f %u /dev/console)
+if [ -n "$console" ] && [ "$console" -ne 0 ]; then
+    launchctl bootstrap "gui/$console" "$AGENT" 2>/dev/null ||
+        launchctl kickstart -k "gui/$console/$LABEL" 2>/dev/null || true
+fi
+exit 0

@@ -1,6 +1,6 @@
 [package]
 name = "kyylan-jukebox"
-description = "Kyylan Jukebox: plays local music through this machine's speakers while guests queue songs from their browsers"
+description = "LAN party jukebox: guests queue songs from their browsers"
 version.workspace = true
 edition.workspace = true
 rust-version.workspace = true
@@ -37,9 +37,31 @@ rfd = "0.17.2"
 tao = "0.37.0"
 tray-icon = "0.25.0"
 
+[build-dependencies]
+# The program's icon and version details on Windows. Does nothing for other targets.
+winresource = "0.1.31"
+
 [dev-dependencies]
 serde_json = "1.0.151"
 tempfile = "3.27.0"
 
 [target.'cfg(windows)'.dev-dependencies]
 windows-sys = { version = "0.61.2", features = ["Win32_Foundation", "Win32_UI_WindowsAndMessaging"] }
+
+# `cargo deb -p kyylan-jukebox`: the Linux package, a system service. Named as the Electron
+# package was, so apt upgrades v0.2.x in place.
+[package.metadata.deb]
+name = "kyylan-jukebox"
+maintainer = "Kyylan <velkka@snoerf.org>"
+section = "sound"
+priority = "optional"
+extended-description = """\
+Plays local music through this machine's speakers while guests browse the library and \
+queue songs from their own browsers over the LAN. Runs as a system service; the admin \
+password is in /etc/kyylan-jukebox/config.json."""
+depends = "$auto, adduser"
+assets = [
+    ["target/release/kyylan-jukebox", "usr/lib/kyylan-jukebox/", "755"],
+]
+maintainer-scripts = "../../packaging/linux/"
+systemd-units = { enable = true, start = true, restart-after-upgrade = true }

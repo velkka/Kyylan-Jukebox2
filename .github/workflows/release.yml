@@ -1,11 +1,20 @@
 name: Release
 
-# Build the macOS + Windows packages and publish a GitHub Release whenever a
-# version tag (v*) is pushed.
+# Builds the installers — the Windows MSI, the universal macOS pkg, and Linux debs for amd64 and
+# arm64 — installs and uninstalls each one on its own runner, and publishes a GitHub Release
+# when a version tag (v*) is pushed.
 on:
   push:
     tags:
       - 'v*'
+    # Packaging changes are proved by installing what they build.
+    branches: [rust-port]
+    paths:
+      - 'packaging/**'
+      - 'scripts/gen-icons.cjs'
+      - 'crates/kyylan-jukebox/build.rs'
+      - 'crates/kyylan-jukebox/Cargo.toml'
+      - '.github/workflows/release.yml'
   # Manual build-only run, for smoke-testing pipeline changes without releasing.
   workflow_dispatch:
 
@@ -13,68 +22,158 @@ permissions:
   contents: write # required to create the release
 
 jobs:
-  build-mac:
-    runs-on: macos-latest # Apple Silicon runner → arm64 .dmg
+  # The React UI, which the program embeds, and the icons. Built once for every package.
+  ui:
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.version.outputs.version }}
     steps:
       - uses: actions/checkout@v4
+      - id: version
+        name: Version
+        run: |
+          VERSION=$(sed -n 's/^version = "\(.*\)"/\1/p' Cargo.toml | head -1)
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          if [ "${GITHUB_REF_TYPE}" = tag ] && [ "${GITHUB_REF_NAME}" != "v$VERSION" ]; then
+            echo "::error::Tag ${GITHUB_REF_NAME} doesn't match version $VERSION in Cargo.toml"
+            exit 1
+          fi
       - uses: actions/setup-node@v4
         with:
           node-version: 20
           cache: npm
-      - run: npm ci
-      - name: Build macOS package
-        run: npm run package:mac
+      # Only the web build is needed: no Electron download, no native modules.
+      - run: npm ci --ignore-scripts
         env:
-          # Unsigned build: skip Developer ID discovery (the afterPack hook
-          # applies an ad-hoc signature so the app still runs locally).
-          CSC_IDENTITY_AUTO_DISCOVERY: 'false'
+          ELECTRON_SKIP_BINARY_DOWNLOAD: '1'
+      - run: npm run build
       - uses: actions/upload-artifact@v4
         with:
-          name: mac
-          path: release/*.dmg
+          name: ui
+          path: |
+            out/renderer
+            build/icon.png
+            build/icon.ico
+            build/tray.png
+            build/tray@2x.png
           if-no-files-found: error
 
-  build-win:
-    runs-on: windows-latest # native NSIS/portable build, x64
+  linux:
+    needs: ui
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          # The oldest supported Ubuntu, for a low glibc floor.
+          - arch: amd64
+            runner: ubuntu-22.04
+          - arch: arm64
+            runner: ubuntu-22.04-arm
+    runs-on: ${{ matrix.runner }}
+    env:
+      VERSION: ${{ needs.ui.outputs.version }}
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/download-artifact@v4
         with:
-          node-version: 20
-          cache: npm
-      - run: npm ci
-      - name: Build Windows packages
-        run: npm run package:win
+          name: ui
+      - run: sudo apt-get update && sudo apt-get install -y libasound2-dev
+      - name: Rust
+        run: |
+          if ! command -v cargo >/dev/null; then
+            curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --profile minimal
+            echo "$HOME/.cargo/bin" >> "$GITHUB_PATH"
+          fi
+      - run: cargo install cargo-deb --version 3.8.0 --locked
+      - name: Build the deb
+        run: |
+          test -f out/renderer/web/index.html
+          cargo deb -p kyylan-jukebox --locked
+          mkdir -p dist
+          cp target/debian/kyylan-jukebox_*_${{ matrix.arch }}.deb "dist/Kyylan-Jukebox-$VERSION-${{ matrix.arch }}.deb"
+          dpkg-deb --info dist/*.deb
+      # Only amd64 had an Electron package to upgrade from.
+      - if: matrix.arch == 'amd64'
+        name: The v0.2.15 package to upgrade from
+        run: gh release download v0.2.15 --pattern '*amd64.deb' --dir electron
+        env:
+          GH_TOKEN: ${{ github.token }}
+      - name: Install, use and remove it
+        run: packaging/linux/smoke-test.sh dist/*.deb $(ls electron/*.deb 2>/dev/null || true)
       - uses: actions/upload-artifact@v4
         with:
-          name: win
-          path: |
-            release/*setup.exe
-            release/*portable.exe
+          name: linux-${{ matrix.arch }}
+          path: dist/*.deb
           if-no-files-found: error
 
-  build-linux:
-    runs-on: ubuntu-latest # native build; better-sqlite3 is rebuilt for Linux here
+  macos:
+    needs: ui
+    runs-on: macos-latest # Apple Silicon; the Intel half is cross-compiled and run under Rosetta
+    env:
+      VERSION: ${{ needs.ui.outputs.version }}
+      MACOSX_DEPLOYMENT_TARGET: '11.0'
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/download-artifact@v4
         with:
-          node-version: 20
-          cache: npm
-      - run: npm ci
-      - name: Build Linux packages
-        run: npm run package:linux
+          name: ui
+      - run: rustup target add aarch64-apple-darwin x86_64-apple-darwin
+      - name: Build both architectures
+        run: |
+          test -f out/renderer/web/index.html
+          cargo build --release --locked -p kyylan-jukebox --target aarch64-apple-darwin
+          cargo build --release --locked -p kyylan-jukebox --target x86_64-apple-darwin
+          lipo -create -output target/kyylan-jukebox \
+            target/aarch64-apple-darwin/release/kyylan-jukebox \
+            target/x86_64-apple-darwin/release/kyylan-jukebox
+          lipo -info target/kyylan-jukebox
+      - name: Build the pkg
+        run: packaging/macos/build-pkg.sh target/kyylan-jukebox "$VERSION" "dist/Kyylan-Jukebox-$VERSION.pkg"
+      - name: Install, use and uninstall it
+        run: packaging/macos/smoke-test.sh "dist/Kyylan-Jukebox-$VERSION.pkg"
       - uses: actions/upload-artifact@v4
         with:
-          name: linux
-          path: |
-            release/*.AppImage
-            release/*.deb
+          name: macos
+          path: dist/*.pkg
+          if-no-files-found: error
+
+  windows:
+    needs: ui
+    runs-on: windows-latest
+    env:
+      VERSION: ${{ needs.ui.outputs.version }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: ui
+      - name: Build the program
+        run: |
+          if (-not (Test-Path out/renderer/web/index.html)) { throw 'the UI is missing' }
+          cargo build --release --locked -p kyylan-jukebox
+      # WiX 5: MS-RL licensed, with the firewall and util extensions.
+      - name: WiX
+        run: |
+          dotnet tool install --global wix --version 5.0.2
+          wix extension add -g WixToolset.Firewall.wixext/5.0.2 WixToolset.Util.wixext/5.0.2
+      - name: Build the MSI
+        run: ./packaging/windows/build-msi.ps1 -Program target/release/kyylan-jukebox.exe -Version $env:VERSION -Output "dist/Kyylan-Jukebox-$env:VERSION-x64.msi"
+      - name: Install, use and uninstall it
+        run: ./packaging/windows/smoke-test.ps1 -Msi "dist/Kyylan-Jukebox-$env:VERSION-x64.msi"
+      - if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: windows-install-logs
+          path: '*.log'
+      - uses: actions/upload-artifact@v4
+        with:
+          name: windows
+          path: dist/*.msi
           if-no-files-found: error
 
   release:
-    needs: [build-mac, build-win, build-linux]
-    # Only publish for tag pushes; workflow_dispatch runs just build and stop.
+    needs: [linux, macos, windows]
+    # Only publish for tag pushes; other runs just build and test the packages.
     if: startsWith(github.ref, 'refs/tags/')
     runs-on: ubuntu-latest
     steps:
@@ -84,6 +183,7 @@ jobs:
       - uses: actions/download-artifact@v4
         with:
           path: dist
+          pattern: '{linux-*,macos,windows}'
       - name: Generate changelog
         run: |
           TAG="${GITHUB_REF_NAME}"
@@ -115,7 +215,7 @@ jobs:
             fi
             echo
             echo "---"
-            echo "> **Unsigned builds.** macOS: ad-hoc signed, runs locally (Gatekeeper may warn on first open — right-click → **Open**). Windows: SmartScreen warns until the \`.exe\` is code-signed."
+            echo "> **Unsigned installers.** macOS: Gatekeeper blocks the \`.pkg\` on first open — right-click it → **Open**, or allow it under System Settings → Privacy & Security. Windows: SmartScreen warns until the \`.msi\` is code-signed. Linux: \`sudo apt install ./Kyylan-Jukebox-${VER}-amd64.deb\` (or \`arm64\`), which prints the admin password."
           } > RELEASE_NOTES.md
           echo "----- generated notes -----"; cat RELEASE_NOTES.md
       - name: Publish GitHub Release

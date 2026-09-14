@@ -1,0 +1,26 @@
+#!/bin/sh
+# Before the new app goes in: stop whatever runs from it now, and remove it.
+#
+# Installer copies a bundle's files over an existing one and never deletes, so v0.2.x's Electron
+# frameworks would otherwise stay inside the new app. Running copies would hold the port.
+
+APP="/Applications/Kyylan Jukebox.app"
+LABEL=org.kyylan.jukebox
+
+# The agent, in every GUI session that has one: each has a loginwindow.
+for uid in $(ps -axo uid=,comm= | awk '$2 ~ /loginwindow$/ { print $1 }' | sort -u); do
+    launchctl bootout "gui/$uid/$LABEL" 2>/dev/null || true
+done
+
+# Anything else running from the app: v0.2.x, which has the same bundle identifier, or a copy
+# started by hand. Asked to quit first, as launchd would.
+pkill -TERM -f "$APP/Contents/" 2>/dev/null || true
+waited=0
+while pgrep -f "$APP/Contents/" >/dev/null 2>&1 && [ "$waited" -lt 20 ]; do
+    sleep 1
+    waited=$((waited + 1))
+done
+pkill -KILL -f "$APP/Contents/" 2>/dev/null || true
+
+rm -rf "$APP"
+exit 0

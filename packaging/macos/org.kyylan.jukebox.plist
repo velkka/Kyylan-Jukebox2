@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<!--
+  Starts Kyylan Jukebox in the session of whoever logs in at the Mac. A crash restarts it;
+  Quit in the menu bar exits successfully and leaves it stopped until the next log in.
+-->
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>org.kyylan.jukebox</string>
+    <key>ProgramArguments</key>
+    <array>
+        <string>/Applications/Kyylan Jukebox.app/Contents/MacOS/kyylan-jukebox</string>
+    </array>
+    <key>AssociatedBundleIdentifiers</key>
+    <string>org.kyylan.jukebox</string>
+    <key>LimitLoadToSessionType</key>
+    <string>Aqua</string>
+    <key>RunAtLoad</key>
+    <true/>
+    <key>KeepAlive</key>
+    <dict>
+        <key>SuccessfulExit</key>
+        <false/>
+    </dict>
+    <!-- Not throttled as a background job: it's playing music. -->
+    <key>ProcessType</key>
+    <string>Interactive</string>
+    <key>ExitTimeOut</key>
+    <integer>20</integer>
+</dict>
+</plist>

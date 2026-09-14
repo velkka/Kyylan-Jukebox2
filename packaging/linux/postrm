@@ -1,0 +1,29 @@
+#!/bin/sh
+# Removing leaves the library, settings and stats in /var/lib/kyylan-jukebox. Purging deletes
+# them and the service's user, following Debian convention.
+set -e
+
+NAME=kyylan-jukebox
+
+#DEBHELPER#
+
+case "$1" in
+    remove)
+        if [ "$(readlink "/usr/bin/$NAME" 2>/dev/null)" = "/usr/lib/kyylan-jukebox/kyylan-jukebox" ]; then
+            rm -f "/usr/bin/$NAME"
+        fi
+        ;;
+    purge)
+        rm -f /etc/kyylan-jukebox/config.json
+        rmdir /etc/kyylan-jukebox 2>/dev/null || true
+        rm -rf /var/lib/kyylan-jukebox
+        if getent passwd "$NAME" >/dev/null && command -v deluser >/dev/null; then
+            deluser --system --quiet "$NAME" || true
+        fi
+        if getent group "$NAME" >/dev/null && command -v delgroup >/dev/null; then
+            delgroup --system --only-if-empty --quiet "$NAME" || true
+        fi
+        ;;
+esac
+
+exit 0

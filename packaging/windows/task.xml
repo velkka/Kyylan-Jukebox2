@@ -1,0 +1,55 @@
+<!--
+  The scheduled task that starts Kyylan Jukebox when anyone signs in, in their own session, where
+  the sound devices are. build-msi.ps1 saves it as UTF-16, which schtasks reads.
+
+  Two Task Scheduler defaults would stop a jukebox, so they're off: the three-day run limit
+  (ExecutionTimeLimit PT0S) and running only on AC power.
+-->
+<Task version="1.2" xmlns="http://schemas.microsoft.com/windows/2004/02/mit/task">
+  <RegistrationInfo>
+    <Description>Starts Kyylan Jukebox when a user signs in.</Description>
+    <URI>\Kyylan Jukebox</URI>
+  </RegistrationInfo>
+  <Triggers>
+    <LogonTrigger>
+      <Enabled>true</Enabled>
+    </LogonTrigger>
+  </Triggers>
+  <Principals>
+    <!-- BUILTIN\Users: any user, only while they're signed in, without elevation. -->
+    <Principal id="Users">
+      <GroupId>S-1-5-32-545</GroupId>
+      <RunLevel>LeastPrivilege</RunLevel>
+    </Principal>
+  </Principals>
+  <Settings>
+    <!-- One per signed-in user; the program itself allows one per user. -->
+    <MultipleInstancesPolicy>Parallel</MultipleInstancesPolicy>
+    <DisallowStartIfOnBatteries>false</DisallowStartIfOnBatteries>
+    <StopIfGoingOnBatteries>false</StopIfGoingOnBatteries>
+    <AllowHardTerminate>true</AllowHardTerminate>
+    <StartWhenAvailable>false</StartWhenAvailable>
+    <RunOnlyIfNetworkAvailable>false</RunOnlyIfNetworkAvailable>
+    <IdleSettings>
+      <StopOnIdleEnd>false</StopOnIdleEnd>
+      <RestartOnIdle>false</RestartOnIdle>
+    </IdleSettings>
+    <AllowStartOnDemand>true</AllowStartOnDemand>
+    <Enabled>true</Enabled>
+    <Hidden>false</Hidden>
+    <RunOnlyIfIdle>false</RunOnlyIfIdle>
+    <WakeToRun>false</WakeToRun>
+    <ExecutionTimeLimit>PT0S</ExecutionTimeLimit>
+    <!-- Normal priority. The default, 7, also lowers disk priority, which audio can't afford. -->
+    <Priority>5</Priority>
+    <RestartOnFailure>
+      <Interval>PT1M</Interval>
+      <Count>3</Count>
+    </RestartOnFailure>
+  </Settings>
+  <Actions Context="Users">
+    <Exec>
+      <Command>%ProgramFiles%\Kyylan Jukebox\kyylan-jukebox.exe</Command>
+    </Exec>
+  </Actions>
+</Task>

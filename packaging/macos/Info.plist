@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>CFBundleName</key>
+    <string>Kyylan Jukebox</string>
+    <key>CFBundleDisplayName</key>
+    <string>Kyylan Jukebox</string>
+    <key>CFBundleIdentifier</key>
+    <string>org.kyylan.jukebox</string>
+    <key>CFBundleExecutable</key>
+    <string>kyylan-jukebox</string>
+    <key>CFBundleIconFile</key>
+    <string>icon</string>
+    <key>CFBundlePackageType</key>
+    <string>APPL</string>
+    <key>CFBundleInfoDictionaryVersion</key>
+    <string>6.0</string>
+    <key>CFBundleShortVersionString</key>
+    <string>@VERSION@</string>
+    <key>CFBundleVersion</key>
+    <string>@VERSION@</string>
+    <key>LSApplicationCategoryType</key>
+    <string>public.app-category.music</string>
+    <key>LSMinimumSystemVersion</key>
+    <string>11.0</string>
+    <!-- A menu-bar app: no Dock icon, no menu bar of its own. -->
+    <key>LSUIElement</key>
+    <true/>
+    <key>NSHighResolutionCapable</key>
+    <true/>
+    <!-- What macOS shows when asking to let the jukebox read music kept in these places. -->
+    <key>NSDesktopFolderUsageDescription</key>
+    <string>Kyylan Jukebox plays the music in the library folders you choose.</string>
+    <key>NSDocumentsFolderUsageDescription</key>
+    <string>Kyylan Jukebox plays the music in the library folders you choose.</string>
+    <key>NSDownloadsFolderUsageDescription</key>
+    <string>Kyylan Jukebox plays the music in the library folders you choose.</string>
+    <key>NSRemovableVolumesUsageDescription</key>
+    <string>Kyylan Jukebox plays the music in the library folders you choose.</string>
+    <key>NSNetworkVolumesUsageDescription</key>
+    <string>Kyylan Jukebox plays the music in the library folders you choose.</string>
+    <key>NSLocalNetworkUsageDescription</key>
+    <string>Guests on your network queue songs from their browsers.</string>
+</dict>
+</plist>

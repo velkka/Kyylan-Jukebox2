@@ -50,19 +50,49 @@ fn a_database_failure_ends_the_scan_with_an_error() {
 }
 
 #[test]
-fn a_missing_library_folder_prunes_its_tracks() {
-    // As in Electron: a folder that can't be walked contributes no files, so a rescan
-    // removes what was indexed from it.
-    let (_dir, db) = database();
-    db.lock()
-        .unwrap()
-        .execute(
-            "INSERT INTO tracks (path, title, mtime_ms, added_at) VALUES ('/gone/a.mp3', 'a', 0, 'x')",
-            [],
+fn a_missing_library_folder_keeps_its_tracks_until_it_leaves_the_library() {
+    // Unlike Electron, which removed them: a drive that isn't plugged in when the jukebox
+    // starts and rescans must not take the library, the queue and the standby playlist with
+    // it.
+    let dir = tempfile::tempdir().unwrap();
+    let (conn, _) = db::open(&dir.path().join("jukebox.db")).unwrap();
+    let drive = dir.path().join("drive");
+    let here = dir.path().join("here");
+    fs::create_dir(&here).unwrap();
+    for folder in [&drive, &here] {
+        conn.execute(
+            "INSERT INTO tracks (path, title, mtime_ms, added_at) VALUES (?, 'a', 0, 'x')",
+            [folder.join("a.mp3").to_str().unwrap()],
         )
         .unwrap();
-    let status = Scanner::new().scan(&db, &["/gone".to_string()]);
-    assert_eq!((status.removed, status.total, status.error), (1, 0, None));
+    }
+    conn.execute(
+        "INSERT INTO standby (track_id, position, added_at) VALUES (1, 0, 'x')",
+        [],
+    )
+    .unwrap();
+    let db = Mutex::new(conn);
+    let roots = [
+        drive.to_str().unwrap().to_string(),
+        here.to_str().unwrap().to_string(),
+    ];
+
+    let status = Scanner::new().scan(&db, &roots);
+    assert_eq!(
+        (status.removed, status.total, status.error),
+        (1, 1, None),
+        "the missing drive's track stays; the file gone from a folder that's there doesn't"
+    );
+    let standby: i64 = db
+        .lock()
+        .unwrap()
+        .query_row("SELECT count(*) FROM standby", [], |r| r.get(0))
+        .unwrap();
+    assert_eq!(standby, 1);
+
+    // Taken out of the library, its tracks go at the next scan.
+    let status = Scanner::new().scan(&db, &roots[1..]);
+    assert_eq!((status.removed, status.total), (1, 0));
 }
 
 #[cfg(unix)]

@@ -14,6 +14,7 @@ use std::time::UNIX_EPOCH;
 use rayon::prelude::*;
 use rusqlite::Connection;
 
+use super::folders::folder_prefix;
 use super::metadata::{self, TrackMeta};
 use super::walk::Walker;
 use crate::db::iso_now;
@@ -118,6 +119,19 @@ impl Scanner {
         let mut known = {
             let conn = lock_db(db);
             conn.execute("UPDATE tracks SET seen = 0", [])?;
+            // A folder that isn't there right now — a drive not plugged in, a share not yet
+            // mounted when the jukebox starts at boot — keeps its tracks, where Electron's
+            // scan removed them and, with them, their queue and standby entries. A folder
+            // that's gone for good is removed from the library in the admin panel.
+            let mut keep =
+                conn.prepare("UPDATE tracks SET seen = 1 WHERE substr(path, 1, length(?1)) = ?1")?;
+            for root in roots {
+                if let Err(err) = fs::read_dir(root) {
+                    tracing::warn!(folder = root, %err, "library folder unavailable; keeping its tracks");
+                    keep.execute([folder_prefix(root)])?;
+                }
+            }
+            drop(keep);
             known_tracks(&conn)?
         };
 

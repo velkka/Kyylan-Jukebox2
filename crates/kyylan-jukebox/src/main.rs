@@ -39,6 +39,10 @@ use crate::check::Setup;
 use crate::logging::{Destination, Level};
 use crate::shutdown::Shutdown;
 
+/// The exit status for settings the program won't start with — sysexits' `EX_CONFIG`. The
+/// systemd unit doesn't restart on it: starting again won't fix the file.
+const EXIT_CONFIG: u8 = 78;
+
 /// Plays through virtual devices instead of the machine's own, for tests: `virtual`.
 const AUDIO_ENV: &str = "KYYLAN_AUDIO";
 
@@ -282,7 +286,8 @@ fn run(dir: DataDir) -> ExitCode {
         Err(err) => return fatal(&format!("Can't read the settings: {err}")),
     };
     if let Some(reason) = check::refuses_to_start(&config.get(), config.path(), Setup::PLATFORM) {
-        return fatal(&reason);
+        let _ = fatal(&reason);
+        return ExitCode::from(EXIT_CONFIG);
     }
     let port = config.get().port;
 

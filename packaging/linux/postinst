@@ -1,0 +1,76 @@
+#!/bin/sh
+# Sets up the service: its user, its data directory, and on a first install a config marked as
+# set up, with a generated admin password. The part cargo-deb generates, which enables and
+# starts the unit, goes between the two halves.
+set -e
+
+NAME=kyylan-jukebox
+DATA=/var/lib/kyylan-jukebox
+PROGRAM=/usr/lib/kyylan-jukebox/kyylan-jukebox
+CONFIG="$DATA/config.json"
+PORT=8080
+
+first_install=false
+from_electron=false
+
+if [ "$1" = configure ]; then
+    if ! getent passwd "$NAME" >/dev/null; then
+        adduser --system --group --home "$DATA" --no-create-home --quiet "$NAME"
+    fi
+    # The sound card belongs to the audio group.
+    adduser --quiet "$NAME" audio >/dev/null
+    install -d -o "$NAME" -g "$NAME" -m 0750 "$DATA"
+
+    # v0.2.x was the Electron app. Its scripts linked /usr/bin/kyylan-jukebox through
+    # update-alternatives to a program this upgrade has just removed, and its removal
+    # script unlinks it on the way out. Take the command back.
+    if [ -n "$2" ] && dpkg --compare-versions "$2" lt 0.3.0; then
+        from_electron=true
+    fi
+    if update-alternatives --query "$NAME" >/dev/null 2>&1; then
+        update-alternatives --remove-all "$NAME" >/dev/null 2>&1 || true
+    fi
+    ln -sfn "$PROGRAM" "/usr/bin/$NAME"
+
+    # Where Debian admins look for settings; the program writes the file in $DATA.
+    install -d -m 0755 /etc/kyylan-jukebox
+    ln -sfn "$CONFIG" /etc/kyylan-jukebox/config.json
+
+    if [ ! -e "$CONFIG" ]; then
+        first_install=true
+        # Letters and digits nobody misreads, in groups of four.
+        password=$(LC_ALL=C tr -dc 'abcdefghjkmnpqrstuvwxyz23456789' </dev/urandom | head -c 12 |
+            sed 's/..../&-/g; s/-$//')
+        (
+            umask 0027
+            printf '{\n  "configured": true,\n  "port": %s,\n  "adminPassword": "%s"\n}' \
+                "$PORT" "$password" >"$CONFIG"
+        )
+        chown "$NAME:$NAME" "$CONFIG"
+    fi
+fi
+
+#DEBHELPER#
+
+if [ "$1" = configure ]; then
+    address=$(hostname -I 2>/dev/null | awk '{ print $1 }')
+    [ -n "$address" ] || address=$(hostname)
+    if $first_install; then
+        echo
+        echo "Kyylan Jukebox is running at http://$address:$PORT/"
+        echo "Admin password: $password"
+        echo "(It's in /etc/kyylan-jukebox/config.json, as adminPassword.)"
+    fi
+    if $first_install || $from_electron; then
+        # The Electron app kept its data in its user's home, which the service doesn't use.
+        for old in /home/*/.config/kyylan-jukebox /root/.config/kyylan-jukebox; do
+            if [ -f "$old/jukebox.db" ]; then
+                echo
+                echo "Found the library and stats of an earlier Kyylan Jukebox in $old."
+                echo "To bring them across: sudo kyylan-jukebox import $old"
+            fi
+        done
+    fi
+fi
+
+exit 0

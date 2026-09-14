@@ -357,7 +357,11 @@ fn a_second_copy_on_the_same_data_leaves_the_first_running() {
 fn linux_refuses_to_start_without_the_admin_password() {
     let jukebox = Jukebox::new(serde_json::json!({ "configured": true }));
     let output = jukebox.command().output().unwrap();
-    assert_eq!(output.status.code(), Some(1));
+    assert_eq!(
+        output.status.code(),
+        Some(78),
+        "EX_CONFIG, which the unit doesn't restart on"
+    );
     let text = String::from_utf8_lossy(&output.stdout);
     assert!(text.contains("adminPassword is not set in"), "{text}");
     assert!(
