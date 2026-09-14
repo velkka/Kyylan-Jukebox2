@@ -71,3 +71,6 @@ if (Get-Process kyylan-jukebox -ErrorAction SilentlyContinue) { throw 'the jukeb
 if (-not (Test-Path "$env:APPDATA\kyylan-jukebox\config.json")) { throw 'the data went with it' }
 
 Step 'Passed'
+# The checks above that expect a command to fail leave its exit code behind, which the CI
+# step would otherwise report as the script's.
+exit 0
