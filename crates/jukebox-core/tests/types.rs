@@ -103,7 +103,9 @@ fn player() {
     round_trips::<DevicesResponse>(&json!({
         "devices": [{ "deviceId": "coreaudio:BuiltInSpeakerDevice", "label": "MacBook Pro Speakers" }], "selected": null
     }));
-    round_trips::<OutputResponse>(&json!({ "selected": "coreaudio:BuiltInSpeakerDevice" }));
+    round_trips::<OutputResponse>(
+        &json!({ "ok": true, "selected": "coreaudio:BuiltInSpeakerDevice" }),
+    );
     round_trips::<PlaybackState>(
         &json!({ "trackId": 961, "playing": false, "position": 0, "duration": 0, "volume": 1 }),
     );

@@ -16,7 +16,7 @@ use lofty::probe::Probe;
 use lofty::tag::{ItemKey, Tag, TagType};
 use sha1::{Digest, Sha1};
 
-use super::js;
+use crate::js;
 
 /// Everything the scanner stores about one file, before it has a row.
 #[derive(Debug, Clone, PartialEq)]

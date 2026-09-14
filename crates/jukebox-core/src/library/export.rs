@@ -3,7 +3,7 @@
 use rusqlite::types::ValueRef;
 use rusqlite::Connection;
 
-use super::js;
+use crate::js;
 
 pub const CSV_COLUMNS: &[&str] = &[
     "id",

@@ -3,3 +3,4 @@
 # stores in sqlite_master, and the bytes the config tests compare.
 crates/jukebox-core/migrations/*.sql text eol=lf
 crates/jukebox-core/tests/fixtures/** -text
+crates/jukebox-server/tests/fixtures/** -text

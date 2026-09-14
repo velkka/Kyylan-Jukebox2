@@ -279,6 +279,7 @@ pub struct DevicesResponse {
 /// `POST /api/player/output`.
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct OutputResponse {
+    pub ok: bool,
     pub selected: Option<String>,
 }
 

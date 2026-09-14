@@ -12,7 +12,7 @@ use rusqlite::{Connection, OptionalExtension, Row};
 use serde::Deserialize;
 use unicode_normalization::UnicodeNormalization;
 
-use super::js;
+use crate::js;
 use crate::types::{
     AlbumSummary, AlbumsResponse, ArtistSummary, ArtistsResponse, Track, TracksQuery,
     TracksResponse,

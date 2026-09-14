@@ -4,7 +4,10 @@
 
 pub mod config;
 pub mod db;
+pub mod engine;
+pub mod js;
 pub mod library;
 pub mod paths;
+pub mod player;
 pub mod rows;
 pub mod types;

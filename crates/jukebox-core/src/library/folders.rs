@@ -5,8 +5,8 @@ use std::io;
 
 use rusqlite::Connection;
 
-use super::js;
 use crate::config::{ConfigError, ConfigStore};
+use crate::js;
 use crate::types::{LibraryPath, LibraryPathsResponse};
 
 #[derive(Debug, thiserror::Error)]

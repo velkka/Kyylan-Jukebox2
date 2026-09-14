@@ -3,7 +3,7 @@
 use std::fs;
 use std::vec::IntoIter;
 
-use super::js;
+use crate::js;
 
 /// The extensions the scanner indexes. Electron also indexed `.wma`; the Rust build can't
 /// play it, so those tracks drop out on the first rescan.
