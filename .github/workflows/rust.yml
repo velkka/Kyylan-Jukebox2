@@ -4,7 +4,7 @@ name: Rust
 # workflow is separate and unaffected.
 on:
   push:
-    branches: [rust-port]
+    branches: [main, rust-port]
     paths:
       - 'crates/**'
       - 'Cargo.toml'
